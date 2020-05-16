@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-16T09:26:16.047Z</updated>
+  <updated>2020-05-16T17:38:53.713Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,58 +17,29 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hexo入门测试</title>
-    <link href="http://yoursite.com/2020/05/07/test/"/>
-    <id>http://yoursite.com/2020/05/07/test/</id>
-    <published>2020-05-07T07:53:28.116Z</published>
-    <updated>2020-05-16T09:26:16.047Z</updated>
+    <title>如何美化Hexo博客——nexT？</title>
+    <link href="http://yoursite.com/2020/05/17/How-To-Config-Hexo/"/>
+    <id>http://yoursite.com/2020/05/17/How-To-Config-Hexo/</id>
+    <published>2020-05-16T17:07:05.000Z</published>
+    <updated>2020-05-16T17:38:53.713Z</updated>
     
     <summary type="html">
     
-      &lt;h4 id=&quot;什么是-Hexo？&quot;&gt;&lt;a href=&quot;#什么是-Hexo？&quot; class=&quot;headerlink&quot; title=&quot;什么是 Hexo？&quot;&gt;&lt;/a&gt;什么是 Hexo？&lt;/h4&gt;&lt;p&gt;Hexo 是一个快速、简洁且高效的博客框架。Hexo 使用 &lt;a href=&quot;http://daringfireball.net/projects/markdown/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Markdown&lt;/a&gt;（或其他渲染引擎）解析文章，在几秒内，即可利用靓丽的主题生成静态网页。&lt;/p&gt;
+      &lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们看看如何进行常见的个性化设置吧？&lt;/p&gt;
     
     </summary>
     
     
-      <category term="分类1" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB1/"/>
+      <category term="工具指南" scheme="http://yoursite.com/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
     
-      <category term="1子类A" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB1/1%E5%AD%90%E7%B1%BBA/"/>
-    
-      <category term="1子类B" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB1/1%E5%AD%90%E7%B1%BBB/"/>
-    
-      <category term="分类2" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB2/"/>
-    
-      <category term="2子类A" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB2/2%E5%AD%90%E7%B1%BBA/"/>
-    
-      <category term="2子类B" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB2/2%E5%AD%90%E7%B1%BBB/"/>
-    
-      <category term="2子类C" scheme="http://yoursite.com/categories/%E5%88%86%E7%B1%BB2/2%E5%AD%90%E7%B1%BBC/"/>
+      <category term="Hexo" scheme="http://yoursite.com/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
     
     
-      <category term="PS3" scheme="http://yoursite.com/tags/PS3/"/>
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
     
-      <category term="Games" scheme="http://yoursite.com/tags/Games/"/>
+      <category term="个性化" scheme="http://yoursite.com/tags/%E4%B8%AA%E6%80%A7%E5%8C%96/"/>
     
-      <category term="New" scheme="http://yoursite.com/tags/New/"/>
-    
-      <category term="中文" scheme="http://yoursite.com/tags/%E4%B8%AD%E6%96%87/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2020/05/07/hello-world/"/>
-    <id>http://yoursite.com/2020/05/07/hello-world/</id>
-    <published>2020-05-06T17:19:31.217Z</published>
-    <updated>2020-05-16T09:26:13.522Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;GitHub&lt;/a&gt;.&lt;/p&gt;
-    
-    </summary>
-    
-    
+      <category term="美化" scheme="http://yoursite.com/tags/%E7%BE%8E%E5%8C%96/"/>
     
   </entry>
   
