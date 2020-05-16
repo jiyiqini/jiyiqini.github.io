@@ -44,6 +44,8 @@
 <p>npx hexo <command></p>
 <p>将 Hexo 所在的目录下的 node_modules 添加到环境变量之中即可直接使用 hexo <command>：</p>
 <p>echo ‘PATH=”$PATH:./node_modules/.bin”‘ &gt;&gt; ~/.profile</p>
+<hr>
+<p>测试，哈哈</p>
 ]]></content>
       <categories>
         <category>分类1</category>
