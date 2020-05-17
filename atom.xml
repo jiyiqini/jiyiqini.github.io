@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-16T17:38:53.713Z</updated>
+  <updated>2020-05-17T06:38:35.184Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -17,15 +17,15 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>如何美化Hexo博客——nexT？</title>
-    <link href="http://yoursite.com/2020/05/17/How-To-Config-Hexo/"/>
-    <id>http://yoursite.com/2020/05/17/How-To-Config-Hexo/</id>
+    <title>如何美化 hexo+next 个人博客？</title>
+    <link href="http://yoursite.com/2020/05/17/HexoBlogs_1-How-To-Config/"/>
+    <id>http://yoursite.com/2020/05/17/HexoBlogs_1-How-To-Config/</id>
     <published>2020-05-16T17:07:05.000Z</published>
-    <updated>2020-05-16T17:38:53.713Z</updated>
+    <updated>2020-05-17T06:38:35.184Z</updated>
     
     <summary type="html">
     
-      &lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们看看如何进行常见的个性化设置吧？&lt;/p&gt;
+      &lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？&lt;/p&gt;
     
     </summary>
     
@@ -40,6 +40,31 @@
       <category term="个性化" scheme="http://yoursite.com/tags/%E4%B8%AA%E6%80%A7%E5%8C%96/"/>
     
       <category term="美化" scheme="http://yoursite.com/tags/%E7%BE%8E%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>快速搭建 Hexo+Github 个人博客</title>
+    <link href="http://yoursite.com/2020/05/15/HexoBlogs_0-Setup-Tutorial/"/>
+    <id>http://yoursite.com/2020/05/15/HexoBlogs_0-Setup-Tutorial/</id>
+    <published>2020-05-15T04:51:08.000Z</published>
+    <updated>2020-05-17T06:11:47.273Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重hexo的简洁性和免费托管Github的原因，将决定折腾学习hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="工具指南" scheme="http://yoursite.com/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    
+      <category term="Hexo" scheme="http://yoursite.com/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
+    
+    
+      <category term="Hexo" scheme="http://yoursite.com/tags/Hexo/"/>
+    
+      <category term="环境" scheme="http://yoursite.com/tags/%E7%8E%AF%E5%A2%83/"/>
     
   </entry>
   
