@@ -171,7 +171,7 @@
 
 <h2 id="3-创建-Github-Pages-仓库"><a href="#3-创建-Github-Pages-仓库" class="headerlink" title="3. 创建 Github Pages 仓库"></a>3. 创建 Github Pages 仓库</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1，GitHub 主页右上角加号 -&gt; New repository。</span><br><span class="line">2，Repository name 中输入 “用户名.github.io”。</span><br><span class="line">3，勾选 Public。</span><br><span class="line">4，勾选 “Initialize this repository with a README”。</span><br><span class="line">5，填好后点击 Create repository 创建。</span><br><span class="line">6，创建后默认自动启用 HTTPS，博客地址为：https://用户名.github.io。</span><br></pre></td></tr></table></figure>
 
-<p>例如：我的博客 “<a href="https://jiyiqini.github.io”" target="_blank" rel="noopener">https://jiyiqini.github.io”</a> 。</p>
+<p>例如，我的博客：<a href="https://jiyiqini.github.io" target="_blank" rel="noopener">https://jiyiqini.github.io</a></p>
 <h2 id="4-Hexo博客系统接入（核心）"><a href="#4-Hexo博客系统接入（核心）" class="headerlink" title="4. Hexo博客系统接入（核心）"></a>4. Hexo博客系统接入（核心）</h2><p>☞ <a href="https://hexo.io/zh-cn/" target="_blank" rel="noopener">Hexo</a>官方步骤参考：</p>
 <blockquote>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-cli -g</span><br><span class="line">$ hexo init blog</span><br><span class="line">$ <span class="built_in">cd</span> blog</span><br><span class="line">$ npm install</span><br><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
