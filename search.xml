@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>如何美化 hexo+next 个人博客？</title>
-    <url>/2020/05/17/HexoBlogs_1-How-To-Config/</url>
+    <url>/dev-tools/hexo/How-To-Config/</url>
     <content><![CDATA[<p>Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？</p>
 <a id="more"></a>
 
@@ -139,7 +139,7 @@
   </entry>
   <entry>
     <title>快速搭建 Hexo+Github 个人博客</title>
-    <url>/2020/05/15/HexoBlogs_0-Setup-Tutorial/</url>
+    <url>/dev-tools/hexo/Setup-Tutorial/</url>
     <content><![CDATA[<p>如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重hexo的简洁性和免费托管Github的原因，将决定折腾学习hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。</p>
 <a id="more"></a>
 
