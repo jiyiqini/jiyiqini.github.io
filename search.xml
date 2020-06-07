@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>test</title>
+    <url>/test/</url>
+    <content><![CDATA[<p>摘要….</p>
+<a id="more"></a>
+
+
+]]></content>
+      <categories>
+        <category>cat1</category>
+        <category>cat1-1</category>
+        <category>cat2</category>
+      </categories>
+      <tags>
+        <tag>tag1</tag>
+        <tag>tag2</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>如何美化 hexo+next 个人博客？</title>
     <url>/dev-tools/hexo/How-To-Config/</url>
     <content><![CDATA[<p>Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？</p>

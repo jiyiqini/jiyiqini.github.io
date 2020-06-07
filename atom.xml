@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://yoursite.com/"/>
-  <updated>2020-05-20T09:40:48.897Z</updated>
+  <updated>2020-05-22T15:35:59.450Z</updated>
   <id>http://yoursite.com/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>test</title>
+    <link href="http://yoursite.com/test/"/>
+    <id>http://yoursite.com/test/</id>
+    <published>2020-05-22T14:25:19.000Z</published>
+    <updated>2020-05-22T15:35:59.450Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;摘要….&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="cat1" scheme="http://yoursite.com/categories/cat1/"/>
+    
+      <category term="cat1-1" scheme="http://yoursite.com/categories/cat1/cat1-1/"/>
+    
+      <category term="cat2" scheme="http://yoursite.com/categories/cat2/"/>
+    
+    
+      <category term="tag1" scheme="http://yoursite.com/tags/tag1/"/>
+    
+      <category term="tag2" scheme="http://yoursite.com/tags/tag2/"/>
+    
+  </entry>
   
   <entry>
     <title>如何美化 hexo+next 个人博客？</title>
