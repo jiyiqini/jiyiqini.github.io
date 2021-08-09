@@ -44,15 +44,15 @@
   </entry>
   
   <entry>
-    <title>快速搭建 Hexo+Github 个人博客</title>
+    <title>快速搭建 Hexo+Github/Gitee 个人博客</title>
     <link href="http://yoursite.com/dev-tools/hexo/Setup-Tutorial/"/>
     <id>http://yoursite.com/dev-tools/hexo/Setup-Tutorial/</id>
     <published>2020-05-15T04:51:08.000Z</published>
-    <updated>2020-05-20T10:06:25.660Z</updated>
+    <updated>2021-08-09T07:03:02.019Z</updated>
     
     <summary type="html">
     
-      &lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重hexo的简洁性和免费托管Github的原因，将决定折腾学习hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;
+      &lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 &lt;a href=&quot;https://github.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Github&lt;/a&gt;/&lt;a href=&quot;https://gitee.com/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Gitee&lt;/a&gt; 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;
     
     </summary>
     
