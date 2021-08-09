@@ -17,7 +17,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"yoursite.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"flat"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":true},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="一切，缘于自觉~">
@@ -86,7 +86,7 @@
 
 
     <script type="text/javascript" 
-      color="255, 235, 59" 
+      color="0,0,250" 
       opacity="0.5" 
       zIndex="-1" 
       count="99" 
@@ -145,17 +145,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">4</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">6</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">2</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">3</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">2</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">3</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -173,18 +173,21 @@
   <span class="search-icon">
     <i class="fa fa-search"></i>
   </span>
-  <div class="search-input-container"></div>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
   <span class="popup-btn-close">
     <i class="fa fa-times-circle"></i>
   </span>
 </div>
-<div class="algolia-results">
-  <div id="algolia-stats"></div>
-  <div id="algolia-hits"></div>
-  <div id="algolia-pagination" class="algolia-pagination"></div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
 </div>
 
-      
     </div>
   </div>
 
@@ -212,6 +215,101 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/dev-tools/hexo/Hexo-Issues/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="S.H.">
+      <meta itemprop="description" content="一切，缘于自觉~">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="随风起舞">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/dev-tools/hexo/Hexo-Issues/" class="post-title-link" itemprop="url">常见的 Hexo 报错与解决</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-08-09 21:15:52 / 修改时间：22:51:05" itemprop="dateCreated datePublished" datetime="2021-08-09T21:15:52+08:00">2021-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">技术篇</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/" itemprop="url" rel="index"><span itemprop="name">工具指南</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                </span>
+            </span>
+
+          
+            <div>
+              <span title="post.wordcount">本文约 56 字，</span>
+              <span title="post.min2read">阅读大概 1 分钟</span>
+            </div>
+          
+
+          
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>hexo 使用过程中，经常遇到一些稀奇古怪的问题。经查阅后解决，现将这些常见的错误与处理策略一一记录。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/dev-tools/hexo/Hexo-Issues/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+
+      
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/dev-tools/hexo/How-To-Config/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -226,7 +324,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/dev-tools/hexo/How-To-Config/" class="post-title-link" itemprop="url">如何美化 hexo+next 个人博客？</a>
+            <a href="/dev-tools/hexo/How-To-Config/" class="post-title-link" itemprop="url">如何美化 hexo+next 个人博客？(入门篇2)</a>
         </h2>
 
         <div class="post-meta">
@@ -243,7 +341,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-05-20 17:40:48" itemprop="dateModified" datetime="2020-05-20T17:40:48+08:00">2020-05-20</time>
+                <time title="修改时间：2021-08-09 23:04:42" itemprop="dateModified" datetime="2021-08-09T23:04:42+08:00">2021-08-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -251,18 +349,22 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/" itemprop="url" rel="index"><span itemprop="name">工具指南</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">技术篇</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/" itemprop="url" rel="index"><span itemprop="name">工具指南</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
                 </span>
             </span>
 
           
             <div>
-              <span title="post.wordcount">本文约 5.3k 字，</span>
-              <span title="post.min2read">阅读大概 27 分钟</span>
+              <span title="post.wordcount">本文约 6.3k 字，</span>
+              <span title="post.min2read">阅读大概 31 分钟</span>
             </div>
           
 
@@ -323,7 +425,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/dev-tools/hexo/Setup-Tutorial/" class="post-title-link" itemprop="url">快速搭建 Hexo+Github/Gitee 个人博客</a>
+            <a href="/dev-tools/hexo/Setup-Tutorial/" class="post-title-link" itemprop="url">快速搭建 Hexo+Github/Gitee 个人博客（入门篇1）</a>
         </h2>
 
         <div class="post-meta">
@@ -340,7 +442,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2021-08-09 18:11:09" itemprop="dateModified" datetime="2021-08-09T18:11:09+08:00">2021-08-09</time>
+                <time title="修改时间：2021-08-09 21:28:01" itemprop="dateModified" datetime="2021-08-09T21:28:01+08:00">2021-08-09</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -348,11 +450,15 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/" itemprop="url" rel="index"><span itemprop="name">工具指南</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/" itemprop="url" rel="index"><span itemprop="name">技术篇</span></a>
                 </span>
                   ，
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/" itemprop="url" rel="index"><span itemprop="name">工具指南</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/" itemprop="url" rel="index"><span itemprop="name">Hexo</span></a>
                 </span>
             </span>
 
@@ -470,20 +576,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">2</span>
+          <span class="site-state-item-count">3</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -558,7 +664,7 @@
   </div>
 
   
-  <script color='255, 235, 59' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
+  <script color='0,0,250' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest-nomobile.min.js"></script>
   <script src="/lib/anime.min.js"></script>
   <script src="/lib/velocity/velocity.min.js"></script>
   <script src="/lib/velocity/velocity.ui.min.js"></script>
@@ -582,10 +688,7 @@
 
 
   
-<script src="//cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js"></script>
-<script src="//cdn.jsdelivr.net/npm/instantsearch.js@4/dist/instantsearch.production.min.js"></script>
-<script src="/js/algolia-search.js"></script>
-
+<script src="/js/local-search.js"></script>
 
 
 
