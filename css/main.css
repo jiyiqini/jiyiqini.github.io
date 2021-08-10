@@ -710,9 +710,6 @@ pre .javascript .function {
   outline: 0;
   padding: 0.25em 0.75em;
   text-align: center;
-  transition-delay: 0s;
-  transition-duration: 0.2s;
-  transition-timing-function: ease-out;
 }
 .post-body .tabs ul.nav-tabs li.tab a i,
 .tabs-comment ul.nav-tabs li.tab a i {
@@ -1327,7 +1324,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #e98801;
+  background: #d28fec;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
