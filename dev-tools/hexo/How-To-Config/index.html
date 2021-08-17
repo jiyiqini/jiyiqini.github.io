@@ -549,9 +549,10 @@
 <blockquote>
 <pre class=" language-bash"><code class="language-bash"><span class="token punctuation">..</span>/<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;your_hexo_blog&amp;#125;</span>
    ├────────_config.yml <span class="token comment" spellcheck="true">#全局配置</span>
-   ├────────themes/hexo-theme-next/_config.yml <span class="token comment" spellcheck="true">#next主题配置：后面的大多数都在这里配置</span></code></pre>
+   ├────────themes/hexo-theme-next/_config.yml <span class="token comment" spellcheck="true">#next主题配置：后面的大多数都在这里配置</span>
+</code></pre>
 </blockquote>
-<p>现在，就按我自己的喜好做如下个性化配置吧！（例如：<a href="https://jiyiqini.github.io">我的个人博客</a>）</p>
+<p>现在，就按我自己的喜好做如下个性化配置吧！（例如：<a href="https://jiyiqini.github.io/">我的个人博客</a>）</p>
 <p><em>PS: 本文是基于 Hexo+next 讲解的。</em></p>
 <h1 id="新增网站头信息（Site）"><a href="#新增网站头信息（Site）" class="headerlink" title="新增网站头信息（Site）"></a>新增网站头信息（Site）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># 位于 ../&lt;your_hexo_blog>/_config.yml#Site：</span>
 <span class="token key atrule">title</span><span class="token punctuation">:</span> 博客标题。例如：“我的学习之旅”
@@ -560,7 +561,8 @@
 <span class="token key atrule">keywords</span><span class="token punctuation">:</span> 关键字 <span class="token comment" spellcheck="true">#默认为空</span>
 <span class="token key atrule">author</span><span class="token punctuation">:</span> 作者名称
 <span class="token key atrule">language</span><span class="token punctuation">:</span> 博客语言类型。<span class="token comment" spellcheck="true">#例如：zh-CN</span>
-<span class="token key atrule">timezone</span><span class="token punctuation">:</span> <span class="token string">'时区'</span> <span class="token comment" spellcheck="true">#默认为空，表示当前用户所在时区</span></code></pre>
+<span class="token key atrule">timezone</span><span class="token punctuation">:</span> <span class="token string">'时区'</span> <span class="token comment" spellcheck="true">#默认为空，表示当前用户所在时区</span>
+</code></pre>
 <h1 id="配置“关于-分类-标签-搜索-404”等常见入口"><a href="#配置“关于-分类-标签-搜索-404”等常见入口" class="headerlink" title="配置“关于/分类/标签/搜索/404”等常见入口"></a>配置“关于/分类/标签/搜索/404”等常见入口</h1><blockquote>
 <p>基本步骤：  </p>
 <ol>
@@ -587,79 +589,85 @@
 <span class="token comment" spellcheck="true"># Enable / Disable menu icons / item badges.</span>
 <span class="token key atrule">menu_settings</span><span class="token punctuation">:</span>
 <span class="token key atrule">icons</span><span class="token punctuation">:</span> <span class="token boolean important">true     </span><span class="token comment" spellcheck="true">#是否启用图标</span>
-<span class="token key atrule">badges</span><span class="token punctuation">:</span> <span class="token boolean important">true    </span><span class="token comment" spellcheck="true">#是否显示角标数（栏目下文章数目）</span></code></pre>
+<span class="token key atrule">badges</span><span class="token punctuation">:</span> <span class="token boolean important">true    </span><span class="token comment" spellcheck="true">#是否显示角标数（栏目下文章数目）</span>
+</code></pre>
 </li>
 </ol>
 </blockquote>
 <ul>
 <li><p><strong>关于：</strong></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token comment" spellcheck="true"># 创建 about</span>
-  $ hexo new page about
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 创建 about</span>
+$ hexo new page about
 
-  <span class="token comment" spellcheck="true"># 编辑内容（../source/about/index.md）</span>
-  ---
-  title: 关于介绍              <span class="token comment" spellcheck="true">#当前页标题</span>
-  date: 2020-05-16 18:04:21   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
-  comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁用评论</span>
-  ---
-  <span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.</code></pre>
+<span class="token comment" spellcheck="true"># 编辑内容（../source/about/index.md）</span>
+---
+title: 关于介绍              <span class="token comment" spellcheck="true">#当前页标题</span>
+date: 2020-05-16 18:04:21   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
+comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁用评论</span>
+---
+<span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.
+</code></pre>
 </li>
 <li><p><strong>分类：</strong></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token comment" spellcheck="true"># 创建 categories</span>
-  $ hexo new page categories
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 创建 categories</span>
+$ hexo new page categories
 
-  <span class="token comment" spellcheck="true"># 编辑内容（../source/categories/index.md）</span>
-  ---
-  title: 文章分类              <span class="token comment" spellcheck="true">#当前页标题</span>
-  date: 2020-05-16 13:21:33   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
-  categories: Testing         <span class="token comment" spellcheck="true">#分类名</span>
-  type: <span class="token string">"categories"</span>          <span class="token comment" spellcheck="true">#设置页面类型</span>
-  comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
-  ---
-  <span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.</code></pre>
+<span class="token comment" spellcheck="true"># 编辑内容（../source/categories/index.md）</span>
+---
+title: 文章分类              <span class="token comment" spellcheck="true">#当前页标题</span>
+date: 2020-05-16 13:21:33   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
+categories: Testing         <span class="token comment" spellcheck="true">#分类名</span>
+type: <span class="token string">"categories"</span>          <span class="token comment" spellcheck="true">#设置页面类型</span>
+comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
+---
+<span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.
+</code></pre>
 </li>
 <li><p><strong>标签：</strong></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token comment" spellcheck="true"># 创建 tags</span>
-  $ hexo new page tags
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 创建 tags</span>
+$ hexo new page tags
 
-  <span class="token comment" spellcheck="true"># 编辑内容（../source/tags/index.md）</span>
-  ---
-  title: 文章分类              <span class="token comment" spellcheck="true">#当前页标题</span>
-  date: 2020-05-16 13:21:07   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
-  type: <span class="token string">"tags"</span>                <span class="token comment" spellcheck="true">#设置页面类型</span>
-  comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
-  ---
-  <span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.</code></pre>
+<span class="token comment" spellcheck="true"># 编辑内容（../source/tags/index.md）</span>
+---
+title: 文章分类              <span class="token comment" spellcheck="true">#当前页标题</span>
+date: 2020-05-16 13:21:07   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
+type: <span class="token string">"tags"</span>                <span class="token comment" spellcheck="true">#设置页面类型</span>
+comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
+---
+<span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.
+</code></pre>
 </li>
 <li><p><strong>404：</strong></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token comment" spellcheck="true"># 创建 404</span>
-  $ hexo new page 404
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 创建 404</span>
+$ hexo new page 404
 
-  <span class="token comment" spellcheck="true"># 编辑内容（../source/404/index.md）</span>
-  ---
-  title: 404                  <span class="token comment" spellcheck="true">#404 Not Found：该页无法显示</span>
-  date: 2020-05-16 14:11:34   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
-  comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
-  permalink: /404
-  type: <span class="token string">"404"</span>
-  layout: <span class="token string">"404"</span>
-  ---
-  <span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.</code></pre>
+<span class="token comment" spellcheck="true"># 编辑内容（../source/404/index.md）</span>
+---
+title: 404                  <span class="token comment" spellcheck="true">#404 Not Found：该页无法显示</span>
+date: 2020-05-16 14:11:34   <span class="token comment" spellcheck="true">#当前文件创建时间</span>
+comments: <span class="token boolean">false</span>             <span class="token comment" spellcheck="true">#禁止评论</span>
+permalink: /404
+type: <span class="token string">"404"</span>
+layout: <span class="token string">"404"</span>
+---
+<span class="token punctuation">..</span>.更多详细介绍，根据markdown语法编写即可<span class="token punctuation">..</span>.
+</code></pre>
 </li>
 <li><p><strong>搜索：</strong></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token comment" spellcheck="true"># hexo 站点目录下执行安装命令：</span>
-  $ <span class="token function">npm</span> <span class="token function">install</span> hexo-generator-searchdb
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># hexo 站点目录下执行安装命令：</span>
+$ <span class="token function">npm</span> <span class="token function">install</span> hexo-generator-searchdb
 
-  <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
-  <span class="token comment" spellcheck="true"># 编辑global配置（../&lt;your_hexo_blog>/_config.yml#search）</span>
-  <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
-  <span class="token comment" spellcheck="true"># Search</span>
-  search:
-    path: search.xml    <span class="token comment" spellcheck="true">#索引文件的路径，相对于站点根目录</span>
-    field: post         <span class="token comment" spellcheck="true">#搜索范围，默认是 post，还可以选择 page、all，设置成 all 表示搜索所有页面</span>
-    content: <span class="token boolean">true</span>
-    format: html
-    limit: 10000        <span class="token comment" spellcheck="true">#限制搜索的条目数</span></code></pre>
+<span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
+<span class="token comment" spellcheck="true"># 编辑global配置（../&lt;your_hexo_blog>/_config.yml#search）</span>
+<span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
+<span class="token comment" spellcheck="true"># Search</span>
+search:
+  path: search.xml    <span class="token comment" spellcheck="true">#索引文件的路径，相对于站点根目录</span>
+  field: post         <span class="token comment" spellcheck="true">#搜索范围，默认是 post，还可以选择 page、all，设置成 all 表示搜索所有页面</span>
+  content: <span class="token boolean">true</span>
+  format: html
+  limit: 10000        <span class="token comment" spellcheck="true">#限制搜索的条目数</span>
+</code></pre>
 </li>
 </ul>
 <h1 id="配置字体"><a href="#配置字体" class="headerlink" title="配置字体"></a>配置字体</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -707,7 +715,7 @@
   <span class="token key atrule">codes</span><span class="token punctuation">:</span>
     <span class="token key atrule">external</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
     <span class="token key atrule">family</span><span class="token punctuation">:</span>
-
+    
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 编辑theme配置（../themes/theme-hexo-next/_config.yml#font），默认在</span>
 <span class="token comment" spellcheck="true"># next主题配置中也有Font Settings。</span>
@@ -762,7 +770,8 @@
   <span class="token comment" spellcheck="true"># Font settings for &lt;code> and code blocks.</span>
   <span class="token key atrule">codes</span><span class="token punctuation">:</span>
     <span class="token key atrule">external</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-    family<span class="token punctuation">:</span></code></pre>
+    <span class="token key atrule">family</span><span class="token punctuation">:</span>
+</code></pre>
 <h1 id="配置个人信息栏（头像、内联链接、友情链接等）"><a href="#配置个人信息栏（头像、内联链接、友情链接等）" class="headerlink" title="配置个人信息栏（头像、内联链接、友情链接等）"></a>配置个人信息栏（头像、内联链接、友情链接等）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1.头像。编辑theme配置（../themes/hexo-theme-next/_config.yml#avatar）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -806,7 +815,8 @@
 <span class="token key atrule">links</span><span class="token punctuation">:</span>
     <span class="token key atrule">简书</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//www.jianshu.com/u/xxxx    <span class="token comment" spellcheck="true">#简书博客</span>
     <span class="token key atrule">掘金</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//juejin.im/user/xxx        <span class="token comment" spellcheck="true">#掘金博客</span>
-    <span class="token key atrule">更多其它</span><span class="token punctuation">:</span> 其它链接地址<span class="token punctuation">...</span></code></pre>
+    <span class="token key atrule">更多其它</span><span class="token punctuation">:</span> 其它链接地址<span class="token punctuation">...</span>
+</code></pre>
 <h1 id="配置GitHub角标"><a href="#配置GitHub角标" class="headerlink" title="配置GitHub角标"></a>配置GitHub角标</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># GitHub链接主页。编辑theme配置（../themes/hexo-theme-next/_config.yml#github_banner）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -814,7 +824,8 @@
 <span class="token key atrule">github_banner</span><span class="token punctuation">:</span>
   <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true                              </span><span class="token comment" spellcheck="true">#是否启动右上角的github-banner，默认关闭</span>
   <span class="token key atrule">permalink</span><span class="token punctuation">:</span> https<span class="token punctuation">:</span>//github.com/jiyiqini    <span class="token comment" spellcheck="true">#你的github主页地址</span>
-  <span class="token key atrule">title</span><span class="token punctuation">:</span> 小主，关注我吧~                       <span class="token comment" spellcheck="true">#当鼠标放在该banner上，提示的文本。</span></code></pre>
+  <span class="token key atrule">title</span><span class="token punctuation">:</span> 小主，关注我吧~                       <span class="token comment" spellcheck="true">#当鼠标放在该banner上，提示的文本。</span>
+</code></pre>
 <h1 id="配置back2top与阅读进度"><a href="#配置back2top与阅读进度" class="headerlink" title="配置back2top与阅读进度"></a>配置back2top与阅读进度</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1.回到顶部。编辑theme配置（../themes/hexo-theme-next/_config.yml#back2top）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -822,7 +833,7 @@
   <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true          </span><span class="token comment" spellcheck="true">#是否开启回到顶部功能</span>
   <span class="token key atrule">sidebar</span><span class="token punctuation">:</span> <span class="token boolean important">false        </span><span class="token comment" spellcheck="true">#是否显示在侧边。选择false吧，让它单独在另外一侧好看些～</span>
   <span class="token key atrule">scrollpercent</span><span class="token punctuation">:</span> <span class="token boolean important">true   </span><span class="token comment" spellcheck="true">#滚动进度百分比是否显示在“回到顶部按钮”的文本中</span>
-
+  
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 2.阅读进度。编辑theme配置（../themes/hexo-theme-next/_config.yml#back2top）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -830,7 +841,8 @@
   <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true          </span><span class="token comment" spellcheck="true">#是否开启阅读进度</span>
   <span class="token key atrule">position</span><span class="token punctuation">:</span> top         <span class="token comment" spellcheck="true">#阅读进度条的位置：top | bottom</span>
   <span class="token key atrule">color</span><span class="token punctuation">:</span> "<span class="token comment" spellcheck="true">#37c6c0"      #自定义进度条颜色</span>
-  <span class="token key atrule">height</span><span class="token punctuation">:</span> 3px           <span class="token comment" spellcheck="true">#自定义进度条高度</span></code></pre>
+  <span class="token key atrule">height</span><span class="token punctuation">:</span> 3px           <span class="token comment" spellcheck="true">#自定义进度条高度</span>
+</code></pre>
 <h1 id="配置code-style"><a href="#配置code-style" class="headerlink" title="配置code-style"></a>配置code-style</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 插入代码配置。编辑theme配置（../themes/hexo-theme-next/_config.yml#codeblock）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -843,7 +855,8 @@
   <span class="token key atrule">copy_button</span><span class="token punctuation">:</span>
     <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true        </span><span class="token comment" spellcheck="true">#是否开启复制代码功能</span>
     <span class="token key atrule">show_result</span><span class="token punctuation">:</span> <span class="token boolean important">true   </span><span class="token comment" spellcheck="true">#是否显示复制成功提示</span>
-    <span class="token key atrule">style</span><span class="token punctuation">:</span> mac          <span class="token comment" spellcheck="true">#代码显示样式，可选：default | flat | mac</span></code></pre>
+    <span class="token key atrule">style</span><span class="token punctuation">:</span> mac          <span class="token comment" spellcheck="true">#代码显示样式，可选：default | flat | mac</span>
+</code></pre>
 <h1 id="配置footer"><a href="#配置footer" class="headerlink" title="配置footer"></a>配置footer</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 阅读进度。编辑theme配置（../themes/hexo-theme-next/_config.yml#footer）</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -869,7 +882,8 @@
     <span class="token key atrule">icp</span><span class="token punctuation">:</span>
     <span class="token key atrule">gongan_id</span><span class="token punctuation">:</span>          <span class="token comment" spellcheck="true"># The digit in the num of gongan beian.</span>
     <span class="token key atrule">gongan_num</span><span class="token punctuation">:</span>         <span class="token comment" spellcheck="true"># The full num of gongan beian.</span>
-    <span class="token key atrule">gongan_icon_url</span><span class="token punctuation">:</span>    <span class="token comment" spellcheck="true"># The icon for gongan beian. See: http://www.beian.gov.cn/portal/download</span></code></pre>
+    <span class="token key atrule">gongan_icon_url</span><span class="token punctuation">:</span>    <span class="token comment" spellcheck="true"># The icon for gongan beian. See: http://www.beian.gov.cn/portal/download</span>
+</code></pre>
 <h1 id="配置字数统计与预览时间"><a href="#配置字数统计与预览时间" class="headerlink" title="配置字数统计与预览时间"></a>配置字数统计与预览时间</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1.当前博客站点目录下，执行安装命令：</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -888,7 +902,7 @@ $ npm i <span class="token punctuation">-</span><span class="token punctuation">
   <span class="token key atrule">min2read</span><span class="token punctuation">:</span> <span class="token boolean important">true        </span><span class="token comment" spellcheck="true">#预览时间</span>
   <span class="token key atrule">totalcount</span><span class="token punctuation">:</span> <span class="token boolean important">true      </span><span class="token comment" spellcheck="true">#总字数,显示在页面底部</span>
   <span class="token key atrule">separated_meta</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-
+  
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 3.配置显示样式。编辑post.swig配置（../themes/hexo-theme-next/layout/_macro/post.swig）</span>
 <span class="token comment" spellcheck="true"># 在合适的位置插入布局代码，例如在categories之后和LeanCloud之前，另换一行显示：</span>
@@ -901,7 +915,8 @@ $ npm i <span class="token punctuation">-</span><span class="token punctuation">
   &lt;span title="&amp;<span class="token comment" spellcheck="true">#123;&amp;#123; __('post.min2read') &amp;#125;&amp;#125;">阅读大概 &amp;#123;&amp;#123; min2read(post.content)&amp;#125;&amp;#125; 分钟&lt;/span></span>
 &lt;/div<span class="token punctuation">></span>
 &amp;<span class="token comment" spellcheck="true">#123;% endif %&amp;#125;</span>
-<span class="token punctuation">...</span></code></pre>
+<span class="token punctuation">...</span>
+</code></pre>
 <h1 id="添加文末结束标语（passage-end-tag）"><a href="#添加文末结束标语（passage-end-tag）" class="headerlink" title="添加文末结束标语（passage-end-tag）"></a>添加文末结束标语（passage-end-tag）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1. 在 ../themes/next/layout/_macro/ 下新建 passage-end-tag.swig。</span>
 <span class="token comment" spellcheck="true"># 填充内容如下：</span>
@@ -932,7 +947,8 @@ $ npm i <span class="token punctuation">-</span><span class="token punctuation">
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 文章末尾添加“本文结束”标记</span>
 <span class="token key atrule">passage_end_tag</span><span class="token punctuation">:</span>
-  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true</span></code></pre>
+  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
+</code></pre>
 <h1 id="添加评论功能（Valine）"><a href="#添加评论功能（Valine）" class="headerlink" title="添加评论功能（Valine）"></a>添加评论功能（Valine）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1.注册LeanCloud，获取AppId和AppKey。</span>
 <span class="token comment" spellcheck="true"># 在合适的位置插入布局代码，例如在categories之后和LeanCloud之前，另换一行显示：</span>
@@ -966,7 +982,7 @@ $ npm i <span class="token punctuation">-</span><span class="token punctuation">
   <span class="token key atrule">serverURLs</span><span class="token punctuation">:</span>           <span class="token comment" spellcheck="true">#When the custom domain name is enabled, fill it in here (it will be detected automatically by default, no need to fill in)</span>
   <span class="token comment" spellcheck="true">#post_meta_order: 0</span>
   <span class="token comment" spellcheck="true">#background: /medias/comment_bg.png</span>
-
+  
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 3.在需要的文章Front-Matter前，按需配置是否支持评论</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -977,7 +993,8 @@ $ npm i <span class="token punctuation">-</span><span class="token punctuation">
 <span class="token key atrule">categories</span><span class="token punctuation">:</span> Testing
 <span class="token key atrule">type</span><span class="token punctuation">:</span> <span class="token string">"categories"</span>
 <span class="token key atrule">comments</span><span class="token punctuation">:</span> <span class="token boolean important">false             </span><span class="token comment" spellcheck="true">#禁止评论</span>
-<span class="token punctuation">---</span></code></pre>
+<span class="token punctuation">---</span>
+</code></pre>
 <blockquote>
 <p><strong>类似参考：</strong></p>
 <ul>
@@ -1059,7 +1076,8 @@ $ npm install live2d<span class="token punctuation">-</span>widget<span class="t
   <span class="token key atrule">mobile</span><span class="token punctuation">:</span>
     <span class="token key atrule">show</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
   <span class="token key atrule">react</span><span class="token punctuation">:</span>
-    <span class="token key atrule">opacityDefault</span><span class="token punctuation">:</span> <span class="token number">0.7 </span><span class="token comment" spellcheck="true">#默认透明度</span></code></pre>
+    <span class="token key atrule">opacityDefault</span><span class="token punctuation">:</span> <span class="token number">0.7 </span><span class="token comment" spellcheck="true">#默认透明度</span>
+</code></pre>
 <h1 id="添加鼠标点击特效（❤️、爆炸）"><a href="#添加鼠标点击特效（❤️、爆炸）" class="headerlink" title="添加鼠标点击特效（❤️、爆炸）"></a>添加鼠标点击特效（❤️、爆炸）</h1><p>☞ <strong>添加步骤：</strong></p>
 <blockquote>
 <ol>
@@ -1068,13 +1086,14 @@ $ npm install live2d<span class="token punctuation">-</span>widget<span class="t
 </ol>
 </blockquote>
 <p>1.主题配置项：<code>../themes/theme-hexo-next/_config.yml#cursor_effect</code></p>
-<pre class=" language-yaml"><code class="language-yaml">  <span class="token comment" spellcheck="true"># Customize different effects while clicking cursor.</span>
-  <span class="token comment" spellcheck="true"># type values: love 浮出爱心 | explosion 爆炸 | ...</span>
-  <span class="token key atrule">cursor_effect</span><span class="token punctuation">:</span>
-    <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
-    <span class="token key atrule">type</span><span class="token punctuation">:</span> love</code></pre>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># Customize different effects while clicking cursor.</span>
+<span class="token comment" spellcheck="true"># type values: love 浮出爱心 | explosion 爆炸 | ...</span>
+<span class="token key atrule">cursor_effect</span><span class="token punctuation">:</span>
+  <span class="token key atrule">enable</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+  <span class="token key atrule">type</span><span class="token punctuation">:</span> love
+</code></pre>
 <p>2.配置：<code>../themes/theme-hexo-next/layout/_custom/custom.swig</code></p>
-<pre class=" language-yaml"><code class="language-yaml">  &amp;<span class="token comment" spellcheck="true">#123;% if theme.cursor_effect.enable %&amp;#125;</span>
+<pre class=" language-yaml"><code class="language-yaml">&amp;<span class="token comment" spellcheck="true">#123;% if theme.cursor_effect.enable %&amp;#125;</span>
     &amp;<span class="token comment" spellcheck="true">#123;% if theme.cursor_effect.type == "love" %&amp;#125;</span>
       &lt;script src="/js/effects/cursor/love.min.js"<span class="token punctuation">></span>&lt;/script<span class="token punctuation">></span>
     &amp;<span class="token comment" spellcheck="true">#123;% elseif theme.cursor_effect.type == "explosion" %&amp;#125;</span>
@@ -1082,15 +1101,19 @@ $ npm install live2d<span class="token punctuation">-</span>widget<span class="t
       &lt;script src="//cdn.bootcss.com/animejs/2.2.0/anime.min.js"<span class="token punctuation">></span>&lt;/script<span class="token punctuation">></span>
       &lt;script src="/js/effects/cursor/explosion.min.js"<span class="token punctuation">></span>&lt;/script<span class="token punctuation">></span>
     &amp;<span class="token comment" spellcheck="true">#123;% endif %&amp;#125;</span>
-  &amp;<span class="token comment" spellcheck="true">#123;% endif %&amp;#125;</span></code></pre>
+&amp;<span class="token comment" spellcheck="true">#123;% endif %&amp;#125;</span>
+</code></pre>
 <p>3.配置：<code>/themes/theme-hexo-next/layout/_layout.swig</code></p>
-<pre class=" language-yaml"><code class="language-yaml">  &amp;<span class="token comment" spellcheck="true">#123;% include '_custom/custom.swig' %&amp;#125;</span></code></pre>
+<pre class=" language-yaml"><code class="language-yaml">&amp;<span class="token comment" spellcheck="true">#123;% include '_custom/custom.swig' %&amp;#125;</span>
+</code></pre>
 <ul>
 <li><p><em>示例特效js：红心（love.min.js）</em></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token operator">!</span>function<span class="token punctuation">(</span>e,t,a<span class="token punctuation">)</span><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;function n()&amp;#123;c(".heart&amp;#123;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);&amp;#125;.heart:after,.heart:before&amp;#123;content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 500%;-moz-border-radius: 50%;position: fixed;&amp;#125;.heart:after&amp;#123;top: -5px;&amp;#125;.heart:before&amp;#123;left: -5px;&amp;#125;"),o(),r()&amp;#125;function r()&amp;#123;for(var e=0;e&lt;d.length;e++)d[e].alpha&lt;=0?(t.body.removeChild(d[e].el),d.splice(e,1)):(d[e].y--,d[e].scale+=.004,d[e].alpha-=.013,d[e].el.style.cssText="left:"+d[e].x+"px;top:"+d[e].y+"px;opacity:"+d[e].alpha+";transform:scale("+d[e].scale+","+d[e].scale+") rotate(45deg);background:"+d[e].color+";z-index:99999");requestAnimationFrame(r)&amp;#125;function o()&amp;#123;var t="function"==typeof e.onclick&amp;&amp;e.onclick;e.onclick=function(e)&amp;#123;t&amp;&amp;t(),i(e)&amp;#125;&amp;#125;function i(e)&amp;#123;var a=t.createElement("div");a.className="heart",d.push(&amp;#123;el:a,x:e.clientX-5,y:e.clientY-5,scale:1,alpha:1,color:s()&amp;#125;),t.body.appendChild(a)&amp;#125;function c(e)&amp;#123;var a=t.createElement("style");a.type="text/css";try&amp;#123;a.appendChild(t.createTextNode(e))&amp;#125;catch(t)&amp;#123;a.styleSheet.cssText=e&amp;#125;t.getElementsByTagName("head")[0].appendChild(a)&amp;#125;function s()&amp;#123;return"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"&amp;#125;var d=[];e.requestAnimationFrame=function()&amp;#123;return e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e)&amp;#123;setTimeout(e,1e3/60)&amp;#125;&amp;#125;(),n()&amp;#125;(window,document);</span></code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token operator">!</span>function<span class="token punctuation">(</span>e,t,a<span class="token punctuation">)</span><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;function n()&amp;#123;c(".heart&amp;#123;width: 10px;height: 10px;position: fixed;background: #f00;transform: rotate(45deg);-webkit-transform: rotate(45deg);-moz-transform: rotate(45deg);&amp;#125;.heart:after,.heart:before&amp;#123;content: '';width: inherit;height: inherit;background: inherit;border-radius: 50%;-webkit-border-radius: 500%;-moz-border-radius: 50%;position: fixed;&amp;#125;.heart:after&amp;#123;top: -5px;&amp;#125;.heart:before&amp;#123;left: -5px;&amp;#125;"),o(),r()&amp;#125;function r()&amp;#123;for(var e=0;e&lt;d.length;e++)d[e].alpha&lt;=0?(t.body.removeChild(d[e].el),d.splice(e,1)):(d[e].y--,d[e].scale+=.004,d[e].alpha-=.013,d[e].el.style.cssText="left:"+d[e].x+"px;top:"+d[e].y+"px;opacity:"+d[e].alpha+";transform:scale("+d[e].scale+","+d[e].scale+") rotate(45deg);background:"+d[e].color+";z-index:99999");requestAnimationFrame(r)&amp;#125;function o()&amp;#123;var t="function"==typeof e.onclick&amp;&amp;e.onclick;e.onclick=function(e)&amp;#123;t&amp;&amp;t(),i(e)&amp;#125;&amp;#125;function i(e)&amp;#123;var a=t.createElement("div");a.className="heart",d.push(&amp;#123;el:a,x:e.clientX-5,y:e.clientY-5,scale:1,alpha:1,color:s()&amp;#125;),t.body.appendChild(a)&amp;#125;function c(e)&amp;#123;var a=t.createElement("style");a.type="text/css";try&amp;#123;a.appendChild(t.createTextNode(e))&amp;#125;catch(t)&amp;#123;a.styleSheet.cssText=e&amp;#125;t.getElementsByTagName("head")[0].appendChild(a)&amp;#125;function s()&amp;#123;return"rgb("+~~(255*Math.random())+","+~~(255*Math.random())+","+~~(255*Math.random())+")"&amp;#125;var d=[];e.requestAnimationFrame=function()&amp;#123;return e.requestAnimationFrame||e.webkitRequestAnimationFrame||e.mozRequestAnimationFrame||e.oRequestAnimationFrame||e.msRequestAnimationFrame||function(e)&amp;#123;setTimeout(e,1e3/60)&amp;#125;&amp;#125;(),n()&amp;#125;(window,document);</span>
+</code></pre>
 </li>
 <li><p><em>示例特效js：爆炸（explosion.min.js）</em></p>
-<pre class=" language-bash"><code class="language-bash">  <span class="token string">"use strict"</span><span class="token punctuation">;</span><span class="token keyword">function</span> updateCoords<span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;pointerX=(e.clientX||e.touches[0].clientX)-canvasEl.getBoundingClientRect().left,pointerY=e.clientY||e.touches[0].clientY-canvasEl.getBoundingClientRect().top&amp;#125;function setParticuleDirection(e)&amp;#123;var t=anime.random(0,360)*Math.PI/180,a=anime.random(50,180),n=[-1,1][anime.random(0,1)]*a;return&amp;#123;x:e.x+n*Math.cos(t),y:e.y+n*Math.sin(t)&amp;#125;&amp;#125;function createParticule(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color=colors[anime.random(0,colors.length-1)],a.radius=anime.random(16,32),a.endPos=setParticuleDirection(a),a.draw=function()&amp;#123;ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.fillStyle=a.color,ctx.fill()&amp;#125;,a&amp;#125;function createCircle(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color="#F00",a.radius=0.1,a.alpha=0.5,a.lineWidth=6,a.draw=function()&amp;#123;ctx.globalAlpha=a.alpha,ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.lineWidth=a.lineWidth,ctx.strokeStyle=a.color,ctx.stroke(),ctx.globalAlpha=1&amp;#125;,a&amp;#125;function renderParticule(e)&amp;#123;for(var t=0;t&lt;e.animatables.length;t++)&amp;#123;e.animatables[t].target.draw()&amp;#125;&amp;#125;function animateParticules(e,t)&amp;#123;for(var a=createCircle(e,t),n=[],i=0;i&lt;numberOfParticules;i++)&amp;#123;n.push(createParticule(e,t))&amp;#125;anime.timeline().add(&amp;#123;targets:n,x:function(e)&amp;#123;return e.endPos.x&amp;#125;,y:function(e)&amp;#123;return e.endPos.y&amp;#125;,radius:0.1,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule&amp;#125;).add(&amp;#123;targets:a,radius:anime.random(80,160),lineWidth:0,alpha:&amp;#123;value:0,easing:"linear",duration:anime.random(600,800)&amp;#125;,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule,offset:0&amp;#125;)&amp;#125;function debounce(e,t)&amp;#123;var a;return function()&amp;#123;var n=this,i=arguments;clearTimeout(a),a=setTimeout(function()&amp;#123;e.apply(n,i)&amp;#125;,t)&amp;#125;&amp;#125;var canvasEl=document.querySelector(".fireworks");if(canvasEl)&amp;#123;var ctx=canvasEl.getContext("2d"),numberOfParticules=30,pointerX=0,pointerY=0,tap="mousedown",colors=["#FF1461","#18FF92","#5A87FF","#FBF38C"],setCanvasSize=debounce(function()&amp;#123;canvasEl.width=2*window.innerWidth,canvasEl.height=2*window.innerHeight,canvasEl.style.width=window.innerWidth+"px",canvasEl.style.height=window.innerHeight+"px",canvasEl.getContext("2d").scale(2,2)&amp;#125;,500),render=anime(&amp;#123;duration:1/0,update:function()&amp;#123;ctx.clearRect(0,0,canvasEl.width,canvasEl.height)&amp;#125;&amp;#125;);document.addEventListener(tap,function(e)&amp;#123;"sidebar"!==e.target.id&amp;&amp;"toggle-sidebar"!==e.target.id&amp;&amp;"A"!==e.target.nodeName&amp;&amp;"IMG"!==e.target.nodeName&amp;&amp;(render.play(),updateCoords(e),animateParticules(pointerX,pointerY))&amp;#125;,!1),setCanvasSize(),window.addEventListener("resize",setCanvasSize,!1)&amp;#125;"use strict";function updateCoords(e)&amp;#123;pointerX=(e.clientX||e.touches[0].clientX)-canvasEl.getBoundingClientRect().left,pointerY=e.clientY||e.touches[0].clientY-canvasEl.getBoundingClientRect().top&amp;#125;function setParticuleDirection(e)&amp;#123;var t=anime.random(0,360)*Math.PI/180,a=anime.random(50,180),n=[-1,1][anime.random(0,1)]*a;return&amp;#123;x:e.x+n*Math.cos(t),y:e.y+n*Math.sin(t)&amp;#125;&amp;#125;function createParticule(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color=colors[anime.random(0,colors.length-1)],a.radius=anime.random(16,32),a.endPos=setParticuleDirection(a),a.draw=function()&amp;#123;ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.fillStyle=a.color,ctx.fill()&amp;#125;,a&amp;#125;function createCircle(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color="#F00",a.radius=0.1,a.alpha=0.5,a.lineWidth=6,a.draw=function()&amp;#123;ctx.globalAlpha=a.alpha,ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.lineWidth=a.lineWidth,ctx.strokeStyle=a.color,ctx.stroke(),ctx.globalAlpha=1&amp;#125;,a&amp;#125;function renderParticule(e)&amp;#123;for(var t=0;t&lt;e.animatables.length;t++)&amp;#123;e.animatables[t].target.draw()&amp;#125;&amp;#125;function animateParticules(e,t)&amp;#123;for(var a=createCircle(e,t),n=[],i=0;i&lt;numberOfParticules;i++)&amp;#123;n.push(createParticule(e,t))&amp;#125;anime.timeline().add(&amp;#123;targets:n,x:function(e)&amp;#123;return e.endPos.x&amp;#125;,y:function(e)&amp;#123;return e.endPos.y&amp;#125;,radius:0.1,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule&amp;#125;).add(&amp;#123;targets:a,radius:anime.random(80,160),lineWidth:0,alpha:&amp;#123;value:0,easing:"linear",duration:anime.random(600,800)&amp;#125;,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule,offset:0&amp;#125;)&amp;#125;function debounce(e,t)&amp;#123;var a;return function()&amp;#123;var n=this,i=arguments;clearTimeout(a),a=setTimeout(function()&amp;#123;e.apply(n,i)&amp;#125;,t)&amp;#125;&amp;#125;var canvasEl=document.querySelector(".fireworks");if(canvasEl)&amp;#123;var ctx=canvasEl.getContext("2d"),numberOfParticules=30,pointerX=0,pointerY=0,tap="mousedown",colors=["#FF1461","#18FF92","#5A87FF","#FBF38C"],setCanvasSize=debounce(function()&amp;#123;canvasEl.width=2*window.innerWidth,canvasEl.height=2*window.innerHeight,canvasEl.style.width=window.innerWidth+"px",canvasEl.style.height=window.innerHeight+"px",canvasEl.getContext("2d").scale(2,2)&amp;#125;,500),render=anime(&amp;#123;duration:1/0,update:function()&amp;#123;ctx.clearRect(0,0,canvasEl.width,canvasEl.height)&amp;#125;&amp;#125;);document.addEventListener(tap,function(e)&amp;#123;"sidebar"!==e.target.id&amp;&amp;"toggle-sidebar"!==e.target.id&amp;&amp;"A"!==e.target.nodeName&amp;&amp;"IMG"!==e.target.nodeName&amp;&amp;(render.play(),updateCoords(e),animateParticules(pointerX,pointerY))&amp;#125;,!1),setCanvasSize(),window.addEventListener("resize",setCanvasSize,!1)&amp;#125;;</span></code></pre>
+<pre class=" language-bash"><code class="language-bash"><span class="token string">"use strict"</span><span class="token punctuation">;</span><span class="token keyword">function</span> updateCoords<span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;pointerX=(e.clientX||e.touches[0].clientX)-canvasEl.getBoundingClientRect().left,pointerY=e.clientY||e.touches[0].clientY-canvasEl.getBoundingClientRect().top&amp;#125;function setParticuleDirection(e)&amp;#123;var t=anime.random(0,360)*Math.PI/180,a=anime.random(50,180),n=[-1,1][anime.random(0,1)]*a;return&amp;#123;x:e.x+n*Math.cos(t),y:e.y+n*Math.sin(t)&amp;#125;&amp;#125;function createParticule(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color=colors[anime.random(0,colors.length-1)],a.radius=anime.random(16,32),a.endPos=setParticuleDirection(a),a.draw=function()&amp;#123;ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.fillStyle=a.color,ctx.fill()&amp;#125;,a&amp;#125;function createCircle(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color="#F00",a.radius=0.1,a.alpha=0.5,a.lineWidth=6,a.draw=function()&amp;#123;ctx.globalAlpha=a.alpha,ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.lineWidth=a.lineWidth,ctx.strokeStyle=a.color,ctx.stroke(),ctx.globalAlpha=1&amp;#125;,a&amp;#125;function renderParticule(e)&amp;#123;for(var t=0;t&lt;e.animatables.length;t++)&amp;#123;e.animatables[t].target.draw()&amp;#125;&amp;#125;function animateParticules(e,t)&amp;#123;for(var a=createCircle(e,t),n=[],i=0;i&lt;numberOfParticules;i++)&amp;#123;n.push(createParticule(e,t))&amp;#125;anime.timeline().add(&amp;#123;targets:n,x:function(e)&amp;#123;return e.endPos.x&amp;#125;,y:function(e)&amp;#123;return e.endPos.y&amp;#125;,radius:0.1,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule&amp;#125;).add(&amp;#123;targets:a,radius:anime.random(80,160),lineWidth:0,alpha:&amp;#123;value:0,easing:"linear",duration:anime.random(600,800)&amp;#125;,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule,offset:0&amp;#125;)&amp;#125;function debounce(e,t)&amp;#123;var a;return function()&amp;#123;var n=this,i=arguments;clearTimeout(a),a=setTimeout(function()&amp;#123;e.apply(n,i)&amp;#125;,t)&amp;#125;&amp;#125;var canvasEl=document.querySelector(".fireworks");if(canvasEl)&amp;#123;var ctx=canvasEl.getContext("2d"),numberOfParticules=30,pointerX=0,pointerY=0,tap="mousedown",colors=["#FF1461","#18FF92","#5A87FF","#FBF38C"],setCanvasSize=debounce(function()&amp;#123;canvasEl.width=2*window.innerWidth,canvasEl.height=2*window.innerHeight,canvasEl.style.width=window.innerWidth+"px",canvasEl.style.height=window.innerHeight+"px",canvasEl.getContext("2d").scale(2,2)&amp;#125;,500),render=anime(&amp;#123;duration:1/0,update:function()&amp;#123;ctx.clearRect(0,0,canvasEl.width,canvasEl.height)&amp;#125;&amp;#125;);document.addEventListener(tap,function(e)&amp;#123;"sidebar"!==e.target.id&amp;&amp;"toggle-sidebar"!==e.target.id&amp;&amp;"A"!==e.target.nodeName&amp;&amp;"IMG"!==e.target.nodeName&amp;&amp;(render.play(),updateCoords(e),animateParticules(pointerX,pointerY))&amp;#125;,!1),setCanvasSize(),window.addEventListener("resize",setCanvasSize,!1)&amp;#125;"use strict";function updateCoords(e)&amp;#123;pointerX=(e.clientX||e.touches[0].clientX)-canvasEl.getBoundingClientRect().left,pointerY=e.clientY||e.touches[0].clientY-canvasEl.getBoundingClientRect().top&amp;#125;function setParticuleDirection(e)&amp;#123;var t=anime.random(0,360)*Math.PI/180,a=anime.random(50,180),n=[-1,1][anime.random(0,1)]*a;return&amp;#123;x:e.x+n*Math.cos(t),y:e.y+n*Math.sin(t)&amp;#125;&amp;#125;function createParticule(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color=colors[anime.random(0,colors.length-1)],a.radius=anime.random(16,32),a.endPos=setParticuleDirection(a),a.draw=function()&amp;#123;ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.fillStyle=a.color,ctx.fill()&amp;#125;,a&amp;#125;function createCircle(e,t)&amp;#123;var a=&amp;#123;&amp;#125;;return a.x=e,a.y=t,a.color="#F00",a.radius=0.1,a.alpha=0.5,a.lineWidth=6,a.draw=function()&amp;#123;ctx.globalAlpha=a.alpha,ctx.beginPath(),ctx.arc(a.x,a.y,a.radius,0,2*Math.PI,!0),ctx.lineWidth=a.lineWidth,ctx.strokeStyle=a.color,ctx.stroke(),ctx.globalAlpha=1&amp;#125;,a&amp;#125;function renderParticule(e)&amp;#123;for(var t=0;t&lt;e.animatables.length;t++)&amp;#123;e.animatables[t].target.draw()&amp;#125;&amp;#125;function animateParticules(e,t)&amp;#123;for(var a=createCircle(e,t),n=[],i=0;i&lt;numberOfParticules;i++)&amp;#123;n.push(createParticule(e,t))&amp;#125;anime.timeline().add(&amp;#123;targets:n,x:function(e)&amp;#123;return e.endPos.x&amp;#125;,y:function(e)&amp;#123;return e.endPos.y&amp;#125;,radius:0.1,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule&amp;#125;).add(&amp;#123;targets:a,radius:anime.random(80,160),lineWidth:0,alpha:&amp;#123;value:0,easing:"linear",duration:anime.random(600,800)&amp;#125;,duration:anime.random(1200,1800),easing:"easeOutExpo",update:renderParticule,offset:0&amp;#125;)&amp;#125;function debounce(e,t)&amp;#123;var a;return function()&amp;#123;var n=this,i=arguments;clearTimeout(a),a=setTimeout(function()&amp;#123;e.apply(n,i)&amp;#125;,t)&amp;#125;&amp;#125;var canvasEl=document.querySelector(".fireworks");if(canvasEl)&amp;#123;var ctx=canvasEl.getContext("2d"),numberOfParticules=30,pointerX=0,pointerY=0,tap="mousedown",colors=["#FF1461","#18FF92","#5A87FF","#FBF38C"],setCanvasSize=debounce(function()&amp;#123;canvasEl.width=2*window.innerWidth,canvasEl.height=2*window.innerHeight,canvasEl.style.width=window.innerWidth+"px",canvasEl.style.height=window.innerHeight+"px",canvasEl.getContext("2d").scale(2,2)&amp;#125;,500),render=anime(&amp;#123;duration:1/0,update:function()&amp;#123;ctx.clearRect(0,0,canvasEl.width,canvasEl.height)&amp;#125;&amp;#125;);document.addEventListener(tap,function(e)&amp;#123;"sidebar"!==e.target.id&amp;&amp;"toggle-sidebar"!==e.target.id&amp;&amp;"A"!==e.target.nodeName&amp;&amp;"IMG"!==e.target.nodeName&amp;&amp;(render.play(),updateCoords(e),animateParticules(pointerX,pointerY))&amp;#125;,!1),setCanvasSize(),window.addEventListener("resize",setCanvasSize,!1)&amp;#125;;</span>
+</code></pre>
 </li>
 </ul>
 <h1 id="添加背景线条特效（canvas-nest）"><a href="#添加背景线条特效（canvas-nest）" class="headerlink" title="添加背景线条特效（canvas-nest）"></a>添加背景线条特效（canvas-nest）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -1123,7 +1146,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <span class="token comment" spellcheck="true"># 这2个js找不到的错误。故，还是推荐上面的方法。</span>
 1. 当前博客站点目录下，创建文件 &lt;your_hexo_blog<span class="token punctuation">></span>/source/_data/footer.swig
 2. footer.swig内容为：&lt;script color="0<span class="token punctuation">,</span><span class="token number">0</span><span class="token punctuation">,</span>255" opacity="0.5" zIndex="<span class="token punctuation">-</span>1" count="99" src="https<span class="token punctuation">:</span>//cdn.jsdelivr.net/npm/canvas<span class="token punctuation">-</span>nest.js@1/dist/canvas<span class="token punctuation">-</span>nest.js"<span class="token punctuation">></span>&lt;/script<span class="token punctuation">></span>
-3. 在“../themes/hexo<span class="token punctuation">-</span>theme<span class="token punctuation">-</span>next/_config.yml”配置中找到 custom_file_path 节点，打开注释 “footer<span class="token punctuation">:</span> source/_data/footer.swig” 这一行。</code></pre>
+3. 在“../themes/hexo<span class="token punctuation">-</span>theme<span class="token punctuation">-</span>next/_config.yml”配置中找到 custom_file_path 节点，打开注释 “footer<span class="token punctuation">:</span> source/_data/footer.swig” 这一行。
+</code></pre>
 <h1 id="添加站内搜索功能（searchdb）"><a href="#添加站内搜索功能（searchdb）" class="headerlink" title="添加站内搜索功能（searchdb）"></a>添加站内搜索功能（searchdb）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1. 安装 hexo-generator-searchdb 插件</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -1164,7 +1188,8 @@ $ npm install <span class="token punctuation">-</span>g hexo<span class="token p
   <span class="token punctuation">...</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 
-$ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="token punctuation">-</span>d</code></pre>
+$ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="token punctuation">-</span>d
+</code></pre>
 <h1 id="添加打赏功能（Reward）"><a href="#添加打赏功能（Reward）" class="headerlink" title="添加打赏功能（Reward）"></a>添加打赏功能（Reward）</h1><pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
 <span class="token comment" spellcheck="true"># 1. 编辑主题配置文件，即：&lt;your_hexo_blog>/themes/hexo-theme-next/_config.yml 。 开启赞赏功能、提供收款码图片等。</span>
 <span class="token comment" spellcheck="true">#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#</span>
@@ -1200,7 +1225,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
   &amp;<span class="token comment" spellcheck="true">#123;&amp;#123; partial('_partials/post/post-reward.swig') &amp;#125;&amp;#125;</span>
   &lt;hr<span class="token punctuation">></span>
 &amp;<span class="token comment" spellcheck="true">#123;%- endif %&amp;#125;</span>
-<span class="token punctuation">...</span></code></pre>
+<span class="token punctuation">...</span>
+</code></pre>
 <hr>
 <h1 id="Front-Matter-系列使用指南"><a href="#Front-Matter-系列使用指南" class="headerlink" title="Front-Matter 系列使用指南"></a>Front-Matter 系列使用指南</h1><p>通常，文章开头的 <code>fron-matter模板</code> 示例为：</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token punctuation">---</span>
@@ -1221,7 +1247,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>标签2<span class="token punctuation">]</span>
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>标签N<span class="token punctuation">...</span><span class="token punctuation">]</span>
 <span class="token key atrule">comments</span><span class="token punctuation">:</span> <span class="token boolean important">true</span>
-<span class="token punctuation">---</span></code></pre>
+<span class="token punctuation">---</span>
+</code></pre>
 <h2 id="categories（分类）"><a href="#categories（分类）" class="headerlink" title="categories（分类）"></a>categories（分类）</h2><p>Hexo+next 默认不支持多级分类，但可以通过 <code>[a,b,c,...]</code> 或 <code>- - 空格缩进</code> 2种形式来实现分类层级。</p>
 <ul>
 <li><p><strong>☞格式1：</strong></p>
@@ -1231,7 +1258,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>父分类1<span class="token punctuation">,</span>父分类1的子分类2<span class="token punctuation">]</span>
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>父分类2<span class="token punctuation">,</span>父分类2的子分类1<span class="token punctuation">]</span>
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>父分类2<span class="token punctuation">,</span>父分类2的子分类2<span class="token punctuation">]</span>
-<span class="token punctuation">-</span> 分类3</code></pre>
+<span class="token punctuation">-</span> 分类3
+</code></pre>
 </blockquote>
 </li>
 <li><p><strong>☞格式2：</strong></p>
@@ -1243,7 +1271,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <span class="token punctuation">-</span> <span class="token punctuation">-</span> 父分类2
   <span class="token punctuation">-</span> 父分类2的子分类1
   <span class="token punctuation">-</span> 父分类2的子分类2
-<span class="token punctuation">-</span> <span class="token punctuation">-</span> 分类3</code></pre>
+<span class="token punctuation">-</span> <span class="token punctuation">-</span> 分类3
+</code></pre>
 </blockquote>
 </li>
 </ul>
@@ -1253,7 +1282,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">tags</span><span class="token punctuation">:</span>
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>标签1<span class="token punctuation">]</span>
 <span class="token punctuation">-</span> <span class="token punctuation">[</span>标签2<span class="token punctuation">]</span>
-<span class="token punctuation">-</span> <span class="token punctuation">[</span>标签N<span class="token punctuation">...</span><span class="token punctuation">]</span></code></pre>
+<span class="token punctuation">-</span> <span class="token punctuation">[</span>标签N<span class="token punctuation">...</span><span class="token punctuation">]</span>
+</code></pre>
 </blockquote>
 </li>
 <li><p><strong>☞格式2：</strong></p>
@@ -1261,7 +1291,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 <pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">tags</span><span class="token punctuation">:</span>
 <span class="token punctuation">-</span> <span class="token punctuation">-</span> 标签1
 <span class="token punctuation">-</span> <span class="token punctuation">-</span> 标签2
-<span class="token punctuation">-</span> <span class="token punctuation">-</span> 标签N<span class="token punctuation">...</span></code></pre>
+<span class="token punctuation">-</span> <span class="token punctuation">-</span> 标签N<span class="token punctuation">...</span>
+</code></pre>
 </blockquote>
 </li>
 </ul>
@@ -1272,7 +1303,8 @@ $ 最后，重新编译部署即可：hexo clean &amp;&amp; hexo g <span class="
 ---
 title: &#123;&#123; title &#125;&#125;
 tags:
----</code></pre>
+---
+</code></pre>
 </blockquote>
 </li>
 <li><p><code>page.md</code>：对应 <code>hexo new page &#39;NewPageName&#39; &gt; ./source/NewPageName/index.md</code></p>
@@ -1282,7 +1314,8 @@ tags:
 title: &#123;&#123; title &#125;&#125;      #标题
 date: &#123;&#123; date &#125;&#125;        #创建日期时间
 comments: false         #禁止评论
----</code></pre>
+---
+</code></pre>
 </blockquote>
 </li>
 <li><p><code>post.md</code>：对应 <code>hexo new &#39;NewPostName&#39; &gt; ./source/_post/NewPostName.md</code></p>
@@ -1306,7 +1339,8 @@ tags:
 
 <!-- more -->
 
-正文...</code></pre>
+正文...
+</code></pre>
 </blockquote>
 </li>
 </ul>
@@ -1317,7 +1351,8 @@ tags:
 
 示例：
 &#123;% post_link dev-tools/hexo/How-To-Config %&#125;
-&#123;% post_link dev-tools/hexo/How-To-Config 《嘿嘿，引用名字我修改了》%&#125;</code></pre>
+&#123;% post_link dev-tools/hexo/How-To-Config 《嘿嘿，引用名字我修改了》%&#125;
+</code></pre>
 </blockquote>
 
                 
@@ -2157,7 +2192,7 @@ tags:
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">11.2k</span>
+                        class="white-color">11.4k</span>
             
             
             

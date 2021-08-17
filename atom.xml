@@ -3,7 +3,7 @@
   <title>随风起舞</title>
   
   <subtitle>沉默，是一个人的狂欢。</subtitle>
-  <link href="/atom.xml" rel="self"/>
+  <link href="https://jiyiqini.github.io/atom.xml" rel="self"/>
   
   <link href="https://jiyiqini.github.io/"/>
   <updated>2021-08-11T12:04:42.678Z</updated>
@@ -23,25 +23,23 @@
     <published>2021-08-09T13:15:52.000Z</published>
     <updated>2021-08-11T12:04:42.678Z</updated>
     
-    <summary type="html">
     
-      &lt;p&gt;hexo 使用过程中，经常遇到一些稀奇古怪的问题。经查阅后解决，现将这些常见的错误与处理策略一一记录。&lt;/p&gt;
-    
-    </summary>
+    <summary type="html">&lt;p&gt;hexo 使用过程中，经常遇到一些稀奇古怪的问题。经查阅后解决，现将这些常见的错误与处理策略一一记录。&lt;/p&gt;</summary>
     
     
-      <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
     
-      <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
     
-      <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
+    <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    
+    <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
     
     
-      <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
+    <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
     
-      <category term="报错" scheme="https://jiyiqini.github.io/tags/%E6%8A%A5%E9%94%99/"/>
+    <category term="报错" scheme="https://jiyiqini.github.io/tags/%E6%8A%A5%E9%94%99/"/>
     
-      <category term="异常" scheme="https://jiyiqini.github.io/tags/%E5%BC%82%E5%B8%B8/"/>
+    <category term="异常" scheme="https://jiyiqini.github.io/tags/%E5%BC%82%E5%B8%B8/"/>
     
   </entry>
   
@@ -52,27 +50,25 @@
     <published>2020-05-16T17:07:05.000Z</published>
     <updated>2021-08-11T13:38:40.095Z</updated>
     
-    <summary type="html">
     
-      &lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？&lt;/p&gt;
-    
-    </summary>
+    <summary type="html">&lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？&lt;/p&gt;</summary>
     
     
-      <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
     
-      <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
     
-      <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
+    <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    
+    <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
     
     
-      <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
+    <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
     
-      <category term="个性化" scheme="https://jiyiqini.github.io/tags/%E4%B8%AA%E6%80%A7%E5%8C%96/"/>
+    <category term="个性化" scheme="https://jiyiqini.github.io/tags/%E4%B8%AA%E6%80%A7%E5%8C%96/"/>
     
-      <category term="美化" scheme="https://jiyiqini.github.io/tags/%E7%BE%8E%E5%8C%96/"/>
+    <category term="美化" scheme="https://jiyiqini.github.io/tags/%E7%BE%8E%E5%8C%96/"/>
     
-      <category term="主题" scheme="https://jiyiqini.github.io/tags/%E4%B8%BB%E9%A2%98/"/>
+    <category term="主题" scheme="https://jiyiqini.github.io/tags/%E4%B8%BB%E9%A2%98/"/>
     
   </entry>
   
@@ -81,25 +77,23 @@
     <link href="https://jiyiqini.github.io/dev-tools/hexo/Setup-Tutorial/"/>
     <id>https://jiyiqini.github.io/dev-tools/hexo/Setup-Tutorial/</id>
     <published>2020-05-15T04:51:08.000Z</published>
-    <updated>2021-08-11T13:37:47.225Z</updated>
-    
-    <summary type="html">
-    
-      &lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 &lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt;/&lt;a href=&quot;https://gitee.com/&quot;&gt;Gitee&lt;/a&gt; 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;
-    
-    </summary>
+    <updated>2021-08-17T09:09:02.711Z</updated>
     
     
-      <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
-    
-      <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
-    
-      <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
+    <summary type="html">&lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 &lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt;/&lt;a href=&quot;https://gitee.com/&quot;&gt;Gitee&lt;/a&gt; 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;</summary>
     
     
-      <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
     
-      <category term="环境" scheme="https://jiyiqini.github.io/tags/%E7%8E%AF%E5%A2%83/"/>
+    <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
+    
+    <category term="工具指南" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/"/>
+    
+    <category term="Hexo" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%B7%A5%E5%85%B7%E6%8C%87%E5%8D%97/Hexo/"/>
+    
+    
+    <category term="Hexo" scheme="https://jiyiqini.github.io/tags/Hexo/"/>
+    
+    <category term="环境" scheme="https://jiyiqini.github.io/tags/%E7%8E%AF%E5%A2%83/"/>
     
   </entry>
   

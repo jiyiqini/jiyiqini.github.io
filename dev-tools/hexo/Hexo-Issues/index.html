@@ -531,16 +531,18 @@
 <span id="more"></span>
 
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a target="_blank" rel="noopener" href="https://leunggeorge.github.io/2017/07/09/执行hexo时的一些报错处理/">执行 hexo 时的一些报错处理</a></li>
+<li><a target="_blank" rel="noopener" href="https://leunggeorge.github.io/2017/07/09/%E6%89%A7%E8%A1%8Chexo%E6%97%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/">执行 hexo 时的一些报错处理</a></li>
 </ul>
 <h1 id="Deprecated：use-date-for-updated"><a href="#Deprecated：use-date-for-updated" class="headerlink" title="Deprecated：use_date_for_updated"></a>Deprecated：<code>use_date_for_updated</code></h1><p>因安装一些模块，中途又跟踪提示 fix ，最后莫名其妙地把 hexo 从 <code>4.2.0</code> 升级到了 <code>5.4.0</code> ，在使用 hexo 操作（<code>hexo server</code>, etc.）时，出现如下警告提示：</p>
-<pre class=" language-text"><code class="language-text">Deprecated config detected: "use_date_for_updated" is deprecated, please use "updated_option" instead. See https://hexo.io/docs/configuration for more details.</code></pre>
+<pre class=" language-text"><code class="language-text">Deprecated config detected: "use_date_for_updated" is deprecated, please use "updated_option" instead. See https://hexo.io/docs/configuration for more details.
+</code></pre>
 <blockquote>
 <p><strong>原因：</strong> 提示 <code>use_date_for_updated</code> 过时。<br><strong>解决办法：</strong>： 根据提示，用 <code>updated_option</code> 替换即可。</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># 修改文件：&lt;hexo-blog>/_config.yml</span>
 <span class="token comment" spellcheck="true"># Date / Time format</span>
 <span class="token comment" spellcheck="true">## Use post's date for updated date unless set in front-matter</span>
-<span class="token key atrule">updated_option</span><span class="token punctuation">:</span> <span class="token boolean important">false</span></code></pre>
+<span class="token key atrule">updated_option</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
+</code></pre>
 </blockquote>
 
                 
@@ -1386,7 +1388,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">11.2k</span>
+                        class="white-color">11.4k</span>
             
             
             
