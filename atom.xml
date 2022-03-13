@@ -6,7 +6,7 @@
   <link href="https://jiyiqini.github.io/atom.xml" rel="self"/>
   
   <link href="https://jiyiqini.github.io/"/>
-  <updated>2022-03-13T04:33:16.579Z</updated>
+  <updated>2022-03-13T11:32:47.307Z</updated>
   <id>https://jiyiqini.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Android 重要技能</title>
+    <link href="https://jiyiqini.github.io/interviews/android/Android-Resume-3/"/>
+    <id>https://jiyiqini.github.io/interviews/android/Android-Resume-3/</id>
+    <published>2022-03-13T07:48:17.000Z</published>
+    <updated>2022-03-13T11:32:47.307Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Android面试之《重要技能》总结。对于简单部分，只做总结。对于难点，进一步总结分析。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="面试" scheme="https://jiyiqini.github.io/categories/%E9%9D%A2%E8%AF%95/"/>
+    
+    <category term="Android面试" scheme="https://jiyiqini.github.io/categories/%E9%9D%A2%E8%AF%95/Android%E9%9D%A2%E8%AF%95/"/>
+    
+    
+    <category term="面试" scheme="https://jiyiqini.github.io/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+    <category term="Android面试" scheme="https://jiyiqini.github.io/tags/Android%E9%9D%A2%E8%AF%95/"/>
+    
+  </entry>
   
   <entry>
     <title>Spring Boot 入门基础（概览）</title>

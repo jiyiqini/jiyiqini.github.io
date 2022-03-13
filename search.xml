@@ -2590,4 +2590,497 @@ public class ServletInitializer extends SpringBootServletInitializer <span class
         <tag>SpringBoot</tag>
       </tags>
   </entry>
+  <entry>
+    <title>Android 重要技能</title>
+    <url>/interviews/android/Android-Resume-3/</url>
+    <content><![CDATA[<p>Android面试之《重要技能》总结。对于简单部分，只做总结。对于难点，进一步总结分析。</p>
+<span id="more"></span>
+
+<h1 id="四大组件"><a href="#四大组件" class="headerlink" title="四大组件"></a>四大组件</h1><blockquote>
+<p><strong>Android之四大组件</strong>：Activity、Service、BroadcastReceiver、ContentProvider。  </p>
+</blockquote>
+<h2 id="Activity（活动）"><a href="#Activity（活动）" class="headerlink" title="Activity（活动）"></a>Activity（活动）</h2><p><strong>（1）简介与特点：</strong></p>
+<ol>
+<li>作用于表现业务功能，即交互。有 UI 界面，不可处理耗时任务。</li>
+<li>Activity 间通过 Intent 通信。</li>
+<li>必须在 AndroidManifest.xml 中注册配置，使用时系统才可识别。</li>
+</ol>
+<p><strong>（2）Activity 的 4 种状态：</strong></p>
+<ol>
+<li>运行中（running/active）：对应 <code>onResume</code> 状态，位于栈顶，交互可见。</li>
+<li>暂停（paused）：对应 <code>onPause</code> 状态，可见+不可交互。</li>
+<li>停止（stopped）：对应 <code>onStop</code> 状态，不可见+不可交互。</li>
+<li>销毁（destroyed）：对应 <code>onDestroy</code> 状态，Activity 被销毁了。</li>
+</ol>
+<p>对于理解 Activity 的 4 种状态，应结合 <a href="#">Post not found: ??? Activity 生命周期</a> 来理解。</p>
+<p><strong>（3）Activity 的生命周期：</strong></p>
+<blockquote>
+<p>首先，献上官方的 Activity 生命周期图：<br><img src="../../../images/illustration/android/lifecycle-Activity&Fragment.png" alt="lifecycle-Activity&amp;Fragment.png"></p>
+</blockquote>
+<p><strong>按顺序总结 Activiyt 各生命周期：</strong></p>
+<ul>
+<li><code>onCreate</code></li>
+<li><code>onReStart</code></li>
+<li><code>onStart</code></li>
+<li><code>onRestoreInstanceState</code>：用于恢复数据。</li>
+<li><code>onResume</code></li>
+<li><code>onSaveInstanceState</code>：<strong>特别注意</strong>，<code>onSaveInstanceState</code> 始终在 <code>onStop</code> 前（可能在 <code>onPause</code> 前或 <code>onPause~onStop</code>，虽然测试大多数情况在 <code>onPause</code> 前）。用于保存数据。</li>
+<li><code>onPause</code></li>
+<li><code>onStop</code></li>
+<li><code>onDestroy</code></li>
+</ul>
+<h2 id="Service（服务）"><a href="#Service（服务）" class="headerlink" title="Service（服务）"></a>Service（服务）</h2><p><strong>（1）简介与特点：</strong></p>
+<ol>
+<li>作用于后台服务，即无接触交互，但无（或说不依赖） UI 界面。不可处理耗时任务。</li>
+<li>同 Activity 一样，必须在 AndroidManifest.xml 中注册配置，使用时系统才可识别。</li>
+<li>虽说无 UI 交互，适于长期运行任务，但同样不能处理耗时任务（***切记，勿坑~***）。需要手动结合线程，将耗时任务放在线程中处理。否则，就会阻塞主线程。</li>
+</ol>
+<p><strong>（2）Service 的 2 种启动方式：</strong></p>
+<blockquote>
+<ol>
+<li><strong>ctxObj.startService：</strong></li>
+</ol>
+<ul>
+<li>此类服务可在后台无限期运行。</li>
+<li>生命周期：<code>onCreate -&gt; onStartCommand -&gt; onDestroy</code></li>
+<li>多次 <code>startService</code>，只会执行一次 <code>onCreate</code>（++共享一个实例++），但会多次执行 <code>onStartCommand</code>。</li>
+<li>因启动它的组件（如Activity）与 Service 没有关联，停止需要手动调用 <code>stopService</code> 或 <code>stopSelf</code> 。</li>
+</ul>
+<ol start="2">
+<li><strong>ctxObj.bindService：</strong></li>
+</ol>
+<ul>
+<li>此类服务跟随绑定组件（如<code>Activity</code>）的生命周期，除非中途手动 <code>unbindService</code> 才会提前停止。</li>
+<li>生命周期：<code>onCreate -&gt; onBind -&gt; onUnbind -&gt; onDestroy</code></li>
+<li>多次 <code>bindService</code>，只会执行一次 <code>onCreate 和 onBind</code>（++共享一个实例++）。</li>
+<li>调用 <code>unbindService</code> 后，若该 service 没有与其它 client 绑定时，才会真正地 destroy 掉（Service-Client：1-N，若 Client 还有一个在绑定着该 Service，其就不会真正销毁，除非到最后一个关联者 Client 解绑不再使用后。）</li>
+</ul>
+</blockquote>
+<h2 id="BroadcastReceiver（广播接收者）"><a href="#BroadcastReceiver（广播接收者）" class="headerlink" title="BroadcastReceiver（广播接收者）"></a>BroadcastReceiver（广播接收者）</h2><p><strong>（1）简介与特点：</strong></p>
+<ol>
+<li>广播接收器，是 Android 中的一种轻量级消息传输-响应机制。</li>
+<li>可分静态注册与动态注册。</li>
+</ol>
+<p><strong>（2）5大类广播：</strong></p>
+<blockquote>
+<ol>
+<li>普通广播（Normal Broadcast）</li>
+<li>系统广播（System Broadcast）</li>
+<li>有序广播（Ordered Broadcast）</li>
+<li>粘性广播（Sticky Broadcast）</li>
+<li>App应用内广播（Local Broadcast）</li>
+</ol>
+</blockquote>
+<ol>
+<li><strong>普通广播（Normal Broadcast）</strong></li>
+</ol>
+<p>注：是一种全局广播，哪怕不在同一App，只要监听相同的action也会收到！推荐使用LocalBroadcast！</p>
+<blockquote>
+<p><strong>Normal Broadcast 的使用</strong>：<code>sendBroadcast(Intent)</code><br><strong>Normal Broadcast 的特点</strong>：</p>
+<ul>
+<li>此类广播对于所有广播接收器均可接收。</li>
+<li>同一级别的接收器接收顺序不确定。</li>
+<li>接收器不能对广播进行处理或修改。</li>
+<li>接收器不能截断广播，仍继续传播。</li>
+</ul>
+</blockquote>
+<ol start="2">
+<li><strong>系统广播（System Broadcast）</strong></li>
+</ol>
+<p>系统内置许多广播，只要是涉及手机基本操作都有。如：电话、短信、电量、开机、网络变化、拍照等，都会发出相应广播。常见系统广播 action 有：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>网络变化</td>
+<td>android.net.conn.CONNECTIVITY_CHANGE</td>
+</tr>
+<tr>
+<td>开关飞行模式</td>
+<td>Intent.ACTION_AIRPLANE_MODE_CHANGED</td>
+</tr>
+<tr>
+<td>充电时或电量变化</td>
+<td>Intent.ACTION_BATTERY_CHANGED</td>
+</tr>
+<tr>
+<td>电量充足时（即从低变化到饱满状态会发出广播）</td>
+<td>Intent.ACTION_BATTERY_OKAY</td>
+</tr>
+<tr>
+<td>系统启动完成后（只广播一次）</td>
+<td>Intent.ACTION_BOOT_COMPLETED</td>
+</tr>
+<tr>
+<td>按下拍照时的拍照按键（硬件按键）</td>
+<td>Intent.ACTION_CAMERA_BUTTON</td>
+</tr>
+<tr>
+<td>锁屏</td>
+<td>Intent.ACTION_CLOSE_SYSTEM_DIALOGS</td>
+</tr>
+<tr>
+<td>设备设置被更改（如：语言Locale、方向Orientation）</td>
+<td>Intent.ACTION_CONFIGURATION_CHANGED</td>
+</tr>
+<tr>
+<td>插入耳机时</td>
+<td>Intent.ACTION_HEADSET_PLUG</td>
+</tr>
+<tr>
+<td>未正确移除SD卡（正确步骤：设置-SD卡和设备内存-卸载SD卡）</td>
+<td>Intent.ACTION_MEDIA_BAD_REMOVAL</td>
+</tr>
+<tr>
+<td>插入外部存储装置（如：插入SD卡）</td>
+<td>Intent.ACTION_MEDIA_CHECKING</td>
+</tr>
+<tr>
+<td>成功安装APK</td>
+<td>Intent.ACTION_PACKAGE_ADDED</td>
+</tr>
+<tr>
+<td>成功卸载APK</td>
+<td>Intent.ACTION_PACKAGE_REMOVED</td>
+</tr>
+<tr>
+<td>屏幕被关闭</td>
+<td>Intent.ACTION_SCREEN_OFF</td>
+</tr>
+<tr>
+<td>屏幕被打开</td>
+<td>Intent.ACTION_SCREEN_ON</td>
+</tr>
+<tr>
+<td>关闭系统时</td>
+<td>Intent.ACTION_SHUTDOWN</td>
+</tr>
+<tr>
+<td>重启设备</td>
+<td>Intent.ACTION_REBOOT</td>
+</tr>
+</tbody></table>
+<p>监听这些系统广播太简单了，只需注册相关的action即可。</p>
+<ol start="3">
+<li><strong>有序广播（Ordered Broadcast）</strong></li>
+</ol>
+<blockquote>
+<p><strong>Ordered Broadcast 的使用</strong>：<code>sendOrderedBroadcast(Intent)</code><br><strong>Ordered Broadcast 的特点</strong>：</p>
+<ul>
+<li>有序，体现在接收器 <code>intent-filter</code> 的 <code>priority</code> 取值（范围：[-1000,1000]），优先级与设值成正比。</li>
+<li>同一级别（priority相同）的接收器接收顺序不确定。</li>
+<li>高优先级（high-priority）接收器能对广播进行处理或修改。在 <code>onRecieve</code> 中调用 <code>setResultExtras(Bundle)</code> 即可，后续低优先级（low-priority）接收器在 <code>onReceive</code> 中调用 <code>getResultExtras(Bundle)</code> 获取被修改过的广播内容。若仍用 <code>getExtras()</code> 的话，取到的仍是源头广播。</li>
+<li>高优先级（high-priority）接收器能截断广播（在 <code>onReceive</code> 调用 <code>abortBroadcast()</code> 即可！），阻止继续传播。</li>
+</ul>
+</blockquote>
+<p><strong>示例：</strong></p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// OrderBroadcat例子：</span>
+<span class="token comment" spellcheck="true">//</span>
+<span class="token comment" spellcheck="true">// 1. 自定义MyBroadcastReceiver1</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyBroadcastReceiver1</span> <span class="token keyword">extends</span> <span class="token class-name">BroadcastReceiver</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceive</span><span class="token punctuation">(</span>Context context<span class="token punctuation">,</span> Intent intent<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        String action <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String data <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getStringExtra</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"action:%s, data:%s, context: %s"</span><span class="token punctuation">,</span> action<span class="token punctuation">,</span> data<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Bundle bundle <span class="token operator">=</span> null <span class="token operator">!=</span> intent<span class="token punctuation">.</span><span class="token function">getExtras</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">?</span> intent<span class="token punctuation">.</span><span class="token function">getExtras</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">:</span> <span class="token keyword">new</span> <span class="token class-name">Bundle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        bundle<span class="token punctuation">.</span><span class="token function">putString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token string">"老子修改过的data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setResultExtras</span><span class="token punctuation">(</span>bundle<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 自定义MyBroadcastReceiver2</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyBroadcastReceiver2</span> <span class="token keyword">extends</span> <span class="token class-name">BroadcastReceiver</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceive</span><span class="token punctuation">(</span>Context context<span class="token punctuation">,</span> Intent intent<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        String action <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String data <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getStringExtra</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[2]action:%s, data:%s, context: %s"</span><span class="token punctuation">,</span> action<span class="token punctuation">,</span> data<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Bundle b <span class="token operator">=</span> <span class="token function">getResultExtras</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        data <span class="token operator">=</span> b<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[2]action:%s, data:%s, context: %s"</span><span class="token punctuation">,</span> action<span class="token punctuation">,</span> data<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[2]bundle1:%s, getResultExtras:%s"</span><span class="token punctuation">,</span> intent<span class="token punctuation">.</span><span class="token function">getExtras</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">getResultExtras</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        b<span class="token punctuation">.</span><span class="token function">putString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token string">"二老子修改过的data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">setResultExtras</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        
+        <span class="token comment" spellcheck="true">//abortBroadcast();//截断继续广播</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 自定义MyBroadcastReceiver3</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyBroadcastReceiver3</span> <span class="token keyword">extends</span> <span class="token class-name">BroadcastReceiver</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceive</span><span class="token punctuation">(</span>Context context<span class="token punctuation">,</span> Intent intent<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        String action <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String data <span class="token operator">=</span> intent<span class="token punctuation">.</span><span class="token function">getStringExtra</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[3]action:%s, data:%s, context: %s"</span><span class="token punctuation">,</span> action<span class="token punctuation">,</span> data<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        Bundle b <span class="token operator">=</span> <span class="token function">getResultExtras</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        data <span class="token operator">=</span> b<span class="token punctuation">.</span><span class="token function">getString</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[3]action:%s, data:%s, context: %s"</span><span class="token punctuation">,</span> action<span class="token punctuation">,</span> data<span class="token punctuation">,</span> context<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Log<span class="token punctuation">.</span><span class="token function">v</span><span class="token punctuation">(</span><span class="token string">"App"</span><span class="token punctuation">,</span> String<span class="token punctuation">.</span><span class="token function">format</span><span class="token punctuation">(</span><span class="token string">"[3]bundle1:%s, getResultExtras:%s"</span><span class="token punctuation">,</span> intent<span class="token punctuation">.</span><span class="token function">getExtras</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token function">getResultExtras</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 2. xml布局文件，一个按钮发送ordered广播</span>
+<span class="token operator">&lt;</span>LineaLayout <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token operator">&lt;</span>Button 
+        android<span class="token operator">:</span>text<span class="token operator">=</span><span class="token string">"发送ordered广播"</span>
+        android<span class="token operator">:</span>onclick<span class="token operator">=</span><span class="token string">"performSendOrderedBroadcast"</span><span class="token operator">/</span><span class="token operator">></span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>LinearLayout<span class="token operator">></span>
+
+<span class="token comment" spellcheck="true">// 3. 在AndroidManifest.xml中静态注册（当然，动态也可以，这里为了方便测试以减少代码）</span>
+<span class="token operator">&lt;</span>manifest xmlns<span class="token operator">:</span>android<span class="token operator">=</span><span class="token string">"http://schemas.android.com/apk/res/android"</span><span class="token operator">></span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token operator">&lt;</span>application<span class="token operator">></span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+        <span class="token operator">&lt;</span>receiver android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">".MyBroadcastReceiver1"</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span>intent<span class="token operator">-</span>filter android<span class="token operator">:</span>priority<span class="token operator">=</span><span class="token string">"1000"</span><span class="token operator">></span>
+                <span class="token operator">&lt;</span>action android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"com.hsong.intent.action.OrderedBroadcastReceiver"</span> <span class="token operator">/</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span><span class="token operator">/</span>intent<span class="token operator">-</span>filter<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>receiver<span class="token operator">></span>
+        <span class="token operator">&lt;</span>receiver android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">".MyBroadcastReceiver2"</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span>intent<span class="token operator">-</span>filter android<span class="token operator">:</span>priority<span class="token operator">=</span><span class="token string">"500"</span><span class="token operator">></span>
+                <span class="token operator">&lt;</span>action android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"com.hsong.intent.action.OrderedBroadcastReceiver"</span> <span class="token operator">/</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span><span class="token operator">/</span>intent<span class="token operator">-</span>filter<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>receiver<span class="token operator">></span>
+        <span class="token operator">&lt;</span>receiver android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">".MyBroadcastReceiver3"</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span>intent<span class="token operator">-</span>filter android<span class="token operator">:</span>priority<span class="token operator">=</span><span class="token string">"250"</span><span class="token operator">></span>
+                <span class="token operator">&lt;</span>action android<span class="token operator">:</span>name<span class="token operator">=</span><span class="token string">"com.hsong.intent.action.OrderedBroadcastReceiver"</span> <span class="token operator">/</span><span class="token operator">></span>
+            <span class="token operator">&lt;</span><span class="token operator">/</span>intent<span class="token operator">-</span>filter<span class="token operator">></span>
+        <span class="token operator">&lt;</span><span class="token operator">/</span>receiver<span class="token operator">></span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token operator">&lt;</span><span class="token operator">/</span>application<span class="token operator">></span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>manifest<span class="token operator">></span>
+
+
+<span class="token comment" spellcheck="true">// 4. MyActivity类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">performSendOrderedBroadcast</span><span class="token punctuation">(</span>View v<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        Intent intent <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        intent<span class="token punctuation">.</span><span class="token function">putExtra</span><span class="token punctuation">(</span><span class="token string">"data"</span><span class="token punctuation">,</span> <span class="token string">"Ordered广播"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        intent<span class="token punctuation">.</span><span class="token function">setAction</span><span class="token punctuation">(</span>com<span class="token punctuation">.</span>hsong<span class="token punctuation">.</span>intent<span class="token punctuation">.</span>action<span class="token punctuation">.</span>OrderedBroadcastReceiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">sendOrderedBroadcast</span><span class="token punctuation">(</span>intent<span class="token punctuation">,</span> null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试与结果：</strong></p>
+<pre class=" language-text"><code class="language-text">//receiver1的结果：
+[1]action:com.hsong.intent.action.OrderedBroadcastReceiver, data:Ordered广播, context: android.app.ReceiverRestrictedContext@c314c02
+
+//receiver2的结果：
+[2]action:com.hsong.intent.action.OrderedBroadcastReceiver, data:Ordered广播, context: android.app.ReceiverRestrictedContext@c314c02
+[2]action:com.hsong.intent.action.OrderedBroadcastReceiver, data:老子修改过的data, context: android.app.ReceiverRestrictedContext@c314c02
+[2]bundle1:Bundle[&#123;data=Ordered广播&#125;], getResultExtras:Bundle[&#123;data=老子修改过的data&#125;]
+
+//receiver3的结果：若receiver2中的abortBroadcast()调用截断的话，则receiver3不会收到了，其他后面的receivers也一样收不到了。
+[3]action:com.hsong.intent.action.OrderedBroadcastReceiver, data:Ordered广播, context: android.app.ReceiverRestrictedContext@c314c02
+[3]action:com.hsong.intent.action.OrderedBroadcastReceiver, data:二老子修改过的data, context: android.app.ReceiverRestrictedContext@c314c02
+[3]bundle1:Bundle[&#123;data=Ordered广播&#125;], getResultExtras:Bundle[&#123;data=二老子修改过的data&#125;]
+</code></pre>
+<p>从上可以发现，虽然高优先级的receiver(1)修改的广播续传内容，但是receiver(2)中 intent.getExtras() 的值却是不变的（还是sender发出那些）。如果要获取被前面或者高优先级的receiver修改过的内容的话，应该调用 getResultExtras() 。</p>
+<ol start="4">
+<li><strong>粘性广播（Sticky Broadcast）</strong></li>
+</ol>
+<blockquote>
+<p><strong>Sticky Broadcast 的使用</strong>：<code>sendStickyBroadcast(Intent)</code><br><strong>Sticky Broadcast 的特点</strong>：</p>
+<ul>
+<li>使用 <code>sendStickyBroadcast</code> API 还必须在 <code>AndroidManifest.xml</code> 中添加权限 <code>&lt;use-permission android:name=&quot;android.permission.BROADCAST_STICKY&quot;/&gt;</code></li>
+<li>此类广播最大特点是，<code>sendStickyBroadcast(Intent)</code> 的 Intent 会一直保留到此广播事件结束（即被 onReceive() 消费掉），且其不像普通广播有 10s 超时 ANR 限制。那仅对于 <em>普通广播</em> 而言，若其 <code>onReceive()</code> 执行太久，超过 10s 就会被系统置为 ***可干掉的 <code>candidate</code> ***，一旦系统资源不够用就会被系统销毁此 <code>candidate广播</code>，不让其执行。</li>
+</ul>
+</blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// StickyBroadcat例子：</span>
+<span class="token comment" spellcheck="true">//</span>
+<span class="token comment" spellcheck="true">// 1. 自定义MyBroadcastReceiver</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyBroadcastReceiver</span> <span class="token keyword">extends</span> <span class="token class-name">BroadcastReceiver</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceive</span><span class="token punctuation">(</span>Context context<span class="token punctuation">,</span> Intent intent<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        Toast<span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token string">"我收到sticky广播了~"</span><span class="token punctuation">,</span> Toast<span class="token punctuation">.</span>LENGTH_SHORT<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 2. xml布局文件，一个按钮发送sticky广播，一个注册广播接收器</span>
+<span class="token operator">&lt;</span>LineaLayout <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token operator">&lt;</span>Button 
+        android<span class="token operator">:</span>text<span class="token operator">=</span><span class="token string">"发送sticky广播"</span>
+        android<span class="token operator">:</span>onclick<span class="token operator">=</span><span class="token string">"performSendStickyBroadcast"</span><span class="token operator">/</span><span class="token operator">></span>
+    <span class="token operator">&lt;</span>Button 
+        android<span class="token operator">:</span>text<span class="token operator">=</span><span class="token string">"注册广播seceiver"</span>
+        android<span class="token operator">:</span>onclick<span class="token operator">=</span><span class="token string">"performRegisterBroadcastReceiver"</span><span class="token operator">/</span><span class="token operator">></span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>LinearLayout<span class="token operator">></span>
+
+<span class="token comment" spellcheck="true">// 3. MyActivity类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> MyBroadcastReceiver mReceiver<span class="token punctuation">;</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">performSendStickyBroadcast</span><span class="token punctuation">(</span>View v<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        Intent intent <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intent</span><span class="token punctuation">(</span><span class="token string">"com.myintent.stickybroadcast"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">sendStickyBroadcast</span><span class="token punctuation">(</span>intent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">performRegisterBroadcastReceiver</span><span class="token punctuation">(</span>View v<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        IntentFilter filter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntentFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        filter<span class="token punctuation">.</span><span class="token function">setAction</span><span class="token punctuation">(</span><span class="token string">"com.myintent.stickybroadcast"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mReceiver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyBroadcastReceiver</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">registerReceiver</span><span class="token punctuation">(</span>mReceiver<span class="token punctuation">,</span> filter<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">unregisterReceiver</span><span class="token punctuation">(</span>mReceiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>测试与结果：</strong> 当只点击“发送sticky广播”按钮时，没有toast响应。然后，再点击“注册广播seceiver”按钮时，这时就收到之前发送的sticky广播了，即toast提示“我收到sticky广播了~”。即，这种sticky广播就是Intent会一直保留事件结束，哪怕尚未注册receiver。</p>
+<ol start="5">
+<li><strong>App应用内广播（Local Broadcast）</strong></li>
+</ol>
+<blockquote>
+<p><strong>Local Boradcast 的使用：</strong></p>
+<blockquote>
+<ul>
+<li>注册：<code>LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter)</code></li>
+<li>解注册：<code>LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver)</code></li>
+<li>发送：<code>LocalBroadcastManager.getInstance(context).sendBroadcast(Intent)</code></li>
+</ul>
+<p><strong>Local Boradcast 的特点：</strong><br>因 Android 中的广播是可以跨域的（即跨App），可存在如下问题：</p>
+<ol>
+<li>other-App 发出与 current-App 的 intent-filter 相匹配的广播时，current-App 会不断收到广播并处理。</li>
+<li>current-App 发出与 other-App 的 intent-filter 相匹配的广播时，other-App 会不断收到广播并处理。<br>这样，就出现了 **安全性 &amp;&amp; 效率性 ** 的问题。</li>
+</ol>
+</blockquote>
+<ul>
+<li>对于上述 <strong>安全性 &amp;&amp; 效率性</strong> 问题，使用 <strong>App应用内广播</strong> 可解决，可理解为局域广播，只局限于当前App应用内发送与接收。</li>
+<li><strong>特别注意：<em>LocalBroadcast 只能动态注册，不可静态注册（即使注册也无效）！</em></strong></li>
+</ul>
+</blockquote>
+<p><em>示例：</em></p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// LocalBroadcat例子：</span>
+<span class="token comment" spellcheck="true">//</span>
+<span class="token comment" spellcheck="true">// 1. 自定义MyBroadcastReceiver</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyBroadcastReceiver</span> <span class="token keyword">extends</span> <span class="token class-name">BroadcastReceiver</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onReceive</span><span class="token punctuation">(</span>Context context<span class="token punctuation">,</span> Intent intent<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        Toast<span class="token punctuation">.</span><span class="token function">makeText</span><span class="token punctuation">(</span>context<span class="token punctuation">,</span> <span class="token string">"我收到local广播了~"</span><span class="token punctuation">,</span> Toast<span class="token punctuation">.</span>LENGTH_SHORT<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">show</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+
+<span class="token comment" spellcheck="true">// 2. xml布局文件，一个按钮发送local广播</span>
+<span class="token operator">&lt;</span>LineaLayout <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token operator">&lt;</span>Button 
+        android<span class="token operator">:</span>text<span class="token operator">=</span><span class="token string">"发送local广播"</span>
+        android<span class="token operator">:</span>onclick<span class="token operator">=</span><span class="token string">"performSendLocalBroadcast"</span><span class="token operator">/</span><span class="token operator">></span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>LinearLayout<span class="token operator">></span>
+
+<span class="token comment" spellcheck="true">// 3. MyActivity类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> MyBroadcastReceiver mReceiver<span class="token punctuation">;</span>
+    
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">performSendLocalBroadcast</span><span class="token punctuation">(</span>View v<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        Intent intent <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Intent</span><span class="token punctuation">(</span><span class="token string">"com.myintent.localbroadcast"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        LocalBroadcastManager<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">sendBroadcast</span><span class="token punctuation">(</span>intent<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle savedInstanceState<span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        IntentFilter filter <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">IntentFilter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        filter<span class="token punctuation">.</span><span class="token function">setAction</span><span class="token punctuation">(</span><span class="token string">"com.myintent.localbroadcast"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mReceiver <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyBroadcastReceiver</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        LocalBroadcastManager<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">registerReceiver</span><span class="token punctuation">(</span>mReceiver<span class="token punctuation">,</span> filter<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+    
+    <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;</span>#<span class="token number">123</span><span class="token punctuation">;</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        LocalBroadcastManager<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">unregisterReceiver</span><span class="token punctuation">(</span>mReceiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+<span class="token operator">&amp;</span>#<span class="token number">125</span><span class="token punctuation">;</span>
+</code></pre>
+<p><strong>小结：</strong></p>
+<ul>
+<li>对于不同注册方式的广播接收器回调 <code>onReceive(Context context, Intent intent)</code> 中的 <code>context</code> 返回值是不一样的：<blockquote>
+<ul>
+<li><strong>静态注册的全局广播（Normal/Ordered/Sticky/System）</strong>：<code>android.app.ReceiverRestrictedContext</code></li>
+<li><strong>动态注册的全局广播（Normal/Ordered/Sticky/System）</strong>：<code>Activity（即具体send广播的组件）</code></li>
+<li><strong>动态注册的应用内广播（LocalBroadcastManager方式）</strong>：<code>android.app.Application</code></li>
+</ul>
+</blockquote>
+</li>
+<li>测试发现，当静态和动态都同时注册的话，send 广播后，分分别收到 2 次 <code>onReceive</code> 且各自的 <code>context</code> 类型不同。<strong>并且，动态注册的优先级更高！</strong></li>
+<li>测试发现，虽然高优先级的 receiver(1) 修改的广播续传内容，但是 receiver(2) 中 <code>intent.getExtras()</code> 的值却是不变的（还是sender发出那些）。如果要获取被前面或者高优先级的 <code>receiver.setResultExtras(bundle)</code> 修改过的内容的话，应该调用 <code>getResultExtras(flase)</code> 。</li>
+<li>若为全局（非<code>LocalBroadcastManager</code>）静态注册的 receiver，无论应用是否处于活动状态，都会进行监听；动态注册的当应用程序关闭后将不再监听。</li>
+</ul>
+<h2 id="ContentProvider（内容提供者）"><a href="#ContentProvider（内容提供者）" class="headerlink" title="ContentProvider（内容提供者）"></a>ContentProvider（内容提供者）</h2><p>当一个 App 指定的数据集提供给其它应用程序，这就是 <code>ContentProvider</code> 的能力。</p>
+<p><strong>（1）简介与特点：</strong></p>
+<ol>
+<li><code>ContentProvider</code> 实现跨应用间的数据共享。其用于数据的保存（set）和获取（get），并使其对所有应用程序可见。<strong>在Android中，这是实现跨应用共享数据的唯一方式！因为Android没有提供所有应用程序共同访问的公共存储区。</strong></li>
+<li>只有需要在多个程序间共享数据，才需要 <code>ContentProvider</code>。如，通讯录数据可被多个应用读取自定义显示在各自的应用里，且必须存储在同一内容提供者中。这样的好处：<strong>统一访问方式！</strong></li>
+<li><code>ContentProvider</code> 使用 URI 唯一标识其数据集，且标准以 <strong><code>content://</code></strong> 为前缀，表示该数据由 <code>ContentProvider</code> 管理。</li>
+<li>开发人员不会直接使用 <code>ContentProvider</code> 类的对象来存取数据，而是通过 <code>ContentResolver</code> 对象来实现对 <code>ContentProvider</code> 的操作。</li>
+</ol>
+<p><strong>（2）<code>ContentProvider、ContentResolver、ContentObserver</code> 之间区别：</strong></p>
+<blockquote>
+<ul>
+<li><strong>ContentProvider： 4大组件之内容提供者，主要用于对外提供数据。</strong><br>一个已经实现ContentProvider来提供数据给其它应用来操作，可通过 ContentResolver 来操作别的应用数据，当然在本身应用中也可以。</li>
+<li><strong>ContentResolver： 内容解析者，用于获取其它应用 ContentProvider 提供的数据。</strong><pre class=" language-java"><code class="language-java">ContentResolver<span class="token punctuation">.</span><span class="token function">notifyChange</span><span class="token punctuation">(</span>uri<span class="token punctuation">)</span> ：发出消息
+ContentResolver<span class="token punctuation">.</span><span class="token function">registerContentObserver</span><span class="token punctuation">(</span><span class="token punctuation">)</span> ：监听消息
+</code></pre>
+</li>
+<li><strong>ContentObserver： 内容监听器，可以监听数据的变化。</strong><br>目的是观察（捕捉）特定Uri引起的数据库的变化，继而做出相应的处理。类似于数据库里的trigger（触发器），当 ContentObserver 所观察的Uri发生变化，就会触发它。触发器分为 表触发器、行触发器 ，相应地 ContentObserver 也分为 表ContentObserver、行ContentObserver ，当然这与其监听的 Uri MIME Type 有关。</li>
+</ul>
+<p>总之，一句话：</p>
+<blockquote>
+<p><strong>使用 <code>ContentResolver</code> 来获取 <code>ContentProvider</code> 提供的数据，同时注册 <code>ContentObserver</code> 监听 <code>Uri</code> 数据变化。</strong></p>
+</blockquote>
+</blockquote>
+<p>学习参考：<a href="https://blog.csdn.net/wenzhi20102321/article/details/53078861">Android内容提供者ContentProvider总结</a></p>
+<h1 id="五大存储"><a href="#五大存储" class="headerlink" title="五大存储"></a>五大存储</h1><blockquote>
+<p>Android中 5 大存储方式：</p>
+<ul>
+<li>File</li>
+<li>SharedPreference</li>
+<li>Sqlite</li>
+<li>Network</li>
+<li>ContentProvider</li>
+</ul>
+</blockquote>
+<h1 id="七大布局"><a href="#七大布局" class="headerlink" title="七大布局"></a>七大布局</h1><blockquote>
+<p>Android中 7 大布局：</p>
+<ul>
+<li>LinearLayout</li>
+<li>RelativeLayout</li>
+<li>FrameLayout</li>
+<li>ConstraintLayout</li>
+<li>AbsoluteLayout（过时）</li>
+<li>TableLaout</li>
+<li>GridLayout（Android 4.0 新增）</li>
+</ul>
+</blockquote>
+]]></content>
+      <categories>
+        <category>面试</category>
+        <category>Android面试</category>
+      </categories>
+      <tags>
+        <tag>面试</tag>
+        <tag>Android面试</tag>
+      </tags>
+  </entry>
 </search>
