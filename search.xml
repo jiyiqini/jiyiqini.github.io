@@ -1347,7 +1347,7 @@ $ hexo d<span class="token operator">|</span>deploy   <span class="token comment
       </tags>
   </entry>
   <entry>
-    <title>Spring Boot 入门基础概览</title>
+    <title>Spring Boot 入门基础（概览）</title>
     <url>/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/</url>
     <content><![CDATA[<p>什么叫微服务？Spring Boot 又是什么？它们能干什么，如何开发？Spring Boot 与传统的 Spring MVC、SSH 这些有啥异同？</p>
 <span id="more"></span>

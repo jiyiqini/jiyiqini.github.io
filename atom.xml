@@ -6,7 +6,7 @@
   <link href="https://jiyiqini.github.io/atom.xml" rel="self"/>
   
   <link href="https://jiyiqini.github.io/"/>
-  <updated>2022-03-13T03:46:49.516Z</updated>
+  <updated>2022-03-13T04:33:16.579Z</updated>
   <id>https://jiyiqini.github.io/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Spring Boot 入门基础概览</title>
+    <title>Spring Boot 入门基础（概览）</title>
     <link href="https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/"/>
     <id>https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/</id>
     <published>2022-03-13T03:22:19.000Z</published>
-    <updated>2022-03-13T03:46:49.516Z</updated>
+    <updated>2022-03-13T04:33:16.579Z</updated>
     
     
     <summary type="html">&lt;p&gt;什么叫微服务？Spring Boot 又是什么？它们能干什么，如何开发？Spring Boot 与传统的 Spring MVC、SSH 这些有啥异同？&lt;/p&gt;</summary>
