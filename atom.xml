@@ -6,7 +6,7 @@
   <link href="https://jiyiqini.github.io/atom.xml" rel="self"/>
   
   <link href="https://jiyiqini.github.io/"/>
-  <updated>2021-08-11T12:04:42.678Z</updated>
+  <updated>2022-03-13T03:46:49.516Z</updated>
   <id>https://jiyiqini.github.io/</id>
   
   <author>
@@ -17,11 +17,34 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Spring Boot 入门基础概览</title>
+    <link href="https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/"/>
+    <id>https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/</id>
+    <published>2022-03-13T03:22:19.000Z</published>
+    <updated>2022-03-13T03:46:49.516Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;什么叫微服务？Spring Boot 又是什么？它们能干什么，如何开发？Spring Boot 与传统的 Spring MVC、SSH 这些有啥异同？&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术篇" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/"/>
+    
+    <category term="后端" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%90%8E%E7%AB%AF/"/>
+    
+    <category term="SpringBoot" scheme="https://jiyiqini.github.io/categories/%E6%8A%80%E6%9C%AF%E7%AF%87/%E5%90%8E%E7%AB%AF/SpringBoot/"/>
+    
+    
+    <category term="SpringBoot" scheme="https://jiyiqini.github.io/tags/SpringBoot/"/>
+    
+  </entry>
+  
+  <entry>
     <title>常见的 Hexo 报错与解决</title>
     <link href="https://jiyiqini.github.io/dev-tools/hexo/Hexo-Issues/"/>
     <id>https://jiyiqini.github.io/dev-tools/hexo/Hexo-Issues/</id>
     <published>2021-08-09T13:15:52.000Z</published>
-    <updated>2021-08-11T12:04:42.678Z</updated>
+    <updated>2022-03-13T03:32:23.383Z</updated>
     
     
     <summary type="html">&lt;p&gt;hexo 使用过程中，经常遇到一些稀奇古怪的问题。经查阅后解决，现将这些常见的错误与处理策略一一记录。&lt;/p&gt;</summary>
