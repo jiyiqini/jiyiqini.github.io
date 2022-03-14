@@ -6,7 +6,7 @@
   <link href="https://jiyiqini.github.io/atom.xml" rel="self"/>
   
   <link href="https://jiyiqini.github.io/"/>
-  <updated>2022-03-13T11:32:47.307Z</updated>
+  <updated>2022-03-14T08:10:43.021Z</updated>
   <id>https://jiyiqini.github.io/</id>
   
   <author>
@@ -17,14 +17,39 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Android 性能优化</title>
+    <link href="https://jiyiqini.github.io/interviews/android/Android-Resume-4/"/>
+    <id>https://jiyiqini.github.io/interviews/android/Android-Resume-4/</id>
+    <published>2022-03-14T01:37:46.000Z</published>
+    <updated>2022-03-14T08:10:43.021Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;Android面试之《性能优化》总结。对于简单部分，只做总结。至于难点，将做进一步分析与记录。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="面试" scheme="https://jiyiqini.github.io/categories/%E9%9D%A2%E8%AF%95/"/>
+    
+    <category term="Android面试" scheme="https://jiyiqini.github.io/categories/%E9%9D%A2%E8%AF%95/Android%E9%9D%A2%E8%AF%95/"/>
+    
+    
+    <category term="面试" scheme="https://jiyiqini.github.io/tags/%E9%9D%A2%E8%AF%95/"/>
+    
+    <category term="Android面试" scheme="https://jiyiqini.github.io/tags/Android%E9%9D%A2%E8%AF%95/"/>
+    
+    <category term="Android性能优化" scheme="https://jiyiqini.github.io/tags/Android%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Android 重要技能</title>
     <link href="https://jiyiqini.github.io/interviews/android/Android-Resume-3/"/>
     <id>https://jiyiqini.github.io/interviews/android/Android-Resume-3/</id>
     <published>2022-03-13T07:48:17.000Z</published>
-    <updated>2022-03-13T11:32:47.307Z</updated>
+    <updated>2022-03-14T01:41:28.882Z</updated>
     
     
-    <summary type="html">&lt;p&gt;Android面试之《重要技能》总结。对于简单部分，只做总结。对于难点，进一步总结分析。&lt;/p&gt;</summary>
+    <summary type="html">&lt;p&gt;Android面试之《重要技能》总结。对于简单部分，只做总结。至于难点，将做进一步分析与记录。&lt;/p&gt;</summary>
     
     
     
