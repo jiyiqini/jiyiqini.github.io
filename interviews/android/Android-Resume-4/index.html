@@ -489,21 +489,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-14
+                    2022-03-19
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.8k
+                    8.4k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    17 分
+                    33 分
                 </div>
                 
 
@@ -530,24 +530,480 @@
 <p><strong>常见的Android性能优化，大致有如下几大模块（细分小模块）：</strong></p>
 <blockquote>
 <ul>
-<li>稳定性（如：内存溢出、崩溃）</li>
-<li>流畅度（如：卡顿）</li>
-<li>耗损（如：耗电、流量、网络）</li>
+<li>稳定性（如：内存溢出/泄漏、崩溃）=&gt; <code>Crash与ANR</code></li>
+<li>流畅度（如：卡顿——UI(布局+绘制)、）</li>
+<li>耗损（如：耗电、流量、网络）=&gt; <code>代码质量与逻辑</code></li>
 <li>安装包（如：APK瘦身）</li>
 </ul>
 </blockquote>
-<blockquote>
 <ul>
-<li>UI优化（布局+绘制）</li>
-<li>内存优化</li>
 <li>响应速度</li>
 <li>线程优化</li>
-<li>电量优化</li>
-<li>包体积优化</li>
+</ul>
+<h1 id="（一）优化：《稳定性》"><a href="#（一）优化：《稳定性》" class="headerlink" title="（一）优化：《稳定性》"></a>（一）优化：《稳定性》</h1><p>众所周知，Java开发一般不需要手动分配内存和释放内存，这得感谢Java底层机制——JVM及其GC。交由虚拟机帮助分配和释放，但因此导致开发者编程不规范或者不严谨，易出现内存泄漏和内存溢出。</p>
+<blockquote>
+<p>Android操作系统对整个设备内存做了一个大致的全局把控：  </p>
+<ul>
+<li>每个App都分配 <code>Dalvik Heap Size</code> ，表示系统分配给每个App内存的最大限制阈值。  </li>
+</ul>
+<p>此阈值在不同厂商设备是不一样的，查看方式如：</p>
+<pre class=" language-shell"><code class="language-shell">➜ ~ adb shell getprop | grep heap
+[dalvik.vm.heapgrowthlimit]: [256m]
+[dalvik.vm.heapmaxfree]: [2m]
+[dalvik.vm.heapminfree]: [512k]
+[dalvik.vm.heapsize]: [256m]
+[dalvik.vm.heapstartsize]: [5m]
+[dalvik.vm.heaptargetutilization]: [0.75]
+</code></pre>
+<p>总之，Android对每个App限制内存大小：</p>
+<blockquote>
+<ul>
+<li>对应Java代码的 <code>Runtime.getRuntime().maxMemory()</code>。</li>
+<li>即 <code>/system/build.prop</code> 中的如下选项值：<ul>
+<li><code>dalvik.vm.heapgrowthlimit</code>：当配置清单的 <code>&lt;application android:largeHeap=&quot;false&quot; 或缺省 .../&gt;</code>时，用这个。</li>
+<li><code>dalvik.vm.heapsize</code>：当配置清单的 <code>&lt;application android:largeHeap=&quot;true&quot; .../&gt;</code>时，用这个。<br>超出该限制再继续申请，则OOM。</li>
+</ul>
+</li>
 </ul>
 </blockquote>
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1><p>???内存、响应速度、线程等（80%）???</p>
-<h1 id="（一）优化：《稳定性》"><a href="#（一）优化：《稳定性》" class="headerlink" title="（一）优化：《稳定性》"></a>（一）优化：《稳定性》</h1><h2 id="异常拦截优化"><a href="#异常拦截优化" class="headerlink" title="异常拦截优化"></a>异常拦截优化</h2><p>请求服务端数据过程中，访问接口和解析返回数据都可能出错，我们可通过拦截器在这两层拦截错误。</p>
+</blockquote>
+<p>所以，Java开发不需要对内存手动分配与释放，但 <strong>需要合理的内存管理</strong> 。</p>
+<h2 id="内存优化点"><a href="#内存优化点" class="headerlink" title="内存优化点"></a>内存优化点</h2><blockquote>
+<ol>
+<li><em><strong>避免内存泄漏（★★★★★）</strong></em></li>
+<li><em><strong>优化内存空间</strong></em><ul>
+<li><strong>合理利用对象引用，以助 GC 合理回收。</strong>如：强/软/弱/虚。</li>
+<li><strong>减少不必要的内存开销：</strong><ul>
+<li><strong>慎用自动装箱</strong>。如：一个 int 占 4bytes，则一个 Integer 占 16bytes。</li>
+<li><strong>慎用枚举。</strong> Enum易读且安全，但过度使用在性能上却不如普通常量定义。Android中，枚举内存是常量2~3倍+。</li>
+<li><strong>内存复用</strong>：<ul>
+<li><strong>充分利用系统内置资源。</strong> 如：<code>strings/colors/icons/animation/simple-layout</code>等，还能优化apk大小。</li>
+<li><strong>视图复用。</strong> 如：<code>ViewHolder</code> 实现 <code>ContentView</code> 复用等。</li>
+<li><strong>对象池。</strong> 如：<code>线程池、消息池</code> 等，对象重用以减少对象创建，避免内存抖动等。</li>
+<li><strong><code>Bitmap</code>对象复用。</strong> 利用 Bitmap 中的 <code>inBitmap</code> 高级特性，提高系统在 Bitmap 的分配与释放效率，不仅可以复用内存，还能提高读写速度。该特性可以在已经的内存区域中申请一块区域来存放 Bitmap。（★★★★★）=&gt; <em>PS：有待更深研究~~~~</em></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>LruCache</strong> </li>
+<li><strong>图片内存优化：以设置位图规格，根据“采样因子”做压缩，用一些图片缓存方式（如<code>LruCache</code>）对图片进行管理等等。</strong> 由于每个App被分配的 dalvik heap size 有限制，而且图片资源又相对耗内存。所以，解决好图片内存优化，是Android开发中的一大重要模块！！！（参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/haha223545/article/details/95349267%EF%BC%89">https://blog.csdn.net/haha223545/article/details/95349267）</a></li>
+</ul>
+</li>
+</ol>
+</blockquote>
+<h3 id="1-内存泄漏"><a href="#1-内存泄漏" class="headerlink" title="1. 内存泄漏"></a>1. 内存泄漏</h3><blockquote>
+<p><strong>归类一下，常见的内存泄漏有：</strong>  </p>
+<ol>
+<li>容器中无用对象未清理造成的泄漏</li>
+<li>单例/<code>static变量</code>造成的内存泄漏</li>
+<li>内部类(匿名、非静态)</li>
+<li>资源未关闭/注册未解注册造成的内存泄漏</li>
+<li><code>Webview</code> 引起的内存泄漏</li>
+<li><code>Handler</code> 引起的内存泄漏</li>
+</ol>
+</blockquote>
+<h4 id="1-1-容器中无用对象未清理造成的泄漏"><a href="#1-1-容器中无用对象未清理造成的泄漏" class="headerlink" title="1.1 容器中无用对象未清理造成的泄漏"></a>1.1 容器中无用对象未清理造成的泄漏</h4><p>容器中添加对象，当不再需要该对象时，并没有将其引用从容器（集合）中清理掉，就会导致集合容器越来越大。如果该集合容器是 <code>static</code> 的话，情况就更严重。</p>
+<p><strong>👉🏻容器引发泄漏的解决方案：</strong></p>
+<blockquote>
+<p>在 <code>Activity</code> 退出前，将集合里的东西 <code>clear</code>，然后置为 <code>null</code>，再退出程序。如：</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  xxxList<span class="token punctuation">.</span><span class="token function">clear</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  xxxList <span class="token operator">=</span> null<span class="token punctuation">;</span>
+  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+<h4 id="1-2-单例-static变量造成的内存泄漏"><a href="#1-2-单例-static变量造成的内存泄漏" class="headerlink" title="1.2 单例/static变量造成的内存泄漏"></a>1.2 单例/<code>static变量</code>造成的内存泄漏</h4><p><code>static</code> 变量长期维持对象引用，阻止 <code>GC</code> 回收。当 <code>static</code> 变量持有的是大数据对象，如 <code>Bitmap/Context</code> 等，就更容易引起泄漏等问题。</p>
+<h4 id="1-3-内部类-匿名、非静态"><a href="#1-3-内部类-匿名、非静态" class="headerlink" title="1.3 内部类(匿名、非静态)"></a>1.3 内部类(匿名、非静态)</h4><blockquote>
+<p>总之，内部类易造成内存泄漏的根本原因是：内部类可持有外部类引用（这也是内部类的特点~~）。</p>
+</blockquote>
+<h5 id="1-3-11-匿名内部类引发内存泄漏"><a href="#1-3-11-匿名内部类引发内存泄漏" class="headerlink" title="1.3.11 匿名内部类引发内存泄漏"></a>1.3.11 匿名内部类引发内存泄漏</h5><h5 id="1-3-12-非静态内部类引发内存泄漏"><a href="#1-3-12-非静态内部类引发内存泄漏" class="headerlink" title="1.3.12 非静态内部类引发内存泄漏"></a>1.3.12 非静态内部类引发内存泄漏</h5><blockquote>
+<p>一个 <code>no-static内部类</code> 对象被声明成 <code>static</code> ，则其就默认拥有了外部类的实例引用，也即是其生命周期大于外部引用，和整个应用存活的生命周期一样长了。显然，就导致了内存泄漏。  </p>
+<p><em>代码解释：</em></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OuterClass</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+  <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">InnerClass</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>
+  <span class="token keyword">private</span> <span class="token keyword">static</span> InnerClass sInnerClazz <span class="token operator">=</span> null<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle savedInstanceState<span class="token punctuation">)</span>
+    sInnerClazz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InnerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+说明：Activity 每次启动都会使用 InnerClass。而 InnerClass 本身为 no<span class="token operator">-</span><span class="token keyword">static</span> 内部类已经持有外部类 OuterClass 的引用了，但在声明对象时用 <span class="token keyword">static</span> 声明了，这又表明了该 no<span class="token operator">-</span><span class="token keyword">static</span><span class="token operator">-</span>inner<span class="token operator">-</span><span class="token keyword">class</span> 又变成与整个应用寿命一样长了，远大于 Activity 了，所以当前 Activity 占用的内存资源根本不可能被正常回收，久而久之就造成了内存泄漏，进而OOM。
+</code></pre>
+</blockquote>
+<h4 id="1-4-资源未关闭-注册未解注册造成的内存泄漏"><a href="#1-4-资源未关闭-注册未解注册造成的内存泄漏" class="headerlink" title="1.4 资源未关闭/注册未解注册造成的内存泄漏"></a>1.4 资源未关闭/注册未解注册造成的内存泄漏</h4><blockquote>
+<ul>
+<li><strong>资源性对象，诸如 <code>Cursor/File/IO流操作/...</code> 往往都使用了缓冲。且</strong>。当不再使用时，应及时关闭，以便它们的<strong>缓冲（缓存对象）及时回收内存</strong>，而非等待 <code>GC</code> 来处理。<strong>因它们的缓存不仅存在于 JVM 内，还存在于 JVM 之外。所以，如果只是简单的置为 <code>null</code> ，而不关闭它们，就会造成内存泄漏。</strong>  </li>
+<li>若事件（诸如 <code>BroadcastReceiver/注册观察者等如EventBus</code>）注册后未解注册，<strong>会导致观察者列表中维持着对象的引用</strong>，阻止 <code>GC</code> 回收。</li>
+</ul>
+</blockquote>
+<p>一般示例写法：</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">try</span> <span class="token punctuation">{</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> xxx<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    xxx<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    xxx <span class="token operator">=</span> null<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> yyy<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    yyy<span class="token punctuation">.</span><span class="token function">unregister</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    yyy <span class="token operator">=</span> null<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h4 id="1-5-WebView-引起的内存泄漏"><a href="#1-5-WebView-引起的内存泄漏" class="headerlink" title="1.5 WebView 引起的内存泄漏"></a>1.5 WebView 引起的内存泄漏</h4><p>Android-WebView 除了兼容和性能上的问题外，不同版本和不同定制ROM也有很大差异。<strong>更重要地，<code>WebView</code> 都存在内存泄漏，哪怕在应用中使用过一次，内存就不会被释放掉。</strong> </p>
+<blockquote>
+<p><strong>解决 <code>WebView</code>内存泄漏方案：</strong> </p>
+<ul>
+<li><em>为 <code>WebView</code> 所在的 <code>Activity</code> 开启新的独立进程（<code>android:process=&quot;:&lt;process_name&gt;&quot;</code>），与主进程通信则通过 <code>AIDL</code> 方式。且可根据业务需要选择合适时机进行 <code>销毁该独立进程</code>，以达到正常释放内存目的。</em>  <blockquote>
+<p><strong>👉🏻终极暴力解决（完美有效）👈🏻：</strong><br><em><strong>在 <code>WebViewActivity.onDestroy()</code> 中 <code>System.exit(0)</code> 杀死当前进程，即直接退出 <code>dvm</code>。</strong></em>  </p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    System<span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//android.os.Process.killProcess(android.os.Process.myPid());不太管用~</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+</li>
+</ul>
+<p>最后，附上常规的 WebView 优化方案（兼容所有释放）：</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">try</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 1. 注册的 services/monitors/handlers/... 及时移除并置null。</span>
+      <span class="token function">unregisterReceiver</span><span class="token punctuation">(</span>mXXXReceiver<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mXXXReceiver <span class="token operator">=</span> null<span class="token punctuation">;</span>
+      
+    <span class="token comment" spellcheck="true">// 2. 如当前页面有 ImageView，也要及时回收并销毁。如，背景大图，主动回收。</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>mIVBackground <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          Drawable drawable <span class="token operator">=</span> mIVBackground<span class="token punctuation">.</span><span class="token function">getDrawable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>drawable <span class="token keyword">instanceof</span> <span class="token class-name">BitmapDrawable</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              BitmapDrawable bitmapDrawable <span class="token operator">=</span> <span class="token punctuation">(</span>BitmapDrawable<span class="token punctuation">)</span> drawable<span class="token punctuation">;</span>
+              Bitmap bitmap <span class="token operator">=</span> bitmapDrawable<span class="token punctuation">.</span><span class="token function">getBitmap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>bitmap <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>bitmap<span class="token punctuation">.</span><span class="token function">isRecycled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                  bitmap<span class="token punctuation">.</span><span class="token function">recycle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+              <span class="token punctuation">}</span>
+          <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">// ImageView的父组件必须移除此ImageView：</span>
+        mIVBackground<span class="token punctuation">.</span><span class="token function">getParent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">removeView</span><span class="token punctuation">(</span>mIVBackground<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      mIVBackground <span class="token operator">=</span> null<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+      
+      <span class="token comment" spellcheck="true">// 最后，清除 WebView 组件缓存并销毁</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>mWebView <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">stopLoading</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">clearHistory</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">removeAllViewsInLayout</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">removeAllViews</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">setWebViewClient</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView<span class="token punctuation">.</span><span class="token function">destroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        mWebView <span class="token operator">=</span> null<span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span> <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// 最后，执行 super.onDestroy 并 System.exit(0) 退出 dvm 进程！</span>
+      <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+      System<span class="token punctuation">.</span><span class="token function">exit</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//android.os.Process.killProcess(android.os.Process.myPid());不太管用~</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+<p><em><strong>PS：特别注意，如果你使用的是腾讯浏览器服务（TBS）<code>X5WebView</code> 的话，则无需像上面那样繁琐，官方API给定一句调用并保证即可一次全部清除完毕：</strong></em></p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  QbSdk<span class="token punctuation">.</span><span class="token function">clearAllWebViewCache</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<blockquote>
+<p><em><strong>扩展，<code>TBS-X5WebView</code> 使用：</strong></em>(引用自<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/93970d419bc7">https://www.jianshu.com/p/93970d419bc7</a>)</p>
+<ol>
+<li>添加依赖：</li>
+</ol>
+<pre class=" language-groovy"><code class="language-groovy">dependencies <span class="token punctuation">{</span>
+    api <span class="token string">'com.yanzhenjie:permission:2.0.3'</span>
+    api <span class="token string">'com.tencent.tbs.tbssdk:sdk:43939'</span> <span class="token comment" spellcheck="true">// 腾讯X5WebView</span>
+
+    implementation <span class="token string">"org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"</span>
+    implementation <span class="token string">'androidx.core:core-ktx:1.2.0'</span>
+    implementation <span class="token string">'androidx.appcompat:appcompat:1.1.0'</span>
+    implementation <span class="token string">'com.google.android.material:material:1.1.0'</span>
+    implementation <span class="token string">'androidx.constraintlayout:constraintlayout:1.1.3'</span>
+    testImplementation <span class="token string">'junit:junit:4.+'</span>
+    androidTestImplementation <span class="token string">'androidx.test.ext:junit:1.1.1'</span>
+    androidTestImplementation <span class="token string">'androidx.test.espresso:espresso-core:3.2.0'</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ol start="2">
+<li><code>AndroidManifest.xml</code> 配置 <code>service</code>：</li>
+</ol>
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>service</span>
+    <span class="token attr-name"><span class="token namespace">android:</span>name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.tencent.smtt.export.external.DexClassLoaderProviderService<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>label</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>dexopt<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>process</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>:dexopt<span class="token punctuation">"</span></span> <span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>service</span><span class="token punctuation">></span></span>
+</code></pre>
+<ol start="3">
+<li><code>Application类</code> 中初始化 <code>TBS</code>： </li>
+</ol>
+<pre class=" language-kotlin"><code class="language-kotlin"><span class="token keyword">import</span> android<span class="token punctuation">.</span>app<span class="token punctuation">.</span>Application<span class="token punctuation">;</span>
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>tencent<span class="token punctuation">.</span>smtt<span class="token punctuation">.</span>export<span class="token punctuation">.</span>external<span class="token punctuation">.</span>TbsCoreSettings<span class="token punctuation">;</span>
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>tencent<span class="token punctuation">.</span>smtt<span class="token punctuation">.</span>sdk<span class="token punctuation">.</span>QbSdk<span class="token punctuation">;</span>
+<span class="token keyword">import</span> java<span class="token punctuation">.</span>util<span class="token punctuation">.</span>HashMap<span class="token punctuation">;</span>
+
+<span class="token keyword">public</span> <span class="token keyword">class</span> BaseApplication extends Application <span class="token punctuation">{</span>
+    <span class="token annotation builtin">@Override</span>
+    <span class="token keyword">public</span> void <span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token function">initX5WebView</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * 初始化x5WebView
+     */</span>
+    <span class="token keyword">private</span> void <span class="token function">initX5WebView</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// 搜集本地tbs内核信息并上报服务器，服务器返回结果决定使用哪个内核。</span>
+        QbSdk<span class="token punctuation">.</span>PreInitCallback cb <span class="token operator">=</span> new QbSdk<span class="token punctuation">.</span><span class="token function">PreInitCallback</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token annotation builtin">@Override</span>
+            <span class="token keyword">public</span> void <span class="token function">onViewInitFinished</span><span class="token punctuation">(</span>boolean arg0<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">// x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。</span>
+                LogUtils<span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span><span class="token string">"onViewInitFinished is "</span><span class="token operator">+</span>arg0<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+
+            <span class="token annotation builtin">@Override</span>
+            <span class="token keyword">public</span> void <span class="token function">onCoreInitFinished</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// x5内核初始化接口</span>
+        QbSdk<span class="token punctuation">.</span><span class="token function">initX5Environment</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> cb<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 在调用TBS初始化、创建WebView之前进行如下配置</span>
+        HashMap map <span class="token operator">=</span> new <span class="token function">HashMap</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>TbsCoreSettings<span class="token punctuation">.</span>TBS_SETTINGS_USE_SPEEDY_CLASSLOADER<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>TbsCoreSettings<span class="token punctuation">.</span>TBS_SETTINGS_USE_DEXLOADER_SERVICE<span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        QbSdk<span class="token punctuation">.</span><span class="token function">initTbsSettings</span><span class="token punctuation">(</span>map<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ol start="4">
+<li>在 <code>Activity</code> 中使用： </li>
+</ol>
+<pre class=" language-kotlin"><code class="language-kotlin"><span class="token keyword">import</span> androidx<span class="token punctuation">.</span>appcompat<span class="token punctuation">.</span>app<span class="token punctuation">.</span>AppCompatActivity
+<span class="token keyword">import</span> android<span class="token punctuation">.</span>os<span class="token punctuation">.</span>Bundle
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>tencent<span class="token punctuation">.</span>smtt<span class="token punctuation">.</span>sdk<span class="token punctuation">.</span>QbSdk
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>tencent<span class="token punctuation">.</span>smtt<span class="token punctuation">.</span>sdk<span class="token punctuation">.</span>WebChromeClient
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>tencent<span class="token punctuation">.</span>smtt<span class="token punctuation">.</span>sdk<span class="token punctuation">.</span>WebView
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>yanzhenjie<span class="token punctuation">.</span>permission<span class="token punctuation">.</span>AndPermission
+<span class="token keyword">import</span> com<span class="token punctuation">.</span>yanzhenjie<span class="token punctuation">.</span>permission<span class="token punctuation">.</span>runtime<span class="token punctuation">.</span>Permission
+<span class="token keyword">import</span> kotlinx<span class="token punctuation">.</span>android<span class="token punctuation">.</span>synthetic<span class="token punctuation">.</span>main<span class="token punctuation">.</span>activity_main<span class="token punctuation">.</span><span class="token operator">*</span>
+
+<span class="token keyword">class</span> MainActivity <span class="token operator">:</span> <span class="token function">AppCompatActivity</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token operator">:</span> Bundle<span class="token operator">?</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span>
+        <span class="token function">setContentView</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span>
+
+        AndPermission<span class="token punctuation">.</span><span class="token function">with</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">runtime</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">permission</span><span class="token punctuation">(</span>Permission<span class="token punctuation">.</span>WRITE_EXTERNAL_STORAGE<span class="token punctuation">,</span> Permission<span class="token punctuation">.</span>READ_PHONE_STATE<span class="token punctuation">)</span>
+            <span class="token punctuation">.</span><span class="token function">onGranted</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+            <span class="token punctuation">.</span><span class="token function">onDenied</span> <span class="token punctuation">{</span> <span class="token punctuation">}</span>
+            <span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+        <span class="token comment" spellcheck="true">// 加载进度</span>
+        forum_context<span class="token punctuation">.</span>webChromeClient <span class="token operator">=</span> <span class="token keyword">object</span> <span class="token operator">:</span> <span class="token function">WebChromeClient</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onProgressChanged</span><span class="token punctuation">(</span>p0<span class="token operator">:</span> WebView<span class="token operator">?</span><span class="token punctuation">,</span> p1<span class="token operator">:</span> Int<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onProgressChanged</span><span class="token punctuation">(</span>p0<span class="token punctuation">,</span> p1<span class="token punctuation">)</span>
+                LogUtils<span class="token punctuation">.</span><span class="token function">d</span><span class="token punctuation">(</span>p1<span class="token punctuation">)</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        forum_context<span class="token punctuation">.</span>settings<span class="token punctuation">.</span>javaScriptEnabled <span class="token operator">=</span> <span class="token boolean">true</span> <span class="token comment" spellcheck="true">// 开启js</span>
+        forum_context<span class="token punctuation">.</span>settingsExtension<span class="token punctuation">.</span><span class="token function">setDisplayCutoutEnable</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 刘海屏适配</span>
+        forum_context<span class="token punctuation">.</span><span class="token function">loadUrl</span><span class="token punctuation">(</span><span class="token string">"https://www.baidu.com"</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 加载url</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">override</span> <span class="token keyword">fun</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        QbSdk<span class="token punctuation">.</span><span class="token function">clearAllWebViewCache</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> <span class="token boolean">true</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// 清除缓存</span>
+        <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<ol start="5">
+<li><code>activity-布局</code> 文件：</li>
+</ol>
+<pre class=" language-xml"><code class="language-xml"><span class="token prolog">&lt;?xml version="1.0" encoding="utf-8"?></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>LinearLayout</span> <span class="token attr-name"><span class="token namespace">xmlns:</span>android</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res/android<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">xmlns:</span>app</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://schemas.android.com/apk/res-auto<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">xmlns:</span>tools</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://schemas.android.com/tools<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>match_parent<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">tools:</span>context</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>.MainActivity<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>com.tencent.smtt.sdk.WebView</span>
+        <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>@+id/forum_context<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>fill_parent<span class="token punctuation">"</span></span>
+        <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>fill_parent<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>LinearLayout</span><span class="token punctuation">></span></span>
+</code></pre>
+<hr>
+<p>另外，也可动态添加 WebView，如：</p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// 动态添加Webview（X5WebView）</span>
+LinearLayout<span class="token punctuation">.</span>LayoutParams params <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">LinearLayout<span class="token punctuation">.</span>LayoutParams</span><span class="token punctuation">(</span>LinearLayout<span class="token punctuation">.</span>LayoutParams<span class="token punctuation">.</span>MATCH_PARENT<span class="token punctuation">,</span> LinearLayout<span class="token punctuation">.</span>LayoutParams<span class="token punctuation">.</span>MATCH_PARENT<span class="token punctuation">)</span><span class="token punctuation">;</span>
+WeakReference weakReference <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//使用弱引用去持有当前Activity</span>
+X5WebView webView <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">X5WebView</span><span class="token punctuation">(</span><span class="token punctuation">(</span>Context<span class="token punctuation">)</span> weakReference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+webView<span class="token punctuation">.</span><span class="token function">setLayoutParams</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span><span class="token punctuation">;</span>
+mWebviewLayout<span class="token punctuation">.</span><span class="token function">addView</span><span class="token punctuation">(</span>webView<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
+</blockquote>
+<h4 id="1-6-Handler-引起的内存泄漏"><a href="#1-6-Handler-引起的内存泄漏" class="headerlink" title="1.6 Handler 引起的内存泄漏"></a>1.6 Handler 引起的内存泄漏</h4><p><em>代码讲解：</em></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">DemoActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+      Handler mHander <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Handler</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>    
+      <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>如上代码就是一个内存泄漏代码，咱们来细说一下： </p>
+<blockquote>
+<p><strong>首先，<code>mHandler</code> 是一个 <code>non-static-匿名内部类__实例</code> ，所以其一定持有外部类（DemoActivity）的引用。且又因消息队列是在一个 <code>Looper</code> 线程中不断轮询处理消息，那就存在一种情况，当该 <code>DemoActivity</code> 退出时，<code>MessageQueue</code> 中的 <code>Message</code> 持有 <code>mHandler</code> 实例引用，而 <code>mHandler</code> 又持有 <code>DemoActivity</code> 引用，最终导致该 <code>Activity</code> 的内存资源无法及时回收，从而引发内存泄漏。</strong></p>
+</blockquote>
+<p><strong>👉🏻<code>Handler</code>内存泄漏的解决方案：</strong></p>
+<blockquote>
+<ol>
+<li>在 <code>Activity</code> 销毁（<code>onDestroy()</code>）时，移除 <code>MessageQueue</code> 中的消息，以避免 <code>Looper</code> 线程的 <code>MessageQueue</code> 中有待处理的 <code>Message</code>。如：<blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  mHandler<span class="token punctuation">.</span><span class="token function">removeCallbacks</span><span class="token punctuation">(</span>xxxRunnable<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 移除指定消息</span>
+  mHandler<span class="token punctuation">.</span><span class="token function">removeCallbacksAndMessages</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 移除所有 Callbacks 和 Messages</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+</li>
+<li>使用 <code>static-Handler-内部类</code>，然后对 <code>Handler</code> 持有的对象使用 <code>弱引用</code> 。当 GC 时，就可以回收 Handler 持有的对象了。如：<blockquote>
+<pre class=" language-java"><code class="language-java">```java
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> MyHandler mHander <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyHandler</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        mHandler<span class="token punctuation">.</span><span class="token function">removeCallbacksAndMessages</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">MyHandler</span> <span class="token keyword">extends</span> <span class="token class-name">Handler</span> <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> WeakReference<span class="token operator">&lt;</span>Context<span class="token operator">></span> context <span class="token operator">=</span> null<span class="token punctuation">;</span>
+
+        <span class="token keyword">public</span> <span class="token function">MyHandler</span><span class="token punctuation">(</span>Context context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>context <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token operator">&lt;</span>Context<span class="token operator">></span><span class="token punctuation">(</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">handleMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+<h3 id="2-优化内存空间"><a href="#2-优化内存空间" class="headerlink" title="2. 优化内存空间"></a>2. 优化内存空间</h3><h4 id="2-1-减少不必要内存开销"><a href="#2-1-减少不必要内存开销" class="headerlink" title="2.1 减少不必要内存开销"></a>2.1 减少不必要内存开销</h4><h5 id="2-1-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代"><a href="#2-1-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代" class="headerlink" title="2.1.1 慎用枚举，Google推荐 @IntDef 和 @StringDef 替代"></a>2.1.1 慎用枚举，Google推荐 <code>@IntDef</code> 和 <code>@StringDef</code> 替代</h5><blockquote>
+<p>Google官方推荐在Android中使用 <code>@IntDef</code> 和 <code>@StringDef</code> 替代枚举类型。</p>
+</blockquote>
+<ul>
+<li><p>第一步，添加依赖：</p>
+<pre class=" language-groovy"><code class="language-groovy">compile <span class="token string">'com.android.support:support-annotations:25.1.0'</span>
+</code></pre>
+</li>
+<li><p>第二步，定义常量 -&gt; 声明构造方法（<code>@IntDef/@StringDef</code> 包裹所有常量并声明 <code>@Rentention为SOURCE策略</code>）-&gt; <code>@XXX式声明</code></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+
+  <span class="token comment" spellcheck="true">// step-1：先定义 常量</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Jan <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Feb <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Mar <span class="token operator">=</span> <span class="token number">3</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Apr <span class="token operator">=</span> <span class="token number">4</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> May <span class="token operator">=</span> <span class="token number">5</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Jun <span class="token operator">=</span> <span class="token number">6</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Jul <span class="token operator">=</span> <span class="token number">7</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Aug <span class="token operator">=</span> <span class="token number">8</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Sep <span class="token operator">=</span> <span class="token number">9</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Oct <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Nov <span class="token operator">=</span> <span class="token number">11</span><span class="token punctuation">;</span>
+  <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> Dec <span class="token operator">=</span> <span class="token number">12</span><span class="token punctuation">;</span>
+
+  <span class="token comment" spellcheck="true">// step-2：声明构造器，用 @IntDef "包住" 常量并 @Retention 定义策略</span>
+  <span class="token annotation punctuation">@IntDef</span><span class="token punctuation">(</span><span class="token punctuation">{</span>Jan<span class="token punctuation">,</span> Feb<span class="token punctuation">,</span> Mar<span class="token punctuation">,</span> Apr<span class="token punctuation">,</span> May<span class="token punctuation">,</span> Jun<span class="token punctuation">,</span> Jul<span class="token punctuation">,</span> Aug<span class="token punctuation">,</span> Sep<span class="token punctuation">,</span> Oct<span class="token punctuation">,</span> Nov<span class="token punctuation">,</span> Dec<span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>SOURCE<span class="token punctuation">)</span>
+  <span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">Months</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Months</span> <span class="token keyword">int</span> mNowMonth <span class="token operator">=</span> Jan<span class="token punctuation">;</span>
+
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle savedInstanceState<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">super</span><span class="token punctuation">.</span><span class="token function">onCreate</span><span class="token punctuation">(</span>savedInstanceState<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">setContentView</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>layout<span class="token punctuation">.</span>activity_main<span class="token punctuation">)</span><span class="token punctuation">;</span>
+      <span class="token function">setNowMonth</span><span class="token punctuation">(</span>Jan<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token comment" spellcheck="true">//声明变量</span>
+      <span class="token annotation punctuation">@Months</span> <span class="token keyword">int</span> currentMonth <span class="token operator">=</span> <span class="token function">getCurrentMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+      <span class="token keyword">switch</span> <span class="token punctuation">(</span>currentMonth<span class="token punctuation">)</span><span class="token punctuation">{</span>
+          <span class="token keyword">case</span> Jan<span class="token operator">:</span>
+              <span class="token keyword">break</span><span class="token punctuation">;</span>
+          <span class="token keyword">case</span> Feb<span class="token operator">:</span>
+              <span class="token keyword">break</span><span class="token punctuation">;</span>
+          <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+          <span class="token keyword">default</span><span class="token operator">:</span>
+              <span class="token keyword">break</span><span class="token punctuation">;</span>
+      <span class="token punctuation">}</span>
+
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setCurrentMonth</span><span class="token punctuation">(</span><span class="token annotation punctuation">@Months</span> <span class="token keyword">int</span> currentMonth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>currentMonth <span class="token operator">=</span> currentMonth<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token annotation punctuation">@Months</span>
+  <span class="token keyword">public</span> <span class="token keyword">int</span> <span class="token function">getCurrentMonth</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">return</span> mCurrentMonth<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+<p>再如，<code>Toast</code> 源码，就是使用 <code>@IntDef</code> 方式：</p>
+<blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// android.widget.Toast.java</span>
+<span class="token comment" spellcheck="true">//</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Toast</span> <span class="token punctuation">{</span>
+    <span class="token keyword">static</span> <span class="token keyword">final</span> String TAG <span class="token operator">=</span> <span class="token string">"Toast"</span><span class="token punctuation">;</span>
+    <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">boolean</span> localLOGV <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/** @hide */</span>
+    <span class="token annotation punctuation">@IntDef</span><span class="token punctuation">(</span>prefix <span class="token operator">=</span> <span class="token punctuation">{</span> <span class="token string">"LENGTH_"</span> <span class="token punctuation">}</span><span class="token punctuation">,</span> value <span class="token operator">=</span> <span class="token punctuation">{</span>
+            LENGTH_SHORT<span class="token punctuation">,</span>
+            LENGTH_LONG
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>SOURCE<span class="token punctuation">)</span>
+    <span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">Duration</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * Show the view or text notification for a short period of time.  This time
+     * could be user-definable.  This is the default.
+     * @see #setDuration
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> LENGTH_SHORT <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">/**
+     * Show the view or text notification for a long period of time.  This time
+     * could be user-definable.
+     * @see #setDuration
+     */</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">int</span> LENGTH_LONG <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+</code></pre>
+</blockquote>
+<h4 id="LruCache（android-support-v4-android-uti-LrueCache包下）"><a href="#LruCache（android-support-v4-android-uti-LrueCache包下）" class="headerlink" title="LruCache（android-support-v4/android.uti.LrueCache包下）"></a>LruCache（<code>android-support-v4/android.uti.LrueCache</code>包下）</h4><p>LruCache算法，又称为近期最少使用算法。</p>
+<p>LruCache 中 Lru 算法的实际上是通过 <code>LinkedHashMap </code>来实现的。<code>LinkedHashMap</code> 继承于 <code>HashMap</code>，它使用了一个双向链表来存储 <code>Map</code> 中的 <code>Entry</code> 顺序关系，对于 <code>get、put、remove</code> 等操作，<code>LinkedHashMap</code> 除了要做 <code>HashMap</code> 做的事情，还做些调整 <code>Entry</code> 顺序链表的工作。</p>
+<p>LruCache 中将 <code>LinkedHashMap</code> 的顺序设置为 <code>LRU</code> 顺序来实现 <code>LRU</code> 缓存，<em><strong>每次调用 <code>get</code>(也就是从内存缓存中取图片)，则将该对象移到链表的尾端。调用 <code>put</code> 插入新的对象也是存储在链表尾端，这样当内存缓存达到设定的最大值时，将链表头部的对象（近期最少用到的）移除</strong></em>。</p>
+<h2 id="异常拦截优化"><a href="#异常拦截优化" class="headerlink" title="异常拦截优化"></a>异常拦截优化</h2><p>请求服务端数据过程中，访问接口和解析返回数据都可能出错，我们可通过拦截器在这两层拦截错误。</p>
 <ul>
 <li>在访问接口时，我们不用设置拦截器，因为一旦出现错误，Retrofit会自动抛出异常。比如，常见请求异常404，500，503等等。</li>
 <li>在解析数据时，我们设置一个拦截器，判断Result里面的code是否为成功，如果不成功，则要根据与服务器约定好的错误码来抛出对应的异常。比如，token失效，禁用同账号登陆多台设备，缺少参数，参数传递异常等等。</li>
@@ -558,7 +1014,7 @@
 <li><strong>数据处理</strong>：“数据处理量大”，有：1. 主线程处理数据。2. 数据处理占用 CPU 高，导致主线程拿不到时间片。3. 内存增加导致 <code>GC</code> 频繁，从而引起卡顿。</li>
 </ul>
 <blockquote>
-<p><em><strong>Android系统每隔 <code>16.6ms(1/60fps)</code> 就会发出一个 <code>VSYNC信号</code> ，以触发对 UI 渲染。如渲染成功，这样就能达到流畅画面所需的 <code>60FPS（每秒刷新60帧）</code> 。</strong></em> 例如，若某操作耗时 20ms ，系统得到 VSYNC 信号时就无法正常渲染，就会出现丢帧从而表现卡顿。  </p>
+<p><em><strong>Android系统每隔 <code>16.6ms(1/60fps)</code> 就会发出一个 <code>VSYNC信号</code> ，以触发对 UI 渲染。如渲染成功，这样就能达到流畅画面所需的 <code>60FPS（每秒刷新60帧）</code> 。也就是说，60fps 用户感觉不到卡。</strong></em> 例如，若某操作耗时 20ms ，系统得到 VSYNC 信号时就无法正常渲染，就会出现丢帧从而表现卡顿。  </p>
 <p><strong>☞总结卡顿原因：</strong></p>
 <ol>
 <li><strong>绘制任务重，绘制一帧时间长。</strong></li>
@@ -664,13 +1120,53 @@
 </blockquote>
 </li>
 <li><p><strong><code>&lt;ViewStub&gt;</code>（延迟加载）</strong>：</p>
-<p><code>&lt;ViewStub&gt;</code> 是一个不可见、大小为 0 的 view，能为 xml 加载时减小压力。</p>
+<p><code>&lt;ViewStub&gt;</code> 是一个 <strong>不可见、大小为0(即不占布局位置)、占用资源极小</strong> 的 view，能为 xml 加载时减小压力。</p>
 <blockquote>
-<p><code>&lt;ViewStub&gt;</code> 常用于 <em><strong>进度条、空/错误占位消息</strong></em> 等无需第一时间显示的view，当 <code>inflate()</code> 后才会被对应的 layout 替换。  </p>
+<p><code>&lt;ViewStub&gt;</code> 常用于 <em><strong>进度条、空/错误占位消息</strong></em> 等无需第一时间显示的view，当 <code>inflate()</code> 或 <code>setVisiblity</code> 后才会被对应的 layout 替换并显示。  </p>
 <p><strong>注：<code>&lt;ViewStub&gt;</code> 暂不支持 <code>&lt;merge&gt;</code> 标签？？</strong></p>
+<p><em>来自官方介绍：</em><br><img src="../../../images/illustration/ViewStub-Introduce.png" alt="ViewStub-Introduce.png"></p>
+<ul>
+<li><strong>注：<em>ViewStub 调用 <code>inflate()</code> 方法后，ViewStub被替换为以 <code>inflateId</code> 为 Id 的视图。</em></strong></li>
+</ul>
 </blockquote>
 </li>
 </ul>
+<p><em>使用示例：</em></p>
+<pre class=" language-xml"><code class="language-xml"><span class="token comment" spellcheck="true">&lt;!-- main layout.xml --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>RelativeLayout</span><span class="token punctuation">></span></span>
+  ...
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ViewStub</span>
+    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>@+id/viewStub<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>inflateId</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>@+id/NoDataLayoutReplacedId_afterInflate<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_width</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>120dp<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout_height</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>60dp<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>layout</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>@layout/layout_no_data<span class="token punctuation">"</span></span>
+  <span class="token punctuation">/></span></span>
+  ...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>RelativeLayout</span><span class="token punctuation">></span></span>
+
+<span class="token comment" spellcheck="true">&lt;!-- view stub layout --></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>FrameLayout</span><span class="token punctuation">></span></span>
+  ...
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Textview</span>
+    <span class="token attr-name">...</span>
+    <span class="token attr-name"><span class="token namespace">android:</span>id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>@+id/noData_tv<span class="token punctuation">"</span></span>
+    <span class="token attr-name"><span class="token namespace">android:</span>text</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>No Data Found<span class="token punctuation">"</span></span> <span class="token punctuation">/></span></span>
+  ...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>FrameLayout</span><span class="token punctuation">></span></span>
+</code></pre>
+<p><em>调用并显示 ViewStub：</em></p>
+<pre class=" language-java"><code class="language-java">ViewStub mViewStub <span class="token operator">=</span> <span class="token punctuation">(</span>ViewStub<span class="token punctuation">)</span> <span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>viewStub<span class="token punctuation">)</span><span class="token punctuation">;</span>
+mViewStub<span class="token punctuation">.</span><span class="token function">inflate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 或 mViewStub.setVisible(View.VISIBLE) ，调用后，ViewStub 从当前父布局移除但其 @layout 的布局沿用其 layout_params 参数（如示例中：width/height/...分别为120dp/60dp/...）。用 @layout 的布局替换了 ViewStub</span>
+<span class="token comment" spellcheck="true">//View mNoDataFoundLayout = mViewStub.inflate(); //报错！因为 mViewStub 在 inflate() 完后被移除并替换，不存在了。</span>
+
+<span class="token comment" spellcheck="true">// 注：ViewStub.inflate() 只能调用一次，否则抛找不到异常！如果要用，则用 inflateId 来作为对应 @layout 引用的布局。</span>
+<span class="token comment" spellcheck="true">// TextView mTvNoDataFound = mViewStub.findViewById(R.id.noData_tv); //错误！</span>
+
+ViewGroup mNoDataFoundLayout <span class="token operator">=</span> <span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>NoDataLayoutReplacedId_afterInflate<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// inflate() 调用后，则布局完全被替换，则可用 @androi:inflateId 来作为替换布局引用id~~~</span>
+ViewGroup mNoDataFoundLayout2 <span class="token operator">=</span> <span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>NoDataLayoutReplacedId_afterInflate<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 此时，多次调用也不会错。因为相当于 main-layout 中已经把 ViewStub 用该布局替换了，和平常使用一样。</span>
+TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout<span class="token punctuation">.</span><span class="token function">findViewById</span><span class="token punctuation">(</span>R<span class="token punctuation">.</span>id<span class="token punctuation">.</span>noData_tv<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <h4 id="2-3-减少自定义-view-过渡绘制（使用clipRect-、quickReject-）"><a href="#2-3-减少自定义-view-过渡绘制（使用clipRect-、quickReject-）" class="headerlink" title="2.3 减少自定义 view 过渡绘制（使用clipRect()、quickReject()）"></a>2.3 减少自定义 view 过渡绘制（使用<code>clipRect()</code>、<code>quickReject()</code>）</h4><blockquote>
 <ul>
 <li><code>canvas.clipRect()</code>：指定矩形区域，只有在此区域内才会被绘制，以此节约 CPU及GPU 资源。<pre class=" language-java"><code class="language-java">canvas<span class="token punctuation">.</span><span class="token function">clipRect</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">,</span> <span class="token number">200</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//指定(0,0)到(200,200)矩形区域为绘制区域</span>
@@ -679,7 +1175,7 @@
 <li><code>canvas.quickReject()</code>：判断画布是否与指定矩形相交，以此决定是否需要绘制该画布。<pre class=" language-java"><code class="language-java"><span class="token keyword">boolean</span> isNeedSkipDraw <span class="token operator">=</span> canvas<span class="token punctuation">.</span><span class="token function">quickReject</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">RectF</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> Canvas<span class="token punctuation">.</span>EdgeType<span class="token punctuation">.</span>AA<span class="token punctuation">)</span><span class="token punctuation">;</span>
 </code></pre>
 </li>
-<li>另外，<code>onDraw()</code> 中不要做耗时操作过创建对象，如：new Paint()等，放到构造方法初始化。</li>
+<li>另外，<code>onDraw()</code> 中不要做耗时操作且创建局部对象，如：new Paint()等，应放到构造方法初始化。</li>
 </ul>
 </blockquote>
 <h1 id="（三）优化：《耗损》"><a href="#（三）优化：《耗损》" class="headerlink" title="（三）优化：《耗损》"></a>（三）优化：《耗损》</h1><p>网络问题，归结如下几方面：</p>
@@ -701,7 +1197,7 @@
 <li>DNS 解析失败率占互联网失败中很大一种，而且首次解析一般需要几百毫秒。</li>
 </ul>
 </blockquote>
-<p><strong>☞优化文案：</strong></p>
+<p><strong>☞优化方案：</strong></p>
 <blockquote>
 <ol>
 <li>DNS 解析易失败且首次耗时，则可以：<strong>使用 IP 直连，省去 DNS 解析过程，节省这些时间。</strong></li>
@@ -788,6 +1284,10 @@
 <li><strong>插件化</strong>。例如，某些功能模块放在服务器上，按需动态下载安装，可以减少用户初始安装包大小，以增加下载量和用户体验。</li>
 </ul>
 </blockquote>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/haha223545/category_7889161.html">CSDN-Android-性能优化
+</a></li>
+</ul>
 
                 
             </div>
@@ -1616,7 +2116,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.7k</span>
+                        class="white-color">31.5k</span>
             
             
             

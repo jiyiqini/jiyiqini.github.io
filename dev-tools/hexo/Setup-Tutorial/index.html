@@ -778,12 +778,12 @@ $ hexo s    <span class="token comment" spellcheck="true">#启动本地预览。
 <span class="token comment" spellcheck="true"># ********** 4，部署 Hexo 到 GitHub Pages</span>
 <span class="token comment" spellcheck="true"># 本地博客测试成功后，就是上传到 GitHub 进行部署，使其能够在网络上访问。</span>
 $ <span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git --save <span class="token comment" spellcheck="true">#安装 hexo-deployer-git。否则可能会出错“error deployer not found:git/github”</span>
-$ 修改 <span class="token punctuation">..</span>/<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;your_hexo_blog&amp;#125;/_config.yml$deploy 中 Deployment 部分并保存：</span>
+$ 修改 <span class="token punctuation">..</span>/<span class="token punctuation">{</span>your_hexo_blog<span class="token punctuation">}</span>/_config.yml<span class="token variable">$deploy</span> 中 Deployment 部分并保存：
     <span class="token comment" spellcheck="true"># Deployment</span>
     <span class="token comment" spellcheck="true">## Docs: https://hexo.io/docs/deployment.html</span>
     deploy:
       type: <span class="token function">git</span>
-      repo: https://github.com/<span class="token operator">&amp;</span><span class="token comment" spellcheck="true">#123;用户名&amp;#125;/&amp;#123;用户名&amp;#125;.github.io.git</span>
+      repo: https://github.com/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>.github.io.git
       branch: master
 $ hexo d <span class="token comment" spellcheck="true">#发布网点到 Github Pages</span>
 $ 浏览器访问 https://用户名.github.io，结束. <span class="token comment" spellcheck="true">#注意：第一次发布可能会有10分钟的延迟，在这期间可能看到的是空白页面。</span>
@@ -1819,7 +1819,7 @@ $ hexo d<span class="token operator">|</span>deploy   <span class="token comment
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">28.7k</span>
+                        class="white-color">31.5k</span>
             
             
             
