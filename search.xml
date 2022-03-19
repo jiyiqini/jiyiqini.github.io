@@ -2295,7 +2295,7 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 </blockquote>
 <h5 id="1-7-2-AsyncTask"><a href="#1-7-2-AsyncTask" class="headerlink" title="1.7.2 AsyncTask"></a>1.7.2 AsyncTask</h5><p><code>AsyncTask = Handler + Thread</code>。leak 原理类同 <code>Runnable</code>，Activity 销毁前 <code>doInBackground()</code> 未得到停止。</p>
 <blockquote>
-<p><strong>👉🏻多线程如 <code>AsyncTask</code> 的内存泄漏解决方案：</strong><br>『推荐使用 <code>cancel() + isCancelled()</code> ！』</p>
+<p><em>👉🏻多线程如 <code>AsyncTask</code> 的内存泄漏解决方案：</em> <em><strong>『推荐使用 <code>cancel() + isCancelled()</code> ！』</strong></em></p>
 <blockquote>
 <ul>
 <li>若 AsyncTask 任务 <code>还未开始</code> 且 <code>cancel</code>，则能立即取消任务且不会执行；</li>
