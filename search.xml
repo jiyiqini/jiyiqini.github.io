@@ -1869,13 +1869,13 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
 <li>每个App都分配 <code>Dalvik Heap Size</code> ，表示系统分配给每个App内存的最大限制阈值。  </li>
 </ul>
 <p>此阈值在不同厂商设备是不一样的，查看方式如：</p>
-<pre class=" language-shell"><code class="language-shell">➜ ~ adb shell getprop | grep heap
-[dalvik.vm.heapgrowthlimit]: [256m]
-[dalvik.vm.heapmaxfree]: [2m]
-[dalvik.vm.heapminfree]: [512k]
-[dalvik.vm.heapsize]: [256m]
-[dalvik.vm.heapstartsize]: [5m]
-[dalvik.vm.heaptargetutilization]: [0.75]
+<pre class=" language-bash"><code class="language-bash">➜ ~ adb shell getprop <span class="token operator">|</span> <span class="token function">grep</span> heap
+<span class="token punctuation">[</span>dalvik.vm.heapgrowthlimit<span class="token punctuation">]</span>: <span class="token punctuation">[</span>256m<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>dalvik.vm.heapmaxfree<span class="token punctuation">]</span>: <span class="token punctuation">[</span>2m<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>dalvik.vm.heapminfree<span class="token punctuation">]</span>: <span class="token punctuation">[</span>512k<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>dalvik.vm.heapsize<span class="token punctuation">]</span>: <span class="token punctuation">[</span>256m<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>dalvik.vm.heapstartsize<span class="token punctuation">]</span>: <span class="token punctuation">[</span>5m<span class="token punctuation">]</span>
+<span class="token punctuation">[</span>dalvik.vm.heaptargetutilization<span class="token punctuation">]</span>: <span class="token punctuation">[</span>0.75<span class="token punctuation">]</span>
 </code></pre>
 <p>总之，Android对每个App限制内存大小：</p>
 <blockquote>
@@ -1890,7 +1890,7 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
 </blockquote>
 </blockquote>
 <p>所以，Java开发不需要对内存手动分配与释放，但 <strong>需要合理的内存管理</strong> 。</p>
-<h2 id="内存优化点"><a href="#内存优化点" class="headerlink" title="内存优化点"></a>内存优化点</h2><blockquote>
+<h2 id="【稳】内存优化点"><a href="#【稳】内存优化点" class="headerlink" title="【稳】内存优化点"></a>【稳】内存优化点</h2><blockquote>
 <ol>
 <li><em><strong>避免内存泄漏（★★★★★）</strong></em></li>
 <li><em><strong>优化内存空间</strong></em><ul>
@@ -1907,7 +1907,7 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
 </li>
 </ul>
 </li>
-<li><strong>LruCache</strong> </li>
+<li><strong><code>LruCache</code> 缓存</strong>。   </li>
 <li><strong>图片内存优化：以设置位图规格，根据“采样因子”做压缩，用一些图片缓存方式（如<code>LruCache</code>）对图片进行管理等等。</strong> 由于每个App被分配的 dalvik heap size 有限制，而且图片资源又相对耗内存。所以，解决好图片内存优化，是Android开发中的一大重要模块！！！（参考：<a href="https://blog.csdn.net/haha223545/article/details/95349267%EF%BC%89">https://blog.csdn.net/haha223545/article/details/95349267）</a></li>
 </ul>
 </li>
@@ -1918,10 +1918,11 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
 <ol>
 <li>容器中无用对象未清理造成的泄漏</li>
 <li>单例/<code>static变量</code>造成的内存泄漏</li>
-<li>内部类(匿名、非静态)</li>
+<li>内部类(<code>匿名、非静态</code>)</li>
 <li>资源未关闭/注册未解注册造成的内存泄漏</li>
 <li><code>Webview</code> 引起的内存泄漏</li>
 <li><code>Handler</code> 引起的内存泄漏</li>
+<li>多线程引起的内存泄漏</li>
 </ol>
 </blockquote>
 <h4 id="1-1-容器中无用对象未清理造成的泄漏"><a href="#1-1-容器中无用对象未清理造成的泄漏" class="headerlink" title="1.1 容器中无用对象未清理造成的泄漏"></a>1.1 容器中无用对象未清理造成的泄漏</h4><p>容器中添加对象，当不再需要该对象时，并没有将其引用从容器（集合）中清理掉，就会导致集合容器越来越大。如果该集合容器是 <code>static</code> 的话，情况就更严重。</p>
@@ -1935,12 +1936,42 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
 <span class="token punctuation">}</span>
 </code></pre>
 </blockquote>
-<h4 id="1-2-单例-static变量造成的内存泄漏"><a href="#1-2-单例-static变量造成的内存泄漏" class="headerlink" title="1.2 单例/static变量造成的内存泄漏"></a>1.2 单例/<code>static变量</code>造成的内存泄漏</h4><p><code>static</code> 变量长期维持对象引用，阻止 <code>GC</code> 回收。当 <code>static</code> 变量持有的是大数据对象，如 <code>Bitmap/Context</code> 等，就更容易引起泄漏等问题。</p>
-<h4 id="1-3-内部类-匿名、非静态"><a href="#1-3-内部类-匿名、非静态" class="headerlink" title="1.3 内部类(匿名、非静态)"></a>1.3 内部类(匿名、非静态)</h4><blockquote>
-<p>总之，内部类易造成内存泄漏的根本原因是：内部类可持有外部类引用（这也是内部类的特点~~）。</p>
+<h4 id="1-2-单例-static变量造成的内存泄漏"><a href="#1-2-单例-static变量造成的内存泄漏" class="headerlink" title="1.2 单例/static变量造成的内存泄漏"></a>1.2 单例/<code>static变量</code>造成的内存泄漏</h4><p><code>static</code> 变量长期维持对象引用，阻止 <code>GC</code> 回收。当 <code>static</code> 变量持有的是大数据对象，如 <code>Bitmap/Context/View/...</code> 等，就更容易引起泄漏等问题。</p>
+<p>如，单例中可能会出现 <code>private static Context sContext</code> ，如果该 <code>Context</code> 是 <code>Activity</code> 类型，则就必定出现 <code>leak</code>，此时可以在传入的 <code>Activity Context</code> 参数中，使用 <code>context.getApplicationContext()</code> ，这样就和 <code>Activity</code> 没有关系，也不存在内存泄漏了。</p>
+<blockquote>
+<p>尽量用 <code>Application Context</code> 代替 <code>Activity Context</code>。</p>
 </blockquote>
-<h5 id="1-3-11-匿名内部类引发内存泄漏"><a href="#1-3-11-匿名内部类引发内存泄漏" class="headerlink" title="1.3.11 匿名内部类引发内存泄漏"></a>1.3.11 匿名内部类引发内存泄漏</h5><h5 id="1-3-12-非静态内部类引发内存泄漏"><a href="#1-3-12-非静态内部类引发内存泄漏" class="headerlink" title="1.3.12 非静态内部类引发内存泄漏"></a>1.3.12 非静态内部类引发内存泄漏</h5><blockquote>
-<p>一个 <code>no-static内部类</code> 对象被声明成 <code>static</code> ，则其就默认拥有了外部类的实例引用，也即是其生命周期大于外部引用，和整个应用存活的生命周期一样长了。显然，就导致了内存泄漏。  </p>
+<h4 id="1-3-内部类-匿名、非静态"><a href="#1-3-内部类-匿名、非静态" class="headerlink" title="1.3 内部类(匿名、非静态)"></a>1.3 内部类(匿名、非静态)</h4><blockquote>
+<p>总之，内部类易造成内存泄漏的根本原因是：内部类可持有外部类引用（这也是内部类的特点~~）。  </p>
+<p>例如，常见的非静态内部类和匿名内部类，编写不好基本就内存泄漏了：</p>
+<ul>
+<li><code>Handler</code>、<code>TimerTask</code>、<code>AsyncTask</code>、<code>Thread</code> ……</li>
+</ul>
+<p><em><strong>👉🏻总之，Android中解决 <code>Activity内部类</code> 内存泄漏的方案为：</strong></em></p>
+<ol>
+<li>使用 <code>Application Context</code> 代替 <code>Activity Context</code>，让生命周期与APP一样长，就可避免了。</li>
+<li>非静态内部类要引用 <code>Actiity</code> ，则优先 <code>软引用</code>。</li>
+<li>慎用 <code>static</code> 声明 <code>Context</code> 对象！！！</li>
+</ol>
+</blockquote>
+<h5 id="1-3-1-匿名内部类引发内存泄漏"><a href="#1-3-1-匿名内部类引发内存泄漏" class="headerlink" title="1.3.1 匿名内部类引发内存泄漏"></a>1.3.1 匿名内部类引发内存泄漏</h5><p><em>代码解释：</em></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OuterClass</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+  <span class="token annotation punctuation">@Override</span>
+  <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle savedInstanceState<span class="token punctuation">)</span>
+    <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token annotation punctuation">@Override</span> <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token comment" spellcheck="true">//可持有 OuterClass 引用。。。</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>匿名内部类 leak 原理同 <code>no-static内部类</code> ，解决方案为：</p>
+<blockquote>
+<p><strong>改为：静态内部类。</strong></p>
+</blockquote>
+<h5 id="1-3-2-非静态内部类引发内存泄漏"><a href="#1-3-2-非静态内部类引发内存泄漏" class="headerlink" title="1.3.2 非静态内部类引发内存泄漏"></a>1.3.2 非静态内部类引发内存泄漏</h5><blockquote>
+<p>一个 <code>no-static内部类</code> <em><strong>对象实例被声明</strong></em> 成 <code>static</code> ，则其就默认拥有了外部类的实例引用，也即是其生命周期大于外部引用，和整个应用存活的生命周期一样长了。显然，就导致了内存泄漏。  </p>
 <p><em>代码解释：</em></p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OuterClass</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
   <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">InnerClass</span> <span class="token punctuation">{</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">}</span>
@@ -1950,10 +1981,39 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
   <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onCreate</span><span class="token punctuation">(</span>Bundle savedInstanceState<span class="token punctuation">)</span>
     sInnerClazz <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">InnerClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 <span class="token punctuation">}</span>
+</code></pre>
+<p><em>说明</em>：Activity 每次启动都会使用 InnerClass。而 InnerClass 本身为 no-static 内部类已经持有外部类 OuterClass 的引用了，但在声明对象时用 static 声明了，这又表明了该 no-static-inner-class 又变成与整个应用寿命一样长了，远大于 Activity 了，所以当前 Activity 占用的内存资源根本不可能被正常回收，久而久之就造成了内存泄漏，进而OOM。</p>
+</blockquote>
+<hr>
+<p>总之，无论是匿名内部类还是非静态内部类，都是 <em><strong>因为可持有外部类引用并生命周期大于外部引用的生命周期</strong></em> 。所以，解决办法都是一个方向。</p>
+<blockquote>
+<p><em><strong>👉🏻匿名内部类、非静态内部类声明成 <code>static</code> 对象引用的解决方案：</strong></em></p>
+<ol>
+<li>『匿名内部类』：改为 <strong>静态内部类</strong>，如：</li>
+<li>『非静态内部类声明成 <code>static</code> 对象引用』：改为 <strong>内部通过 <code>软引用/弱引用</code> 加强。</strong> </li>
+</ol>
+<p><em><strong>总之，这两种情况的内部类 leak 解决方案，可终极为一个：</strong></em></p>
+<blockquote>
+<p><strong>优化为：<code>静态内部类 + 软引用/弱引用 内部持有外部引用的严格加强！</code></strong></p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">OuterClass</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+  
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">InnerClass</span> <span class="token punctuation">{</span>
+        <span class="token keyword">private</span> WeakReference<span class="token operator">&lt;</span>Context<span class="token operator">></span> myContext<span class="token punctuation">;</span>
 
-说明：Activity 每次启动都会使用 InnerClass。而 InnerClass 本身为 no<span class="token operator">-</span><span class="token keyword">static</span> 内部类已经持有外部类 OuterClass 的引用了，但在声明对象时用 <span class="token keyword">static</span> 声明了，这又表明了该 no<span class="token operator">-</span><span class="token keyword">static</span><span class="token operator">-</span>inner<span class="token operator">-</span><span class="token keyword">class</span> 又变成与整个应用寿命一样长了，远大于 Activity 了，所以当前 Activity 占用的内存资源根本不可能被正常回收，久而久之就造成了内存泄漏，进而OOM。
+        <span class="token keyword">public</span> <span class="token function">InnerClass</span><span class="token punctuation">(</span>Context context<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          myContext <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">WeakReference</span><span class="token operator">&lt;</span>Context<span class="token operator">></span><span class="token punctuation">(</span>context<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+    
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> myContext<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+<span class="token punctuation">}</span>
 </code></pre>
 </blockquote>
+</blockquote>
+<hr>
 <h4 id="1-4-资源未关闭-注册未解注册造成的内存泄漏"><a href="#1-4-资源未关闭-注册未解注册造成的内存泄漏" class="headerlink" title="1.4 资源未关闭/注册未解注册造成的内存泄漏"></a>1.4 资源未关闭/注册未解注册造成的内存泄漏</h4><blockquote>
 <ul>
 <li><strong>资源性对象，诸如 <code>Cursor/File/IO流操作/...</code> 往往都使用了缓冲。且</strong>。当不再使用时，应及时关闭，以便它们的<strong>缓冲（缓存对象）及时回收内存</strong>，而非等待 <code>GC</code> 来处理。<strong>因它们的缓存不仅存在于 JVM 内，还存在于 JVM 之外。所以，如果只是简单的置为 <code>null</code> ，而不关闭它们，就会造成内存泄漏。</strong>  </li>
@@ -2188,7 +2248,7 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 </code></pre>
 <p>如上代码就是一个内存泄漏代码，咱们来细说一下： </p>
 <blockquote>
-<p><strong>首先，<code>mHandler</code> 是一个 <code>non-static-匿名内部类__实例</code> ，所以其一定持有外部类（DemoActivity）的引用。且又因消息队列是在一个 <code>Looper</code> 线程中不断轮询处理消息，那就存在一种情况，当该 <code>DemoActivity</code> 退出时，<code>MessageQueue</code> 中的 <code>Message</code> 持有 <code>mHandler</code> 实例引用，而 <code>mHandler</code> 又持有 <code>DemoActivity</code> 引用，最终导致该 <code>Activity</code> 的内存资源无法及时回收，从而引发内存泄漏。</strong></p>
+<p><strong>首先，<code>mHandler</code> 是一个 <code>non-static-匿名内部类__实例</code> ，所以其一定持有外部类（DemoActivity）的引用。且又因消息队列是在一个 <code>Looper</code> 线程中不断轮询处理消息，那就存在一种情况，当该 <code>DemoActivity</code> 退出时（<em>此时，消息可能延迟、或其他原因还未处理的情况</em>），<code>MessageQueue</code> 中的 <code>Message</code> 持有 <code>mHandler</code> 实例引用，而 <code>mHandler</code> 又持有 <code>DemoActivity</code> 引用，最终导致该 <code>Activity</code> 的内存资源无法及时回收，从而引发内存泄漏。</strong></p>
 </blockquote>
 <p><strong>👉🏻<code>Handler</code>内存泄漏的解决方案：</strong></p>
 <blockquote>
@@ -2202,8 +2262,7 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 </blockquote>
 </li>
 <li>使用 <code>static-Handler-内部类</code>，然后对 <code>Handler</code> 持有的对象使用 <code>弱引用</code> 。当 GC 时，就可以回收 Handler 持有的对象了。如：<blockquote>
-<pre class=" language-java"><code class="language-java">```java
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyActivity</span> <span class="token keyword">extends</span> <span class="token class-name">Activity</span> <span class="token punctuation">{</span>
     <span class="token keyword">private</span> MyHandler mHander <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">MyHandler</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
     <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onDestroy</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
@@ -2225,7 +2284,41 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 </li>
 </ol>
 </blockquote>
-<h3 id="2-优化内存空间"><a href="#2-优化内存空间" class="headerlink" title="2. 优化内存空间"></a>2. 优化内存空间</h3><h4 id="2-1-减少不必要内存开销"><a href="#2-1-减少不必要内存开销" class="headerlink" title="2.1 减少不必要内存开销"></a>2.1 减少不必要内存开销</h4><h5 id="2-1-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代"><a href="#2-1-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代" class="headerlink" title="2.1.1 慎用枚举，Google推荐 @IntDef 和 @StringDef 替代"></a>2.1.1 慎用枚举，Google推荐 <code>@IntDef</code> 和 <code>@StringDef</code> 替代</h5><blockquote>
+<h4 id="1-7-多线程引起的内存泄漏"><a href="#1-7-多线程引起的内存泄漏" class="headerlink" title="1.7 多线程引起的内存泄漏"></a>1.7 多线程引起的内存泄漏</h4><p>常见的由线程引起的 leak 有：<code>Runnable(Thread)</code>、<code>AsyncTask</code> ……</p>
+<h5 id="1-7-1-Runnable-Thread"><a href="#1-7-1-Runnable-Thread" class="headerlink" title="1.7.1 Runnable(Thread)"></a>1.7.1 Runnable(Thread)</h5><p>当异步线程持有外部 Activity 的引用，若线程未执行完用户就退出 Activity 了，处理不好线程的归宿就会引发 leak，这是多线程编程中最容易出现的！</p>
+<blockquote>
+<p><strong>👉🏻多线程如 <code>Runnable</code> 的内存泄漏解决方案：</strong>  </p>
+<ul>
+<li>确保 <code>Activity</code> 销毁前终止线程。</li>
+</ul>
+<p>一般我们是使用 <code>Handler+Thread</code> ，则可通过 <code>mHandler.removeCallbacks(xxxRunnable) 或 mHandler.removeCallbacksAndMessages(null)</code> 来移除异步线程！<br>当然，推荐使用 <code>RxJava</code> 更容易~~</p>
+</blockquote>
+<h5 id="1-7-2-AsyncTask"><a href="#1-7-2-AsyncTask" class="headerlink" title="1.7.2 AsyncTask"></a>1.7.2 AsyncTask</h5><p><code>AsyncTask = Handler + Thread</code>。leak 原理类同 <code>Runnable</code>，Activity 销毁前 <code>doInBackground()</code> 未得到停止。</p>
+<blockquote>
+<p><strong>👉🏻多线程如 <code>AsyncTask</code> 的内存泄漏解决方案：</strong><br>『推荐使用 <code>cancel() + isCancelled()</code> ！』</p>
+<blockquote>
+<ul>
+<li>若 AsyncTask 任务 <code>还未开始</code> 且 <code>cancel</code>，则能立即取消任务且不会执行；</li>
+<li>若 AsyncTask 任务 <code>已开始</code> 且 <code>cancel</code>，则不能终止线程（直到<code>doInBackground()</code>完毕），<code>cancel</code> 只能让 <code>onPostExecute()</code> 不被执行；<br>因此，<code>cancel</code> 不会终止正在运行的线程，只会给 AsyncTask 设置 <code>cancelled</code> 状态，通知该线程 <code>应该中断</code> 了（注意只是应该）。<br>所以，使用 <code>cancel</code> 是还要检查当前 task 状态（<code>isCancelled()</code>），保证其及时退出：<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Override</span>
+<span class="token keyword">protected</span> Integer <span class="token function">doInBackground</span><span class="token punctuation">(</span>Void<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// Task被取消了，马上退出</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">isCancelled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+  <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+  <span class="token comment" spellcheck="true">// Task被取消了，马上退出</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token function">isCancelled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> null<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
+</ul>
+</blockquote>
+<p><em>PS：<code>AsyncTask</code> 已过时，不使用高级封装前提下（如：<code>RxJava</code>），还不如直接使用 <code>Handler</code> 更好控制。</em></p>
+</blockquote>
+<h3 id="2-优化内存空间"><a href="#2-优化内存空间" class="headerlink" title="2. 优化内存空间"></a>2. 优化内存空间</h3><h4 id="2-1-合理利用对象引用（强-软-弱-虚）"><a href="#2-1-合理利用对象引用（强-软-弱-虚）" class="headerlink" title="2.1 合理利用对象引用（强/软/弱/虚）"></a>2.1 合理利用对象引用（<code>强/软/弱/虚</code>）</h4><ol>
+<li>内部类（非静态+匿名）内存泄漏优化时：可使用 <code>软引用</code> 处理 <code>Activity</code>。</li>
+<li>图片优化时：亦可使用 <code>软引用</code> 处理 <code>Bitmap</code>。</li>
+<li>自定义App的 <code>Activity任务栈</code> 时：可使用 <code>软引用</code> 存储 <code>Activity</code>，出栈销毁前可判断，也避免内存泄漏。</li>
+</ol>
+<h4 id="2-2-减少不必要内存开销"><a href="#2-2-减少不必要内存开销" class="headerlink" title="2.2 减少不必要内存开销"></a>2.2 减少不必要内存开销</h4><h5 id="2-2-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代"><a href="#2-2-1-慎用枚举，Google推荐-IntDef-和-StringDef-替代" class="headerlink" title="2.2.1 慎用枚举，Google推荐 @IntDef 和 @StringDef 替代"></a>2.2.1 慎用枚举，Google推荐 <code>@IntDef</code> 和 <code>@StringDef</code> 替代</h5><blockquote>
 <p>Google官方推荐在Android中使用 <code>@IntDef</code> 和 <code>@StringDef</code> 替代枚举类型。</p>
 </blockquote>
 <ul>
@@ -2322,10 +2415,30 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
 </code></pre>
 </blockquote>
-<h4 id="LruCache（android-support-v4-android-uti-LrueCache包下）"><a href="#LruCache（android-support-v4-android-uti-LrueCache包下）" class="headerlink" title="LruCache（android-support-v4/android.uti.LrueCache包下）"></a>LruCache（<code>android-support-v4/android.uti.LrueCache</code>包下）</h4><p>LruCache算法，又称为近期最少使用算法。</p>
+<h4 id="2-3-LruCache-缓存"><a href="#2-3-LruCache-缓存" class="headerlink" title="2.3 LruCache 缓存"></a>2.3 LruCache 缓存</h4><blockquote>
+<p>LruCache，位于<code>android-support-v4/android.uti.LrueCache</code>包下。</p>
+</blockquote>
+<p>LruCache算法，又称为近期最少使用算法。</p>
 <p>LruCache 中 Lru 算法的实际上是通过 <code>LinkedHashMap </code>来实现的。<code>LinkedHashMap</code> 继承于 <code>HashMap</code>，它使用了一个双向链表来存储 <code>Map</code> 中的 <code>Entry</code> 顺序关系，对于 <code>get、put、remove</code> 等操作，<code>LinkedHashMap</code> 除了要做 <code>HashMap</code> 做的事情，还做些调整 <code>Entry</code> 顺序链表的工作。</p>
 <p>LruCache 中将 <code>LinkedHashMap</code> 的顺序设置为 <code>LRU</code> 顺序来实现 <code>LRU</code> 缓存，<em><strong>每次调用 <code>get</code>(也就是从内存缓存中取图片)，则将该对象移到链表的尾端。调用 <code>put</code> 插入新的对象也是存储在链表尾端，这样当内存缓存达到设定的最大值时，将链表头部的对象（近期最少用到的）移除</strong></em>。</p>
-<h2 id="异常拦截优化"><a href="#异常拦截优化" class="headerlink" title="异常拦截优化"></a>异常拦截优化</h2><p>请求服务端数据过程中，访问接口和解析返回数据都可能出错，我们可通过拦截器在这两层拦截错误。</p>
+<h4 id="2-4-图片内存优化（Bitmap）"><a href="#2-4-图片内存优化（Bitmap）" class="headerlink" title="2.4 图片内存优化（Bitmap）"></a>2.4 图片内存优化（<code>Bitmap</code>）</h4><p>大图占用内存，容易 <code>OOM</code>。故，</p>
+<blockquote>
+<p><em><strong>👉🏻图片内存优化一般策略：</strong></em>  </p>
+<p><strong>1. 等比（或指定缩小因子）缩小图片：</strong>  </p>
+<pre class=" language-java"><code class="language-java">BitmapFactory<span class="token punctuation">.</span>Options options <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BitmapFactory<span class="token punctuation">.</span>Options</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+options<span class="token punctuation">.</span>inSampleSize <span class="token operator">=</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 图片宽高都为原来的 1/2，即图片为原来的 1/4</span>
+</code></pre>
+<p><strong>2. 对图片使用软引用，并及时 <code>recycle</code> ：</strong>  </p>
+<pre class=" language-java"><code class="language-java"> SoftReference<span class="token operator">&lt;</span>Bitmap<span class="token operator">></span> bitmap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SoftReference</span><span class="token operator">&lt;</span>Bitmap<span class="token operator">></span><span class="token punctuation">(</span>xxxBitmap<span class="token punctuation">)</span><span class="token punctuation">;</span> 
+ <span class="token keyword">if</span><span class="token punctuation">(</span>bitmap <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>  
+       <span class="token keyword">if</span><span class="token punctuation">(</span>bitmap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>bitmap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isRecycled</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span> 
+           bitmap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">recycle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+           bitmap <span class="token operator">=</span> null<span class="token punctuation">;</span>  
+       <span class="token punctuation">}</span> 
+<span class="token punctuation">}</span>
+</code></pre>
+</blockquote>
+<h2 id="【稳】异常拦截优化"><a href="#【稳】异常拦截优化" class="headerlink" title="【稳】异常拦截优化"></a>【稳】异常拦截优化</h2><p>请求服务端数据过程中，访问接口和解析返回数据都可能出错，我们可通过拦截器在这两层拦截错误。</p>
 <ul>
 <li>在访问接口时，我们不用设置拦截器，因为一旦出现错误，Retrofit会自动抛出异常。比如，常见请求异常404，500，503等等。</li>
 <li>在解析数据时，我们设置一个拦截器，判断Result里面的code是否为成功，如果不成功，则要根据与服务器约定好的错误码来抛出对应的异常。比如，token失效，禁用同账号登陆多台设备，缺少参数，参数传递异常等等。</li>
@@ -2344,7 +2457,7 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 </ol>
 </blockquote>
 <p>所以，流畅度则从如下几方面优化：</p>
-<h2 id="1-布局优化"><a href="#1-布局优化" class="headerlink" title="1.布局优化"></a>1.布局优化</h2><p>Google 官方建议 view 布局层级不宜超过 <code>10</code> 且 建议用 <code>RelativeLayout</code> 替代 <code>LinearLayout</code> 作为根布局，AndroidStudio 2.3 起使用 <code>ConstraintLayout</code> 默认根布局。</p>
+<h2 id="【流】1-布局优化"><a href="#【流】1-布局优化" class="headerlink" title="【流】1. 布局优化"></a>【流】1. 布局优化</h2><p>Google 官方建议 view 布局层级不宜超过 <code>10</code> 且 建议用 <code>RelativeLayout</code> 替代 <code>LinearLayout</code> 作为根布局，AndroidStudio 2.3 起使用 <code>ConstraintLayout</code> 默认根布局。</p>
 <blockquote>
 <ul>
 <li><strong>布局复用</strong>，使用 <code>&lt;include&gt;标签</code> 重用 layout。</li>
@@ -2354,7 +2467,7 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
 <li><strong>删除控件中无用属性</strong>。</li>
 </ul>
 </blockquote>
-<h2 id="2-渲染优化"><a href="#2-渲染优化" class="headerlink" title="2.渲染优化"></a>2.渲染优化</h2><p>什么是 <code>过渡绘制（overdraw）</code> ？答：<em>在屏幕上某一像素在同一帧时间内被绘制了多次</em>。尤其是在多层重叠UI结构里，若不可见UI也做绘制操作，就会导致某些像素区域被绘制多次，就会浪费 <code>CPU</code> 和 <code>GPU</code> 资源。</p>
+<h2 id="【流】2-渲染优化"><a href="#【流】2-渲染优化" class="headerlink" title="【流】2. 渲染优化"></a>【流】2. 渲染优化</h2><p>什么是 <code>过渡绘制（overdraw）</code> ？答：<em>在屏幕上某一像素在同一帧时间内被绘制了多次</em>。尤其是在多层重叠UI结构里，若不可见UI也做绘制操作，就会导致某些像素区域被绘制多次，就会浪费 <code>CPU</code> 和 <code>GPU</code> 资源。</p>
 <p><strong>如何检测是否过渡绘制：开发者选项 - 调试GPU过渡绘制 - 显示过渡绘制区域</strong></p>
 <blockquote>
 <p><strong>避免过渡绘制，优化：</strong>  </p>
@@ -2504,7 +2617,7 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
 <blockquote>
 <p><strong>1. 流量耗费。</strong> 过多未经处理的网络请求，会消耗用户更多的流量。<em><strong>高流量消耗会导致经常处于非wifi场景下用户卸载App。</strong></em><br><strong>2. 电量消耗。</strong> 电量消耗快且多，也会增加应用卸载率。<br><strong>3. 用户体验差。</strong> 长期的网络请求超时，尽管使用‘加载进度提示’来从视觉上提升用户体验，但对于玩机爱好者和专业用户而言，是自欺欺人、治标不治本的。于我本人而言，除了丑陋的UI和卡顿，网络请求超时是我最讨厌的，且会立马卸载掉。</p>
 </blockquote>
-<h2 id="网络优化（★★★★★）"><a href="#网络优化（★★★★★）" class="headerlink" title="网络优化（★★★★★）"></a>网络优化（★★★★★）</h2><blockquote>
+<h2 id="【耗】网络优化（★★★★★）"><a href="#【耗】网络优化（★★★★★）" class="headerlink" title="【耗】网络优化（★★★★★）"></a>【耗】网络优化（★★★★★）</h2><blockquote>
 <p>网络优化，主要从这几方面进行：<strong>1.速度 2.成功率 3.流量</strong></p>
 <p><strong>1. DNS 优化（IP直连和HttpDns）</strong><br><strong>2. 连接优化（协议层优化）</strong><br><strong>3. 数据传输优化</strong>  </p>
 </blockquote>
@@ -2581,7 +2694,7 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
 <li>数据更新采用增量，而不是全量，仅将变化的数据返回，客户端进行合并，减少流量消耗；</li>
 </ol>
 </blockquote>
-<h1 id="（四）优化：《包体积》"><a href="#（四）优化：《包体积》" class="headerlink" title="（四）优化：《包体积》"></a>（四）优化：《包体积》</h1><h2 id="APK瘦身"><a href="#APK瘦身" class="headerlink" title="APK瘦身"></a>APK瘦身</h2><p>原则上，安装包大小对使用无影响，但是从用户角度来说就有影响了。若安装包越大，则用户下载门槛就越高。特别是在移动网络情况下，如果包越大，耗流量越多，用户可能就会从犹豫到放弃（ <em>PS：我个人基本是这种情况，除非非常大众使用的App会坚持一下~</em> ）。所以，<strong>减小包体积，可提高用户下载量和体验。</strong></p>
+<h1 id="（四）优化：《包体积》"><a href="#（四）优化：《包体积》" class="headerlink" title="（四）优化：《包体积》"></a>（四）优化：《包体积》</h1><h2 id="【包】APK瘦身"><a href="#【包】APK瘦身" class="headerlink" title="【包】APK瘦身"></a>【包】APK瘦身</h2><p>原则上，安装包大小对使用无影响，但是从用户角度来说就有影响了。若安装包越大，则用户下载门槛就越高。特别是在移动网络情况下，如果包越大，耗流量越多，用户可能就会从犹豫到放弃（ <em>PS：我个人基本是这种情况，除非非常大众使用的App会坚持一下~</em> ）。所以，<strong>减小包体积，可提高用户下载量和体验。</strong></p>
 <p><strong>分析一个apk包的主要信息构成：</strong></p>
 <blockquote>
 <p>一、AndroidStudio，<code>Build - Analyze APK...</code> 来分析一个apk信息，示例（如：酷安）：<br><img src="../../../images/illustration/android/Analyze-APK(CoolMarket.apk).png" alt="Analyze-APK(CoolMarket.apk).png"></p>
@@ -2607,8 +2720,8 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
 </ul>
 </blockquote>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://blog.csdn.net/haha223545/category_7889161.html">CSDN-Android-性能优化
-</a></li>
+<li><a href="https://blog.csdn.net/haha223545/category_7889161.html">CSDN-Android-性能优化</a></li>
+<li><a href="https://www.jianshu.com/p/4d6c38e1f5b8">简书-关于Android性能优化，该从哪些方面入手？</a></li>
 </ul>
 ]]></content>
       <categories>
