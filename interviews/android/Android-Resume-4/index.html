@@ -489,21 +489,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-19
+                    2022-03-20
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    9.5k
+                    11.8k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    37 分
+                    47 分
                 </div>
                 
 
@@ -531,15 +531,11 @@
 <blockquote>
 <ul>
 <li>稳定性（如：内存溢出/泄漏、崩溃）=&gt; <code>Crash与ANR</code></li>
-<li>流畅度（如：卡顿——UI(布局+绘制)、）</li>
+<li>流畅度（如：卡顿——UI(布局+绘制)、线程优化、响应速度）</li>
 <li>耗损（如：耗电、流量、网络）=&gt; <code>代码质量与逻辑</code></li>
 <li>安装包（如：APK瘦身）</li>
 </ul>
 </blockquote>
-<ul>
-<li>响应速度</li>
-<li>线程优化</li>
-</ul>
 <h1 id="（一）优化：《稳定性》"><a href="#（一）优化：《稳定性》" class="headerlink" title="（一）优化：《稳定性》"></a>（一）优化：《稳定性》</h1><p>众所周知，Java开发一般不需要手动分配内存和释放内存，这得感谢Java底层机制——JVM及其GC。交由虚拟机帮助分配和释放，但因此导致开发者编程不规范或者不严谨，易出现内存泄漏和内存溢出。</p>
 <blockquote>
 <p>Android操作系统对整个设备内存做了一个大致的全局把控：  </p>
@@ -577,7 +573,8 @@
 <li><strong>慎用自动装箱</strong>。如：一个 int 占 4bytes，则一个 Integer 占 16bytes。</li>
 <li><strong>慎用枚举。</strong> Enum易读且安全，但过度使用在性能上却不如普通常量定义。Android中，枚举内存是常量2~3倍+。</li>
 <li><strong>内存复用</strong>：<ul>
-<li><strong>充分利用系统内置资源。</strong> 如：<code>strings/colors/icons/animation/simple-layout</code>等，还能优化apk大小。</li>
+<li><strong>充分利用系统内置资源。</strong> 如：<code>strings/colors/icons/animation/simple-layout</code> 等，还能优化apk大小。</li>
+<li><strong>充分利用Android特有数据结构。</strong> 如：<code>SparceArray/Pair</code> 等。</li>
 <li><strong>视图复用。</strong> 如：<code>ViewHolder</code> 实现 <code>ContentView</code> 复用等。</li>
 <li><strong>对象池。</strong> 如：<code>线程池、消息池</code> 等，对象重用以减少对象创建，避免内存抖动等。</li>
 <li><strong><code>Bitmap</code>对象复用。</strong> 利用 Bitmap 中的 <code>inBitmap</code> 高级特性，提高系统在 Bitmap 的分配与释放效率，不仅可以复用内存，还能提高读写速度。该特性可以在已经的内存区域中申请一块区域来存放 Bitmap。（★★★★★）=&gt; <em>PS：有待更深研究~~~~</em></li>
@@ -585,7 +582,8 @@
 </li>
 </ul>
 </li>
-<li><strong><code>LruCache</code> 缓存</strong>。   </li>
+<li><strong><code>ListView/RecycleView</code> 优化。</strong></li>
+<li><strong><code>LruCache</code> 缓存。</strong>   </li>
 <li><strong>图片内存优化：以设置位图规格，根据“采样因子”做压缩，用一些图片缓存方式（如<code>LruCache</code>）对图片进行管理等等。</strong> 由于每个App被分配的 dalvik heap size 有限制，而且图片资源又相对耗内存。所以，解决好图片内存优化，是Android开发中的一大重要模块！！！（参考：<a target="_blank" rel="noopener" href="https://blog.csdn.net/haha223545/article/details/95349267%EF%BC%89">https://blog.csdn.net/haha223545/article/details/95349267）</a></li>
 </ul>
 </li>
@@ -1090,13 +1088,31 @@ mWebviewLayout<span class="token punctuation">.</span><span class="token functio
     <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
 </code></pre>
 </blockquote>
-<h4 id="2-3-LruCache-缓存"><a href="#2-3-LruCache-缓存" class="headerlink" title="2.3 LruCache 缓存"></a>2.3 LruCache 缓存</h4><blockquote>
+<h5 id="2-2-2-对象池、线程优化（线程池）"><a href="#2-2-2-对象池、线程优化（线程池）" class="headerlink" title="2.2.2 对象池、线程优化（线程池）"></a>2.2.2 对象池、线程优化（线程池）</h5><p>线程池，即是对象池中的一种。都是为了避免频繁创建对象与销毁对象，造成内存抖动，进而引发 OOM 。所以，使用线程池，是对象可重复利用的表现。</p>
+<p>常见的对象池有：</p>
+<blockquote>
+<ul>
+<li>消息池。请用：<code>Message msg = Message.option()</code></li>
+<li>线程池。请用：<code>ThreadPoolExecutor 和 ScheduledThreadPoolExecutor</code> 这两个Java中的线程池。</li>
+</ul>
+</blockquote>
+<p>其中，最需要注意的是 <code>线程池</code> 使用。多线程操作与执行，其实是进程的最小颗粒（线程）在对 CPU 时间片获取进行抢占式争夺。如果自己创建 Thread 不光有内存抖动风险，还有 CPU 资源竞争死锁问题。所以，推荐尽量采用线程池创建 Thread 对象。</p>
+<h4 id="2-3-ListView-RecycleView-优化"><a href="#2-3-ListView-RecycleView-优化" class="headerlink" title="2.3 ListView/RecycleView 优化"></a>2.3 ListView/RecycleView 优化</h4><p>列表组件优化步骤：</p>
+<blockquote>
+<ol>
+<li>使用ViewHolder模式来提高效率</li>
+<li>异步加载：耗时的操作放在异步线程中</li>
+<li><code>ListView/RecycleView</code>滑动中请分页加载和停止加载（如：图片、信息填充等）</li>
+</ol>
+</blockquote>
+<p><code>ListView</code> 优化参考：<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/f0408a0f0610">ListView的优化</a></p>
+<h4 id="2-4-LruCache-缓存"><a href="#2-4-LruCache-缓存" class="headerlink" title="2.4 LruCache 缓存"></a>2.4 LruCache 缓存</h4><blockquote>
 <p>LruCache，位于<code>android-support-v4/android.uti.LrueCache</code>包下。</p>
 </blockquote>
 <p>LruCache算法，又称为近期最少使用算法。</p>
 <p>LruCache 中 Lru 算法的实际上是通过 <code>LinkedHashMap </code>来实现的。<code>LinkedHashMap</code> 继承于 <code>HashMap</code>，它使用了一个双向链表来存储 <code>Map</code> 中的 <code>Entry</code> 顺序关系，对于 <code>get、put、remove</code> 等操作，<code>LinkedHashMap</code> 除了要做 <code>HashMap</code> 做的事情，还做些调整 <code>Entry</code> 顺序链表的工作。</p>
 <p>LruCache 中将 <code>LinkedHashMap</code> 的顺序设置为 <code>LRU</code> 顺序来实现 <code>LRU</code> 缓存，<em><strong>每次调用 <code>get</code>(也就是从内存缓存中取图片)，则将该对象移到链表的尾端。调用 <code>put</code> 插入新的对象也是存储在链表尾端，这样当内存缓存达到设定的最大值时，将链表头部的对象（近期最少用到的）移除</strong></em>。</p>
-<h4 id="2-4-图片内存优化（Bitmap）"><a href="#2-4-图片内存优化（Bitmap）" class="headerlink" title="2.4 图片内存优化（Bitmap）"></a>2.4 图片内存优化（<code>Bitmap</code>）</h4><p>大图占用内存，容易 <code>OOM</code>。故，</p>
+<h4 id="2-5-图片内存优化（Bitmap）"><a href="#2-5-图片内存优化（Bitmap）" class="headerlink" title="2.5 图片内存优化（Bitmap）"></a>2.5 图片内存优化（<code>Bitmap</code>）</h4><p>大图占用内存，容易 <code>OOM</code>。故，</p>
 <blockquote>
 <p><em><strong>👉🏻图片内存优化一般策略：</strong></em>  </p>
 <p><strong>1. 等比（或指定缩小因子）缩小图片：</strong>  </p>
@@ -1113,6 +1129,160 @@ options<span class="token punctuation">.</span>inSampleSize <span class="token o
 <span class="token punctuation">}</span>
 </code></pre>
 </blockquote>
+<h5 id="（一）Bitmap-优化①——『尺寸压缩』（inSampleSize-采样率方式），避免OOM（★★★★★）"><a href="#（一）Bitmap-优化①——『尺寸压缩』（inSampleSize-采样率方式），避免OOM（★★★★★）" class="headerlink" title="（一）Bitmap 优化①——『尺寸压缩』（inSampleSize 采样率方式），避免OOM（★★★★★）"></a><strong>（一）Bitmap 优化①——『尺寸压缩』（<code>inSampleSize 采样率方式</code>），避免OOM（★★★★★）</strong></h5><p>Android图片编程中，编码不好就会容易出现如下：</p>
+<pre class=" language-text"><code class="language-text">java.lang.OutofMemoryError:bitmap size exceeds VM budget
+</code></pre>
+<hr>
+<p>Bitmap 图片的优化压缩有多种方式，且应对于不同场景，例如常用的有：</p>
+<ol>
+<li>质量压缩（<code>不会改变尺寸</code>）。<code>boolean isAlreadyCompressedToStream = bitmapObj.compress(CompressFormat format, int quality, OutputStream stream)</code></li>
+<li>尺寸压缩（<code>改变尺寸宽高</code>）：有 <code>采样率inSampleSize</code>、直接创建<code>Bitmap.createBitmap(提供width和height...)</code> 等方式。</li>
+<li>LibJpeg 压缩。</li>
+</ol>
+<p><em>ps：本篇主要对图片尺寸 <code>采样率inSampleSize</code> 压缩做详解，其它另外篇幅再做分析。</em></p>
+<hr>
+<p>这是由于 Android 系统给每个 App DVM 分配内存有限制大小，如果加载 Bitmap ，极容易出现 OOM（Out of Memory）。</p>
+<blockquote>
+<p><em><strong>所以，如何高效加载 <code>Bitmap</code> 就有必要了，基核心思想为：</strong></em>  </p>
+<ul>
+<li><strong>原因</strong>：使用 <code>ImageView</code> 来显示图片，大多数情况下 <code>ImageView</code> 并没有原始图片尺寸那么大。若这时把整个原始图片加载并设置给 <code>ImageView</code> 的话，是没有必要的，况且 <code>ImageView</code> 也无法显示出原图。  </li>
+<li><strong>解决方案</strong>：<em><strong>可按一定 <code>采样率</code> 将图片缩小再加载进 <code>内存</code> ，最后再设置给 <code>ImageView</code> 。这样图片在 <code>ImageView</code> 上既能显示，又能降低内存并一定程度避免 <code>OOM</code> ，自然而然提升了 <code>Bitmap</code> 的加载性能！</strong></em></li>
+</ul>
+<p><em><strong>👉🏻首先，把如何高效加载 <code>Bitmap</code> 的核心流程归纳一下：</strong></em>  </p>
+<ol>
+<li>首先，设置参数 <code>BitmapFactory.Options.inJustDecodeBounds = true</code>（<em><strong>true：只加载图片信息并不加载进入 <code>dvm</code> 内存！</strong></em>）并加载图片；</li>
+<li>从 <code>Options</code> 中取出图片 <strong>原始宽高</strong>，即对应 <code>options.outWidth、options.outHeight</code> 属性；</li>
+<li>根据 <code>采样率规则</code> 并结合 <code>目标ImageView</code> 所需大小计算出 <code>采样率 inSampleSize</code> ；</li>
+<li>最后，归置参数 <code>BitmapFactory.options.inJustDecodeBounds = false</code>（<em><strong>false：会加载图片且计入 <code>dvm</code> 内存！</strong></em>），然后 <code>BitmapFactory.decodeXXX(...)</code> 得到压缩后的 <code>Bitmap</code>，并用于设置给 <code>ImageView</code> 显示。</li>
+</ol>
+</blockquote>
+<hr>
+<h5 id="1-加载-Bitmap-的方式（共-4-种：BitmapFactory-decodeXXX-）"><a href="#1-加载-Bitmap-的方式（共-4-种：BitmapFactory-decodeXXX-）" class="headerlink" title="1. 加载 Bitmap 的方式（共 4 种：BitmapFactory.decodeXXX(...)）"></a>1. 加载 Bitmap 的方式（共 4 种：<code>BitmapFactory.decodeXXX(...)</code>）</h5><p>加载 <code>Bitmap</code> 主要由工厂类 <code>BitmapFactory</code> 提供，名为 <code>BitmapFactory.decodeXXX(...) --&gt; BitmapFactory.nativeDecodeXXX(...)</code>，主要有 4 类：</p>
+<blockquote>
+<ul>
+<li><code>BitmapFactory.decodeFile(...)</code>：从 <code>文件</code> 加载得到 <code>Bitmap</code> 对象。</li>
+<li><code>BitmapFactory.decodeResource(...)</code>：从 <code>资源</code> 加载得到 <code>Bitmap</code> 对象。</li>
+<li><code>BitmapFactory.decodeStream(...)</code>：从 <code>输入流</code> 加载得到 <code>Bitmap</code> 对象。</li>
+<li><code>BitmapFactory.decodeByteArray(...)</code>：从 <code>字节数组</code> 加载得到 <code>Bitmap</code> 对象。<br>其中，<code>decodeFile/decodeResource</code> 间接调用了 <code>decodeStream</code>（但是 resource-&gt;stream 还多了个中间步骤）。且这 4 类方法都分别对应有 native 方法 <code>BitmapFactory.nativeDecodeXXX(...)</code>。<pre class=" language-text"><code class="language-text">decodeFile --> decodeStream
+decodeResource --> decodeResourceStream..在此设置处理一些options --> decodeStream
+</code></pre>
+</li>
+</ul>
+</blockquote>
+<h5 id="2-BitmapFactory-Options-参数"><a href="#2-BitmapFactory-Options-参数" class="headerlink" title="2. BitmapFactory.Options 参数"></a>2. BitmapFactory.Options 参数</h5><h5 id="①-inSampleSize-参数"><a href="#①-inSampleSize-参数" class="headerlink" title="① inSampleSize 参数"></a>① inSampleSize 参数</h5><p>以上加载的 4 种方式，都支持带 <code>Options</code> 参数的重载方法，即 <code>BitmapFactory.decodeXXX(..., @Nullable Options opts)</code> （当然，对应的 native 肯定是有 <code>Options</code> 参数的）。</p>
+<blockquote>
+<p>Bitmap 缩放处理都是通过 <code>Options</code> 参数实现。主要用到了 <code>inSampleSize</code>，即采样率。通过设置 <code>采样率</code> ，以达到 <code>对**图片像素**的**宽、高**进行缩放</code>：   </p>
+<ul>
+<li><strong>当 <code>inSampleSize ≤ 1</code> 时，即采样后图片大小仍为图片原始大小尺寸。<code>&lt;1</code>，也按 <code>=1</code> 处理。</strong></li>
+<li><strong>当 <code>inSampleSize &gt; 1</code> 时，即采样后的图片将会缩小，缩放比为 <code>1/inSampleSize的2次方</code>（<em>因：宽和高都分别缩小了 <code>inSmapleSize</code>！！！</em>）</strong></li>
+</ul>
+<p><em>例如，一张 1024*1024 像素的图片，采用 ARGB8888 格式存储，那么内存大小 1024×1024×4=4MB。如果 inSampleSize=2，那么采样后的图片内存大小：512×512×4=1MB。</em></p>
+</blockquote>
+<blockquote>
+<p><strong>注意，官方 API 对 <code>inSampleSize</code> 的说明：</strong>  </p>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
+ * If set to a value > 1, requests the decoder to subsample the original
+ * image, returning a smaller image to save memory. The sample size is
+ * the number of pixels in either dimension that correspond to a single
+ * pixel in the decoded bitmap. For example, inSampleSize == 4 returns
+ * an image that is 1/4 the width/height of the original, and 1/16 the
+ * number of pixels. Any value &lt;= 1 is treated the same as 1. Note: the
+ * decoder uses a final value based on powers of 2, any other value will
+ * be rounded down to the nearest power of 2.
+ */</span>
+<span class="token keyword">public</span> <span class="token keyword">int</span> inSampleSize<span class="token punctuation">;</span>
+</code></pre>
+<p>大体意思这样的，<code>inSampleSize</code> 取值为 <code>2的幂</code>（如：1，2，4，8……）。如果 <code>inSampleSize</code> 不为2的指数的话，就会 <strong>向下取整为2的指数</strong>（如，<code>inSampleSize=3</code> ，则最终会自动向下取值，最终值为 <code>inSampleSize=2</code>）。</p>
+</blockquote>
+<hr>
+<p><strong>使用 <code>inSampleSize</code> 的注意事项：</strong><br><strong>1. 采样率 <code>inSampleSize</code> 是对像素 <code>宽和高</code> 两个都做缩放，所以是成指数形式（<code>1/(inSampleSize*inSmpleSize)</code>）。</strong><br><strong>2. 通常，<code>inSampleSize</code> 是根据对实际宽高/目标所需宽高，以此公式分别计算得出宽和高的缩放比。</strong><br><strong><em>3. 注意，</em>最终取的缩放比应该是其中最小的，即 <code>inSampleSize=Math.min(widthInSampleSize, heightInSampleSize)</code>，以避免绽放图片太小，设置到 <code>ImageView</code> 中不能铺满从而拉伸导致像素模糊！！！</strong></p>
+<p><em>🥵示例，ImageView 大小为 100*100 px，而图片原始大小 200*300 px。则计算得出，宽缩放比为2，高缩放比为3。最终 <code>inSampleSize=2</code>，那么缩放后图片为 100*150，仍然适合 ImageView。若 <code>inSampleSize=3</code>，缩放后图片为 66.7*100</em>，显示其中的宽比 ImageView 所需的目标尺寸 100px 的宽还小，铺不满就会横向拉伸填充，导致看起来像素模糊了！</p>
+<hr>
+<h5 id="②-inJustDecodeBounds-参数"><a href="#②-inJustDecodeBounds-参数" class="headerlink" title="② inJustDecodeBounds 参数"></a>② inJustDecodeBounds 参数</h5><p>要避免 Bitmap 大图加载到内存导致 OOM，我们就需要一定的采样规则得到采样因子 <code>inSampleSize</code>。而 <code>inSampleSize</code> 的计算公式又是：</p>
+<blockquote>
+<p><strong>计算公式</strong>：<code>inSampleSize = 原图宽(opts.outWidth)或高(opts.outHeight)/目标显示宽/高</code></p>
+</blockquote>
+<p>要想得到原图宽和高信息，但又不能预先加载图片以避免分配像素内存，有什么方法呢？</p>
+<blockquote>
+<p>答：官方的 <code>BitmapFactory.Options.inJustDecodeBounds</code> 参数已经提供便捷了，设置 <code>inJustDecodeBounds = false</code> 即可。  </p>
+<blockquote>
+<p>该 <code>inJustDecodeBounds</code> 参数字面译为“仅仅解码尺寸界限”，然后就会得到 <code>outXXX</code> 系列 Bitmap 属性 XXX。</p>
+<p><code>options.outXXX</code> 有：</p>
+<ul>
+<li><code>&lt;int&gt; outWidth/outHeight</code>：原图宽/高</li>
+<li><code>&lt;ColorSpace&gt; outColorSpace</code>：</li>
+<li><code>&lt;Bitmap.Config&gt; outConfig</code>：</li>
+</ul>
+</blockquote>
+</blockquote>
+<h5 id="3-高效加载-Bitmap-的核心流程"><a href="#3-高效加载-Bitmap-的核心流程" class="headerlink" title="3. 高效加载 Bitmap 的核心流程"></a>3. 高效加载 <code>Bitmap</code> 的核心流程</h5><blockquote>
+<p><em><strong>👉何高效加载 <code>Bitmap</code> 的核心流程：</strong></em><br><strong>一、质量压缩。</strong><br>即对图片质量（<code>存储大小</code>），一般应用于存 <code>储于SD卡、二进制网络传输（如聊天传输图片、上传至服务器）等有大小限制场景</code> 等时，压缩一定质量图片以节约磁盘空间。</p>
+<blockquote>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">/**
+ * Write a compressed version of the bitmap to the specified outputstream.
+ * If this returns true, the bitmap can be reconstructed by passing a
+ * corresponding inputstream to BitmapFactory.decodeStream(). Note: not
+ * all Formats support all bitmap configs directly, so it is possible that
+ * the returned bitmap from BitmapFactory could be in a different bitdepth,
+ * and/or may have lost per-pixel alpha (e.g. JPEG only supports opaque
+ * pixels).
+ *
+ * @param format   The format of the compressed image
+ * @param quality  Hint to the compressor, 0-100. The value is interpreted
+ *                 differently depending on the {@link CompressFormat}.
+ * @param stream   The outputstream to write the compressed data.
+ * @return true if successfully compressed to the specified stream.
+ */</span>
+<span class="token annotation punctuation">@WorkerThread</span>
+<span class="token keyword">public</span> <span class="token keyword">boolean</span> <span class="token function">compress</span><span class="token punctuation">(</span>CompressFormat format<span class="token punctuation">,</span> <span class="token keyword">int</span> quality<span class="token punctuation">,</span> OutputStream stream<span class="token punctuation">)</span>
+解释参数：
+<span class="token operator">-</span> format：想要压缩成的图片格式，如 `JPEG<span class="token operator">/</span>PNG<span class="token operator">/</span>WebP<span class="token operator">/</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>`
+<span class="token operator">-</span> quality：保留质量。压缩质量比取值 <span class="token number">0</span><span class="token operator">~</span><span class="token number">100</span>，表示将要保留 <span class="token number">0</span><span class="token operator">~</span><span class="token number">100</span><span class="token operator">%</span>（即压缩掉或称丢失质量 `<span class="token number">1</span><span class="token operator">-</span>quality<span class="token operator">%</span>`）。如，<span class="token number">80</span>表示保留原图<span class="token number">80</span><span class="token operator">%</span>的质量，压缩丢掉<span class="token number">20</span><span class="token operator">%</span>质量。
+<span class="token operator">-</span> stream：输出流，表示将压缩过后的 Bitmap 以二进制流形式存储。可用于写入sd卡、或者聊天网络图片传输限制（假如wechat聊天只允许发送25kb以下图片）
+</code></pre>
+</blockquote>
+<p><strong>二、尺寸压缩。</strong><br>即对图片尺寸大小进行缩放（<code>内存大小</code>），应用于加载到内存中，减小占用内存，避免 OOM。</p>
+<ol>
+<li>首先，设置参数 <code>BitmapFactory.Options.inJustDecodeBounds = true</code>（<em><strong>true：只加载图片信息并不加载进入 <code>dvm</code> 内存！</strong></em>）并加载图片信息（故，返回的 Bitmap 是 null！）；</li>
+<li>从 <code>Options</code> 中取出图片 <strong>原始宽高</strong>，即对应 <code>options.outWidth、options.outHeight</code> 属性（注意，这个过程就叫采样！）；</li>
+<li>根据 <code>采样率规则</code> 并结合 <code>目标ImageView</code> 所需大小计算出 <code>采样率 inSampleSize</code> ；</li>
+<li>最后，归置参数 <code>BitmapFactory.options.inJustDecodeBounds = false</code>（<em><strong>false：会加载图片且计入 <code>dvm</code> 内存！</strong></em>），然后 <code>BitmapFactory.decodeXXX(...)</code> 得到压缩后的 <code>Bitmap</code>，并用于设置给 <code>ImageView</code> 显示。</li>
+</ol>
+</blockquote>
+<h5 id="4-高效加载-Bitmap-的代码实现"><a href="#4-高效加载-Bitmap-的代码实现" class="headerlink" title="4. 高效加载 Bitmap 的代码实现"></a>4. 高效加载 <code>Bitmap</code> 的代码实现</h5><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> Bitmap <span class="token function">decodeSampledBitmapFromResource</span><span class="token punctuation">(</span>Resources res<span class="token punctuation">,</span> <span class="token keyword">int</span> resId<span class="token punctuation">,</span> <span class="token keyword">int</span> reqWidth<span class="token punctuation">,</span> <span class="token keyword">int</span> reqHeight<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    BitmapFactory<span class="token punctuation">.</span>Options options <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">BitmapFactory<span class="token punctuation">.</span>Options</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    options<span class="token punctuation">.</span>inJustDecodeBounds <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 加载图片</span>
+    BitmapFactory<span class="token punctuation">.</span><span class="token function">decodeResource</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> resId<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 计算缩放比</span>
+    options<span class="token punctuation">.</span>inSampleSize <span class="token operator">=</span> <span class="token function">calculateInSampleSize</span><span class="token punctuation">(</span>options<span class="token punctuation">,</span> reqHeight<span class="token punctuation">,</span> reqWidth<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    
+    options<span class="token punctuation">.</span>inJustDecodeBounds <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">// 重新加载图片</span>
+    <span class="token keyword">return</span> BitmapFactory<span class="token punctuation">.</span><span class="token function">decodeResource</span><span class="token punctuation">(</span>res<span class="token punctuation">,</span> resId<span class="token punctuation">,</span> options<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">int</span> <span class="token function">calculateInSampleSize</span><span class="token punctuation">(</span>BitmapFactory<span class="token punctuation">.</span>Options options<span class="token punctuation">,</span>
+    <span class="token keyword">int</span> reqHeight<span class="token punctuation">,</span> <span class="token keyword">int</span> reqWidth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">int</span> height <span class="token operator">=</span> options<span class="token punctuation">.</span>outHeight<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> width <span class="token operator">=</span> options<span class="token punctuation">.</span>outWidth<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> inSampleSize <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>height <span class="token operator">></span> reqHeight<span class="token punctuation">)</span> <span class="token operator">||</span> <span class="token punctuation">(</span>width <span class="token operator">></span> reqWidth<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> halfHeight <span class="token operator">=</span> height <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token keyword">int</span> halfWidth <span class="token operator">=</span> width <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">;</span>
+
+        <span class="token comment" spellcheck="true">// 计算缩放比，是2的指数</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span>halfHeight <span class="token operator">/</span> inSampleSize<span class="token punctuation">)</span> <span class="token operator">>=</span> reqHeight<span class="token punctuation">)</span> 
+                    <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>halfWidth <span class="token operator">/</span> inSampleSize<span class="token punctuation">)</span> <span class="token operator">>=</span> reqWidth<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            inSampleSize <span class="token operator">*=</span> <span class="token number">2</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> inSampleSize<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// 调用：</span>
+mImageView<span class="token punctuation">.</span><span class="token function">setImageBitmap</span><span class="token punctuation">(</span><span class="token function">decodeSampledBitmapFromResource</span><span class="token punctuation">(</span><span class="token function">getResources</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> R<span class="token punctuation">.</span>mipmap<span class="token punctuation">.</span>ic_launcher<span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">,</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre>
 <h2 id="【稳】异常拦截优化"><a href="#【稳】异常拦截优化" class="headerlink" title="【稳】异常拦截优化"></a>【稳】异常拦截优化</h2><p>请求服务端数据过程中，访问接口和解析返回数据都可能出错，我们可通过拦截器在这两层拦截错误。</p>
 <ul>
 <li>在访问接口时，我们不用设置拦截器，因为一旦出现错误，Retrofit会自动抛出异常。比如，常见请求异常404，500，503等等。</li>
@@ -2226,7 +2396,7 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">32.5k</span>
+                        class="white-color">34.9k</span>
             
             
             
