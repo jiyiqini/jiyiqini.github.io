@@ -1563,17 +1563,41 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
 
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a href="https://leunggeorge.github.io/2017/07/09/%E6%89%A7%E8%A1%8Chexo%E6%97%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/">执行 hexo 时的一些报错处理</a></li>
+<li><a href="https://blog.csdn.net/weixin_47617631/article/details/121425697">hexo上传博客代码时花括号被转义了</a></li>
 </ul>
 <h1 id="Deprecated：use-date-for-updated"><a href="#Deprecated：use-date-for-updated" class="headerlink" title="Deprecated：use_date_for_updated"></a>Deprecated：<code>use_date_for_updated</code></h1><p>因安装一些模块，中途又跟踪提示 fix ，最后莫名其妙地把 hexo 从 <code>4.2.0</code> 升级到了 <code>5.4.0</code> ，在使用 hexo 操作（<code>hexo server</code>, etc.）时，出现如下警告提示：</p>
 <pre class=" language-text"><code class="language-text">Deprecated config detected: "use_date_for_updated" is deprecated, please use "updated_option" instead. See https://hexo.io/docs/configuration for more details.
 </code></pre>
 <blockquote>
-<p><strong>原因：</strong> 提示 <code>use_date_for_updated</code> 过时。<br><strong>解决办法：</strong>： 根据提示，用 <code>updated_option</code> 替换即可。</p>
+<p><strong>原因：</strong> 提示 <code>use_date_for_updated</code> 过时。<br><strong>👉🏻解决：</strong> 根据提示，用 <code>updated_option</code> 替换即可。</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># 修改文件：&lt;hexo-blog>/_config.yml</span>
 <span class="token comment" spellcheck="true"># Date / Time format</span>
 <span class="token comment" spellcheck="true">## Use post's date for updated date unless set in front-matter</span>
 <span class="token key atrule">updated_option</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
 </code></pre>
+</blockquote>
+<h1 id="Hexo-插入代码片段时，在预览时诸如-等被转义了。"><a href="#Hexo-插入代码片段时，在预览时诸如-等被转义了。" class="headerlink" title="Hexo 插入代码片段时，在预览时诸如 {} 等被转义了。"></a>Hexo 插入代码片段时，在预览时诸如 <code>&#123;&#125;</code> 等被转义了。</h1><p>当我切换到 <a href="https://github.com/blinkfox/hexo-theme-matery">hexo-theme-matery</a> 主题时，markdown 里插入代码片段后，在博客预览显示时，代码里的花括号 <code>&#123;&#125;</code> 不显示，而是显示转义代码 <code>&amp;#123</code> 和 <code>&amp;#125</code> （*在其它主题下暂时没有这个问题~*）。</p>
+<blockquote>
+<p><strong>原因：</strong> 主要是 <code>&#123;你的博客项目&#125;/node_modules/hexo-prism-plugin/src/index.js</code> 配置里缺少了这些转义字符的映射配置。<br><strong>👉🏻解决：</strong> </p>
+<blockquote>
+<ol>
+<li>打开 <code>&#123;你的博客项目&#125;/node_modules/hexo-prism-plugin/src/index.js</code> 文件。</li>
+<li>找到 <code>map</code> 变量声明，将 <code>&#123;&#125;</code> 等的转义字符与友好显示字符映射键值对（<code>&amp;#123 → &#123;</code> 与 <code>&amp;#125 → &#125;</code>）加上，然后保存，<code>hexo s</code> 重启服务。<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// {你的博客项目}/node_modules/hexo-prism-plugin/src/index.js</span>
+<span class="token operator">...</span>
+<span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token punctuation">{</span>
+ <span class="token string">'&amp;#39;'</span><span class="token punctuation">:</span> <span class="token string">'\''</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;amp;'</span><span class="token punctuation">:</span> <span class="token string">'&amp;'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;gt;'</span><span class="token punctuation">:</span> <span class="token string">'>'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;lt;'</span><span class="token punctuation">:</span> <span class="token string">'&lt;'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;quot;'</span><span class="token punctuation">:</span> <span class="token string">'"'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;#123;'</span><span class="token punctuation">:</span> <span class="token string">'{'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;#125;'</span><span class="token punctuation">:</span> <span class="token string">'}'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token operator">...</span>
+</code></pre>
+</li>
+</ol>
+</blockquote>
 </blockquote>
 ]]></content>
       <categories>
@@ -1585,6 +1609,481 @@ TextView mTvNoDataFound <span class="token operator">=</span> mNoDataFoundLayout
         <tag>Hexo</tag>
         <tag>报错</tag>
         <tag>异常</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>快速搭建 Hexo+Github/Gitee 个人博客（入门篇1）</title>
+    <url>/dev-tools/hexo/Setup-Tutorial/</url>
+    <content><![CDATA[<p>如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 <a href="https://github.com/">Github</a>/<a href="https://gitee.com/">Gitee</a> 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。</p>
+<span id="more"></span>
+
+<!-- [toc] -->
+
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
+<li><a href="https://hexo.io/zh-cn/">Hexo官网</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/60578464">使用 Hexo+GitHub 搭建个人免费博客教程（小白向）</a></li>
+<li><a href="https://www.jianshu.com/p/8681ab76da08">用hexo+github搭建属于自己的博客</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/136552969">部署Hexo踩过的坑—node14.0配置hexo</a></li>
+<li><a href="https://segmentfault.com/a/1190000002632530">hexo常用命令笔记</a></li>
+<li><a href="https://hexo.io/docs/one-command-deployment">One-Command Deployment</a></li>
+<li><a href="https://blog.csdn.net/weixin_45667885/article/details/101084532">Hexo同时部署在GitHub、Coding、Gitee</a></li>
+<li><a href="https://gavincrown.gitee.io/2020/07/06/Hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0Github%E5%92%8CGitee/">Hexo博客部署到GitHub和Gitee</a></li>
+</ul>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>越来越多的人使用 GitHub/Gitee Pages 来搭建 Hexo 静态博客网站，其最吸引人的莫过于完全免费使用，并且非常稳定。虽然。hexo 搭建过程比较麻烦，有点折腾，但是配置完成后，基本不需要操心维护的事，甚至放了几年都忘记了，打开来看文章依然还在。</p>
+<p>本文就详细介绍下如何使用 Hexo + GitHub/Gitee 搭建免费个人博客网站的教程。</p>
+<p><em>PS：Github 和 Gitee 基本类似，主要区别为 Gitee 为国内开发，服务器在国内相比较访问比较快速，所以本篇讲解如何同时部署 hexo 到 Github/Gitee。</em></p>
+<hr>
+<p>开始前，再介绍一下：</p>
+<ul>
+<li><h2 id="GitHub-Gitee-Pages-是什么？"><a href="#GitHub-Gitee-Pages-是什么？" class="headerlink" title="GitHub/Gitee Pages 是什么？"></a><a href="https://help.github.com/en/github/working-with-github-pages/about-github-pages">GitHub/Gitee Pages 是什么？</a></h2><p>  GitHub Pages 是由 GitHub 官方提供的一种免费的静态站点托管服务，让我们可以在 GitHub 仓库里托管和发布自己的静态网站页面。同理，Gitee Pages 是 Gitee 官方主的托管服务。</p>
+</li>
+<li><h2 id="Hexo-是什么？"><a href="#Hexo-是什么？" class="headerlink" title="Hexo 是什么？"></a><a href="https://hexo.io/zh-cn/">Hexo 是什么？</a></h2><p>  Hexo 是一个快速、简洁且高效的静态博客框架，它基于 Node.js 运行，可以将我们撰写的 Markdown 文档解析渲染成静态的 HTML 网页。</p>
+</li>
+<li><h2 id="Hexo-GitHub-Gitee-文章发布原理"><a href="#Hexo-GitHub-Gitee-文章发布原理" class="headerlink" title="Hexo + GitHub/Gitee 文章发布原理"></a>Hexo + GitHub/Gitee 文章发布原理</h2><p>  在本地撰写 Markdown 格式文章后，通过 Hexo 解析文档，渲染生成具有主题样式的 HTML 静态网页，再推送到 GitHub/Gitee 上完成博文的发布。</p>
+</li>
+</ul>
+<pre class=" language-text"><code class="language-text">graph LR
+A(撰写文章.md) --> |hexo g| B(Hexo生成静态网页)
+B --> |hexo d| C(部署到Github Pages)
+C --> |访客| D(该博客首页xxx.github.io)
+</code></pre>
+<p><img src="http://pic3.zhimg.com/80/v2-a193a47cf70fe6ecf156e5f3d34920ea_1440w.jpg"></p>
+<ul>
+<li><h2 id="Hexo-的优缺点"><a href="#Hexo-的优缺点" class="headerlink" title="Hexo 的优缺点"></a>Hexo 的优缺点</h2><p>  <strong>优点</strong>：免费托管在 GitHub/Gitee，安全省心；静态站点，轻量快速；可自由定制；迁移方便……</p>
+<p>  <strong>不足</strong>：发文不便，依赖于本地环境；更适合个人博客使用；GitHub 在国内访问速度有点不快。</p>
+</li>
+<li><h2 id="托管与博客地址一览表"><a href="#托管与博客地址一览表" class="headerlink" title="托管与博客地址一览表"></a>托管与博客地址一览表</h2><table>
+<thead>
+<tr>
+<th align="center">托管平台</th>
+<th align="center">访问博客地址格式</th>
+<th align="center">示例</th>
+<th align="center">备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><a href="https://github.com/">https://github.com</a></td>
+<td align="center">https://用户名.github.io</td>
+<td align="center"><a href="https://jiyiqini.github.io/">https://jiyiqini.github.io</a></td>
+<td align="center">国内访问慢</td>
+</tr>
+<tr>
+<td align="center"><a href="https://gitee.com/">https://gitee.com</a></td>
+<td align="center">https://用户名.gitee.io</td>
+<td align="center"><a href="https://jiyiqini.gitee.io/">https://jiyiqini.gitee.io</a></td>
+<td align="center">国内访问快</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h1 id="博客搭建"><a href="#博客搭建" class="headerlink" title="博客搭建"></a>博客搭建</h1><p>由于 Hexo 基于 Node.js，搭建过程中还需要使用 npm（Node.js 已带） 和 git，因此先搭建本地操作环境，安装 Node.js 和 Git。</p>
+<ul>
+<li>Node.js：<a href="https://nodejs.org/zh-cn">https://nodejs.org/zh-cn</a></li>
+<li>Git：<a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></li>
+</ul>
+<p>下载 Node.js 和 Git 程序并安装，一路点 “下一步” 按默认配置完成安装。</p>
+<p>安装完成后，打开 terminal ，依次输入 <code>node -v、npm -v、 git --version</code> 并回车，出现程序版本号即可。</p>
+<h2 id="1-搭建环境"><a href="#1-搭建环境" class="headerlink" title="1. 搭建环境"></a>1. 搭建环境</h2><ul>
+<li><h3 id="安装-git"><a href="#安装-git" class="headerlink" title="安装 git"></a>安装 git</h3><p>  忽略。具体请下载安装包或终端命令安装均可。</p>
+</li>
+<li><h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="安装 node.js"></a>安装 node.js</h3><p>  忽略。具体请下载安装包或终端命令安装均可。</p>
+</li>
+<li><h3 id="申请-github、gitee-账号"><a href="#申请-github、gitee-账号" class="headerlink" title="申请 github、gitee 账号"></a>申请 github、gitee 账号</h3><p>  忽略。本文着重讲解hexo，请自行网上查阅。</p>
+</li>
+<li><h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><p>  具体过程请看如下。</p>
+</li>
+</ul>
+<h2 id="2-连接-github-gitee-与-SSH-key"><a href="#2-连接-github-gitee-与-SSH-key" class="headerlink" title="2. 连接 github/gitee 与 SSH-key"></a>2. 连接 github/gitee 与 SSH-key</h2><h3 id="Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）"><a href="#Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）" class="headerlink" title="Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）"></a>Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）</h3><pre class=" language-bash"><code class="language-bash">1，分别生成不同使用环境的SSH-Key：
+
+<span class="token comment" spellcheck="true"># 例1，生成 github、gitgee 使用的 ssh-key，并单独命名管理为 github_id_rsa</span>
+<span class="token comment" spellcheck="true"># 例2，生成 公司(例如：gitlab) 使用的 ssh-key，并单独命名管理为 gitlab_id_rsa</span>
+$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_github.com"</span> -f ~/.ssh/github_id_rsa
+$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_gitee.com"</span>  -f ~/.ssh/gitee_id_rsa
+$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_gitlab.com"</span> -f ~/.ssh/gitlab_id_rsa
+$ <span class="token punctuation">..</span>.
+
+最终，在 ~/.ssh/ 目录会生成 私钥和公钥（分别为：github_id_rsa/github_id_rsa.pub、gitee_id_rsa/gitee_id_rsa.pub、gitlab_id_rsa/gitlab_id_rsa.pub）。然后，我们将公钥中的内容粘帖到各自服务器的 SSH-key 的配置中即可。
+
+2，添加私钥：
+
+$ ssh-add ~/.ssh/github_id_rsa  <span class="token comment" spellcheck="true">#输出例如：Identity added: id_rsa (sh14****60@163)</span>
+$ ssh-add ~/.ssh/gitee_id_rsa   <span class="token comment" spellcheck="true">#输出例如：Identity added: id_rsa (sh14****60@163)</span>
+$ ssh-add ~/.ssh/gitlab_id_rsa  <span class="token comment" spellcheck="true">#输出例如：Identity added: github_id_rsa (sh14****60@163)</span>
+$ <span class="token punctuation">..</span>.
+
+如果执行ssh-add时提示<span class="token string">"Could not open a connection to your authentication agent"</span>，可以现执行命令：
+
+$ ssh-agent <span class="token function">bash</span>
+
+然后，再运行ssh-add命令：
+
+<span class="token comment" spellcheck="true"># 可以通过 ssh-add -l 来显示私钥列表</span>
+$ ssh-add -l
+<span class="token comment" spellcheck="true"># 输出（对应ssh-add添加的密钥），例如：</span>
+<span class="token comment" spellcheck="true"># 3072 SHA256:IFMBBfvZvSb1+Gmrs******9HaY2f5x******Sw+atVY sh14****60@163.com (RSA)</span>
+<span class="token comment" spellcheck="true"># 3072 SHA256:IFMBBfvZvF+d+Bgtf******9HaY2f5x******BstddYZ sh14****60@163.com (RSA)</span>
+<span class="token comment" spellcheck="true"># 3072 SHA256:Z65IEans5+7mZ5Fj8******lbYa2Qk******UP54oUeE sh14****60@163.com (RSA)</span>
+
+<span class="token comment" spellcheck="true"># 可以通过 ssh-add -D 来清空私钥列表</span>
+$ ssh-add -D
+
+ssh-add命令是把专用密钥添加到ssh-agent的高速缓存中。该命令位置在/usr/bin/ssh-add，参数选项有：
+
+-D：删除ssh-agent中的所有密钥. 
+-d：从ssh-agent中的删除密钥 
+-e pkcs11：删除PKCS<span class="token comment" spellcheck="true">#11共享库pkcs1提供的钥匙。 </span>
+-s pkcs11：添加PKCS<span class="token comment" spellcheck="true">#11共享库pkcs1提供的钥匙。 </span>
+-L：显示ssh-agent中的公钥 
+-l：显示ssh-agent中的密钥 
+-t life：对加载的密钥设置超时时间，超时ssh-agent将自动卸载密钥 -X：对ssh-agent进行解锁 
+-x：对ssh-agent进行加锁
+
+3，创建并修改config配置文件：
+
+<span class="token comment" spellcheck="true"># 在 ~/.ssh 目录下新建一个 config 文件：</span>
+$ <span class="token function">touch</span> config
+
+添加内容：
+
+<span class="token comment" spellcheck="true"># github</span>
+Host github.com
+    HostName github.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/github_id_rsa
+
+<span class="token comment" spellcheck="true"># gitee</span>
+Host gitee.com
+    HostName gitee.com
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/gitee_id_rsa
+
+<span class="token comment" spellcheck="true"># gitlab</span>
+Host gitlab.com
+    HostName gitlab.com <span class="token comment" spellcheck="true">#这里填你们公司的git网址即可</span>
+    PreferredAuthentications publickey
+    IdentityFile ~/.ssh/gitlab_id_rsa
+
+<span class="token comment" spellcheck="true"># 更多ssh-key添加...</span>
+
+4，测试：
+
+$ <span class="token function">ssh</span> -T git@github.com
+$ <span class="token function">ssh</span> -T git@gitee.com
+
+<span class="token comment" spellcheck="true"># 若出错的话，别急！通过debug来查看解决吧。(其中-v 是输出编译信息，然后根据编译信息自己去解决问题吧)：</span>
+$ <span class="token function">ssh</span> -vT git@github.com
+
+若输出：  
+
+Hi <span class="token operator">&lt;</span>your_ssh_user_name<span class="token operator">></span><span class="token operator">!</span> You've successfully authenticated, but <span class="token operator">&lt;</span>GitHub<span class="token operator">|</span>GITEE.COM<span class="token operator">|</span><span class="token punctuation">..</span>.<span class="token operator">></span> does not provide shell access.  
+
+则表示成功的连上 github 了。也可以试试链接公司的 gitlab 。这样，就可以在不同的仓库，用不同的账号登录了~~~
+</code></pre>
+<h3 id="Step2：在托管平台上添加公钥授权："><a href="#Step2：在托管平台上添加公钥授权：" class="headerlink" title="Step2：在托管平台上添加公钥授权："></a>Step2：在托管平台上添加公钥授权：</h3><ul>
+<li><p>Github 添加公钥授权：</p>
+<pre class=" language-bash"><code class="language-bash">1，Github -<span class="token operator">></span> Settings -<span class="token operator">></span> SSH and GPG keys
+2，SSH keys选项 -<span class="token operator">></span> New SSH key。
+3，Title：随便取个名字即可，如：SSH-key_myGithub。
+4，Key：将之前创建的 github 公钥（即 github_id_rsa.pub）里的内容，全复制粘贴进去。
+5，点击“Add SSH key”，保存。
+</code></pre>
+</li>
+<li><p>Gitee 添加公钥授权：</p>
+<pre class=" language-bash"><code class="language-bash">1，Gitee -<span class="token operator">></span> 设置 -<span class="token operator">></span> 安全设置<span class="token comment" spellcheck="true">#SSH公钥。</span>
+2，SSH公钥 -<span class="token operator">></span> 添加公钥。
+3，标题：随便取个名字即可。如：SSH-key_myGitee。
+4，公钥：将之前创建的 gitee 公钥（即 gitee_id_rsa.pub）里的内容，全复制粘贴进去。
+5，点击“确定”，保存。
+</code></pre>
+</li>
+</ul>
+<h3 id="Step3：验证连接"><a href="#Step3：验证连接" class="headerlink" title="Step3：验证连接"></a>Step3：验证连接</h3><pre class=" language-bash"><code class="language-bash">1，进入终端。
+2，输入命令：ssh -T git@github.com <span class="token comment" spellcheck="true"># gitee：ssh -T git@gitee.com</span>
+3，若出现 “Are you sure……”，输入 <span class="token function">yes</span> 回车确认。
+4，最后输出 “Hi <span class="token operator">&lt;</span>your_ssh_user_name<span class="token operator">></span><span class="token operator">!</span> You've successfully authenticated, but <span class="token operator">&lt;</span>GitHub<span class="token operator">|</span>GITEE.COM<span class="token operator">></span> does not provide shell access.  ”，表示成功连接。
+</code></pre>
+<h2 id="3-创建-Github-Gitee-Pages-仓库"><a href="#3-创建-Github-Gitee-Pages-仓库" class="headerlink" title="3. 创建 Github/Gitee Pages 仓库"></a>3. 创建 Github/Gitee Pages 仓库</h2><h3 id="Github-Pages-仓库"><a href="#Github-Pages-仓库" class="headerlink" title="Github Pages 仓库"></a>Github Pages 仓库</h3><pre class=" language-bash"><code class="language-bash">1，GitHub 主页右上角加号 -<span class="token operator">></span> New repository。
+2，Repository name 中输入“用户名.github.io”。
+3，勾选 Public。必须 Public 才能使用。 
+4，勾选 “Initialize this repository with a README”。
+5，填好后点击 Create repository 创建。
+6，创建后默认自动启用 HTTPS，博客地址为：https://用户名.github.io。
+</code></pre>
+<p>例如，我的博客：<a href="https://jiyiqini.github.io/">https://jiyiqini.github.io</a></p>
+<h3 id="Gitee-Pages-仓库"><a href="#Gitee-Pages-仓库" class="headerlink" title="Gitee Pages 仓库"></a>Gitee Pages 仓库</h3><pre class=" language-bash"><code class="language-bash">1，Gitee 主页右上角加号 -<span class="token operator">></span> 新建仓库。
+2，仓库名称中输入“用户名”。
+3，勾选“开源”或“私有”均可。对于个人博客嘛，私有吧。
+4，勾选“初始化仓库”，其它看情况可选（如：设置模板、选择分支模型）。
+5，创建完成后，点击该仓库的 “服务” -<span class="token operator">></span> Gitee Pages <span class="token operator">></span> 勾选“强制使用HTTPS” -<span class="token operator">></span> 启动。博客地址为：https://用户名.gitee.io。
+</code></pre>
+<p>例如，我的博客：<a href="https://jiyiqini.gitee.io/">https://jiyiqini.gitee.io</a></p>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li>Github repo 权限只能为 <code>public</code> ，而 Gitee repo 权限可以是 <code>public</code>、也可是 <code>private</code>。</li>
+<li>Github 的 repo name 必须为 <code>“用户名.github.io”</code> 格式，从而博客访问地址为：<code>https://用户名.github.io</code>；而 Gitee 的 repo name 任意。***一般与用户名一致，这样博客地址就比较简洁，形如：<code>https://用户名.gitee.io</code>***。若 repo name 不保持与用户名一致，则需要有二级目录方可访问，如：<code>https://用户名.gitee.io/仓库名</code>。</li>
+<li>Github 创建好仓库，默认为 <code>HTTPS</code> ，而 Gitee 需要去手动开启！</li>
+</ul>
+<h2 id="4-Hexo博客系统接入（核心）"><a href="#4-Hexo博客系统接入（核心）" class="headerlink" title="4. Hexo博客系统接入（核心）"></a>4. Hexo博客系统接入（核心）</h2><h3 id="hexo-安装与基本使用"><a href="#hexo-安装与基本使用" class="headerlink" title="hexo 安装与基本使用"></a>hexo 安装与基本使用</h3><p>☞ <a href="https://hexo.io/zh-cn/">Hexo</a>官方步骤参考：</p>
+<blockquote>
+<pre class=" language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
+$ hexo init blog
+$ <span class="token function">cd</span> blog
+$ <span class="token function">npm</span> <span class="token function">install</span>
+$ hexo server
+</code></pre>
+</blockquote>
+<p>☞ Hexo 博客文件夹目录结构概览（<a href="https://hexo.io/zh-cn/docs/setup">更多详情</a>）：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token keyword">.</span>
+├── _config.yml         <span class="token comment" spellcheck="true">#网点的配置信息</span>
+├── db.json             <span class="token comment" spellcheck="true">#缓存文件</span>
+├── node_modules        <span class="token comment" spellcheck="true">#安装的插件以及hexo所需的一些node.js模块。</span>
+├── package-lock.json   <span class="token comment" spellcheck="true">#应用程序的信息</span>
+├── package.json        <span class="token comment" spellcheck="true">#应用程序信息，配置hexo运行需要的js包。</span>
+├── public              <span class="token comment" spellcheck="true">#最终所见网页的所有内容</span>
+├── scaffolds           <span class="token comment" spellcheck="true">#模版文件夹。当您新建文章时，Hexo会根据scaffold来建立文件。Hexo的模板是指在新建的文章文件中默认填充的内容。例如，如果您修改scaffold/post.md中的Front-matter内容，那么每次新建一篇文章时都会包含这个修改。</span>
+│   ├── draft.md
+│   ├── page.md
+│   └── post.md
+├── <span class="token function">source</span>              <span class="token comment" spellcheck="true">#存放用户资源，md等文档。除 _posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown和HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去。</span>
+│   └── _posts
+└── themes              <span class="token comment" spellcheck="true">#主题 文件夹。Hexo 会根据主题来生成静态页面。</span>
+</code></pre>
+<p><em><strong>具体个人搭建步骤：</strong></em></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># ********** 1，npm安装hexo博客程序：</span>
+$ <span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g hexo-cli
+
+
+<span class="token comment" spellcheck="true"># ********** 2，hexo初始化及相关依赖：</span>
+<span class="token comment" spellcheck="true"># 假设，我的博客放在： ~/MyBlogs/Hexo-Blogs</span>
+$ <span class="token function">cd</span> ~/MyBlogs/Hexo-Blogs <span class="token comment" spellcheck="true">#进入存放hexo博客程序的目标目录</span>
+$ hexo init     <span class="token comment" spellcheck="true">#初始化。亦可：进入上一级目录~/MyBlogs下，再直接 hexo init Hexo-Blogs。</span>
+$ <span class="token function">npm</span> <span class="token function">install</span>   <span class="token comment" spellcheck="true">#安装依赖组件</span>
+
+
+<span class="token comment" spellcheck="true"># ********** 3，生成与预览：</span>
+$ hexo g    <span class="token comment" spellcheck="true">#生成静态页面。或hexo generate</span>
+$ hexo s    <span class="token comment" spellcheck="true">#启动本地预览。或hexo server</span>
+<span class="token comment" spellcheck="true"># 浏览器打开终端提示的url：http://localhost:4000。若出现默认的hexo页面，表示本地博客成功。</span>
+<span class="token comment" spellcheck="true"># Tips：如果出现页面加载不出来，可能是端口被占用了。Ctrl+C 关闭服务器，运行 hexo server -p 5000 更改端口号后重试。</span>
+
+<span class="token comment" spellcheck="true"># ********** 4，部署 Hexo 到 GitHub Pages</span>
+<span class="token comment" spellcheck="true"># 本地博客测试成功后，就是上传到 GitHub 进行部署，使其能够在网络上访问。</span>
+$ <span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git --save <span class="token comment" spellcheck="true">#安装 hexo-deployer-git。否则可能会出错“error deployer not found:git/github”</span>
+$ 修改 <span class="token punctuation">..</span>/<span class="token punctuation">{</span>your_hexo_blog<span class="token punctuation">}</span>/_config.yml<span class="token variable">$deploy</span> 中 Deployment 部分并保存：
+    <span class="token comment" spellcheck="true"># Deployment</span>
+    <span class="token comment" spellcheck="true">## Docs: https://hexo.io/docs/deployment.html</span>
+    deploy:
+      type: <span class="token function">git</span>
+      repo: https://github.com/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>.github.io.git
+      branch: master
+$ hexo d <span class="token comment" spellcheck="true">#发布网点到 Github Pages</span>
+$ 浏览器访问 https://用户名.github.io，结束. <span class="token comment" spellcheck="true">#注意：第一次发布可能会有10分钟的延迟，在这期间可能看到的是空白页面。</span>
+</code></pre>
+<p>☞ ==<em><strong>每次修改完本地的文件后必须执行以下命令，以重新部署Github Pages：</strong></em>==</p>
+<pre class=" language-bash"><code class="language-bash">hexo clean              <span class="token comment" spellcheck="true">#清除缓存</span>
+hexo g 或 hexo generate <span class="token comment" spellcheck="true">#生成静态页面</span>
+hexo d 或 deploy        <span class="token comment" spellcheck="true">#部署发布。发布前本地检查预览下：hexo s -> http://localhost:4000</span>
+</code></pre>
+<h3 id="hexo-同时部署-Github-Gitee-Pages"><a href="#hexo-同时部署-Github-Gitee-Pages" class="headerlink" title="hexo 同时部署 Github/Gitee Pages"></a>hexo 同时部署 Github/Gitee Pages</h3><p>即，在您的博客根目录下，编辑 <code>_config.yml</code> 配置文件，设置 <code>deploy</code> ，如：</p>
+<pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># Deployment</span>
+<span class="token comment" spellcheck="true">## Docs: https://hexo.io/docs/deployment.html</span>
+<span class="token key atrule">deploy</span><span class="token punctuation">:</span>
+  <span class="token comment" spellcheck="true"># 单平台部署，不用 - 分栏配置亦可以，直接如下：</span>
+  <span class="token comment" spellcheck="true"># ref: https://hexo.io/docs/one-command-deployment</span>
+  <span class="token comment" spellcheck="true"># type: git</span>
+  <span class="token comment" spellcheck="true"># repo: https://github.com/用户名/用户名.github.io.git</span>
+  <span class="token comment" spellcheck="true"># #repo: https://gitee.com/用户名/用户名.git</span>
+  <span class="token comment" spellcheck="true"># branch: master</span>
+  
+  <span class="token comment" spellcheck="true"># 如果为多平台部署，请用 - 分栏配置：</span>
+<span class="token punctuation">-</span> <span class="token key atrule">type</span><span class="token punctuation">:</span> git
+  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@github.com<span class="token punctuation">:</span>用户名/用户名.github.io.git <span class="token comment" spellcheck="true">#或 https://github.com/用户名/用户名.github.io.git</span>
+  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master
+<span class="token punctuation">-</span> <span class="token key atrule">type</span><span class="token punctuation">:</span> git 
+  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@gitee.com<span class="token punctuation">:</span>用户名/用户名.git <span class="token comment" spellcheck="true">#或 https://gitee.com/用户名/用户名.git</span>
+  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master
+</code></pre>
+<p><strong>注意事项：Github Pages 部署后，支持自动更新，无需额外操作，稍等一小会就可访问了，因 Github 服务器在国外。而 Gitee Pages 则不一样，部署后，不支持自动更新，需要手动去点击更新后才可以访问。</strong></p>
+<h3 id="最后，一键部署。"><a href="#最后，一键部署。" class="headerlink" title="最后，一键部署。"></a>最后，一键部署。</h3><p>通常，我比较喜欢使用一键操作：</p>
+<blockquote>
+<p><code>hexo clean &amp;&amp; hexo g -d</code> 或 <code>hexo clean &amp;&amp; hexo d -g</code></p>
+</blockquote>
+<h1 id="Hexo常用命令"><a href="#Hexo常用命令" class="headerlink" title="Hexo常用命令"></a>Hexo常用命令</h1><h2 id="Hexo基本命令（★★★★）"><a href="#Hexo基本命令（★★★★）" class="headerlink" title="Hexo基本命令（★★★★）"></a>Hexo基本命令（★★★★）</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 基本常用</span>
+hexo <span class="token punctuation">[</span>-<span class="token punctuation">]</span>h<span class="token operator">|</span><span class="token function">help</span>              <span class="token comment" spellcheck="true">#查看帮助</span>
+hexo <span class="token punctuation">[</span>-<span class="token punctuation">]</span>v<span class="token operator">|</span>version           <span class="token comment" spellcheck="true">#查看 hexo 的版本，包括 hexo 所依赖的组件正在使用的版本，如：node、v8……</span>
+
+hexo n/new <span class="token string">"postName"</span>       <span class="token comment" spellcheck="true">#新建文章。在source下_post中生成一个“postName.md”，打开开始写文章即可。即：/source/_post/&lt;postName.md></span>
+hexo n/new page <span class="token string">"pageName"</span>  <span class="token comment" spellcheck="true">#新建页面。在source下生成page文件夹页并默认生成index.md，即：/source/&lt;pageName>/index.md</span>
+
+hexo g/generate             <span class="token comment" spellcheck="true">#生成静态页面至public目录</span>
+hexo s/server               <span class="token comment" spellcheck="true">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span>
+hexo d/deploy               <span class="token comment" spellcheck="true">#将.deploy目录部署到GitHub</span>
+hexo p/publish <span class="token punctuation">[</span>layout<span class="token punctuation">]</span> <span class="token operator">&lt;</span>filename<span class="token operator">></span>  <span class="token comment" spellcheck="true">#发表草稿</span>
+
+<span class="token comment" spellcheck="true"># 完成后部署</span>
+<span class="token comment" spellcheck="true"># 两个命令的作用是相同的（--deploy全名等价于-简写）</span>
+hexo deploy --generate 或 hexo generate --deploy
+<span class="token comment" spellcheck="true">#简写即为：</span>
+hexo g -d 或 hexo d -g  <span class="token comment" spellcheck="true">#生成后并部署（g和d顺序可交换）</span>
+hexo g -d -m <span class="token string">'message'</span>  <span class="token comment" spellcheck="true">#生成后并部署带git-commit message</span>
+
+<span class="token comment" spellcheck="true"># 服务器</span>
+hexo s/server                   <span class="token comment" spellcheck="true">#Hexo 会监视文件变动并自动更新，您无须重启服务器。</span>
+hexo s/server -s                <span class="token comment" spellcheck="true">#静态模式</span>
+hexo s/server -p 5000           <span class="token comment" spellcheck="true">#更改端口为5000</span>
+hexo s/server -i 192.168.1.1    <span class="token comment" spellcheck="true">#自定义 IP</span>
+
+<span class="token comment" spellcheck="true"># 监视文件变动</span>
+hexo generate               <span class="token comment" spellcheck="true">#使用 Hexo 生成静态文件快速而且简单</span>
+hexo generate --watch       <span class="token comment" spellcheck="true">#监视文件变动</span>
+</code></pre>
+<h2 id="Hexo升级"><a href="#Hexo升级" class="headerlink" title="Hexo升级"></a>Hexo升级</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 使用淘宝源的 cnpm 替换 npm</span>
+<span class="token comment" spellcheck="true"># 若网络好，还是尽量使用 npm ，万一使用 cnpm 出现未同步或者其他问题，当然可能性小。</span>
+<span class="token function">npm</span> <span class="token function">install</span> -g cnpm --registry<span class="token operator">=</span>https://registry.npm.taobao.org
+
+cnpm <span class="token function">install</span> -g cnpm        <span class="token comment" spellcheck="true"># 升级 npm</span>
+cnpm cache clean -f         <span class="token comment" spellcheck="true"># 清除 npm 缓存</span>
+
+<span class="token operator">==</span><span class="token operator">=</span>更新 hexo: 进入 blog 目录，执行如下命令<span class="token operator">==</span><span class="token operator">=</span> 
+<span class="token comment" spellcheck="true"># 更新 package.json 中的 hexo 及个插件版本</span>
+cnpm <span class="token function">install</span> -g npm-check   <span class="token comment" spellcheck="true"># 检查之前安装的插件，都有哪些是可以升级的 </span>
+cnpm <span class="token function">install</span> -g npm-upgrade <span class="token comment" spellcheck="true"># 升级系统中的插件</span>
+npm-check
+npm-upgrade
+
+<span class="token comment" spellcheck="true"># 更新 hexo 及所有插件</span>
+cnpm update
+
+<span class="token comment" spellcheck="true"># 确认 hexo 已经更新</span>
+hexo -v
+</code></pre>
+<h1 id="Hexo个性化设置（基础入门）"><a href="#Hexo个性化设置（基础入门）" class="headerlink" title="Hexo个性化设置（基础入门）"></a>Hexo个性化设置（基础入门）</h1><p>此章节仅讲解 hexo 如何设置主题，更多详细请移步: <a href="/dev-tools/hexo/How-To-Config/" title="《如何美化 hexo+next 个人博客？(入门篇2)》">《如何美化 hexo+next 个人博客？(入门篇2)》</a></p>
+<h2 id="主题切换"><a href="#主题切换" class="headerlink" title="主题切换"></a>主题切换</h2><p>Hexo官方推荐或Github上搜索，都有很多主题。</p>
+<blockquote>
+<ol>
+<li><a href="https://hexo.io/themes">https://hexo.io/themes</a></li>
+</ol>
+</blockquote>
+<p>☞ <strong>切换主题步骤：</strong></p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#********** 1，进入&lt;your_blogs>/thems目录</span>
+$ <span class="token function">cd</span> themes
+
+<span class="token comment" spellcheck="true">#********** 2，下载主题（例如：https://github.com/theme-next/hexo-theme-next.git）</span>
+$ <span class="token function">git</span> clone <span class="token operator">&lt;</span>git_theme_repo_url<span class="token operator">></span>
+
+<span class="token comment" spellcheck="true">#********** 3, 配置&lt;your_blogs>/_config.yml</span>
+    <span class="token comment" spellcheck="true"># vim _config.yml</span>
+    <span class="token comment" spellcheck="true"># Extensions</span>
+    <span class="token comment" spellcheck="true">## Plugins: https://hexo.io/plugins/</span>
+    <span class="token comment" spellcheck="true">## Themes: https://hexo.io/themes/</span>
+    theme: hexo-theme-next <span class="token comment" spellcheck="true">#landscape</span>
+
+<span class="token comment" spellcheck="true">#********** 4, 重启server（本地预览或部署Github）</span>
+$ hexo clean <span class="token operator">&amp;&amp;</span> hexo g <span class="token operator">&amp;&amp;</span> hexo s    <span class="token comment" spellcheck="true">#更新并本地预览服务</span>
+$ hexo cleann <span class="token operator">&amp;&amp;</span> hexo d -g          <span class="token comment" spellcheck="true">#更新并部署发布</span>
+</code></pre>
+<h2 id="布局切换"><a href="#布局切换" class="headerlink" title="布局切换"></a>布局切换</h2><h1 id="Hexo搭建遇到问题（仅入门常见的几个）"><a href="#Hexo搭建遇到问题（仅入门常见的几个）" class="headerlink" title="Hexo搭建遇到问题（仅入门常见的几个）"></a>Hexo搭建遇到问题（仅入门常见的几个）</h1><p>此章节仅讲解 hexo 入门搭建中遇到的几个报错与解决，更多异常与处理请移步: <a href="/dev-tools/hexo/Hexo-Issues/" title="《常见的 Hexo 报错与解决》">《常见的 Hexo 报错与解决》</a></p>
+<ul>
+<li><p>若出现 <code>error deployer not found:git 或者 error deployer not found:github</code> 的错误：</p>
+<blockquote>
+<p><strong>解决办法</strong>：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token variable">$npm</span> <span class="token function">install</span> hexo-deployer-git --save
+</code></pre>
+</blockquote>
+</li>
+<li><p>若出现类似 <code>FATAL can not read a block mapping entry; a multiline key may not be an implicit key at line 70, column 1: ...</code> 错误：</p>
+<blockquote>
+<p><strong>解决办法</strong>：</p>
+<pre class=" language-bash"><code class="language-bash">_config.yml中配置项的冒号后面要用空格隔开，再跟配置内容。
+<span class="token comment" spellcheck="true">#例如：</span>
+<span class="token comment" spellcheck="true">#deploy:</span>
+<span class="token comment" spellcheck="true">#  type: git</span>
+<span class="token comment" spellcheck="true">#  repo: https://github.com/用户名/用户名.github.io.git</span>
+<span class="token comment" spellcheck="true">#  branch: master</span>
+</code></pre>
+</blockquote>
+</li>
+<li><p>中文乱码问题：</p>
+<blockquote>
+<p><strong>解决办法</strong>：</p>
+<pre class=" language-bash"><code class="language-bash">将文件的内容编码改为UTF8格式
+</code></pre>
+</blockquote>
+</li>
+<li><p><code>hexo sever</code>能够成功运行，但是 <code>localhost:4000</code> 无法访问：</p>
+<blockquote>
+<p><strong>解决办法</strong>：</p>
+<pre class=" language-bash"><code class="language-bash">$ hexo s -p 5000 <span class="token comment" spellcheck="true">#改用其他端口5000启动</span>
+</code></pre>
+</blockquote>
+</li>
+<li><p><code>hexo d</code> 和 <code>hexo -v</code> 若出现如下稀奇古怪错误，已确保所有配置都正确，但还是会报错：</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># hexo -v 提示错误：</span>
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>Use <span class="token variable"><span class="token variable">`</span>node --trace-warnings <span class="token punctuation">..</span>.<span class="token variable">`</span></span> to show where the warning was created<span class="token punctuation">)</span>
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
+hexo: 4.2.0
+hexo-cli: 3.1.0
+os: Darwin 19.4.0 darwin x64
+node: 14.2.0 <span class="token comment" spellcheck="true">#------》注意这一行！！！</span>
+v8: 8.1.307.31-node.32
+uv: 1.37.0
+zlib: 1.2.11
+brotli: 1.0.7
+ares: 1.16.0
+modules: 83
+nghttp2: 1.40.0
+napi: 6
+llhttp: 2.0.4
+openssl: 1.1.1g
+cldr: 36.1
+icu: 66.1
+tz: 2019c
+unicode: 13.0
+
+<span class="token comment" spellcheck="true"># hexo d 提示错误：</span>
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>Use <span class="token variable"><span class="token variable">`</span>node --trace-warnings <span class="token punctuation">..</span>.<span class="token variable">`</span></span> to show where the warning was created<span class="token punctuation">)</span>
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
+<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
+INFO  Start processing
+INFO  Files loaded <span class="token keyword">in</span> 125 ms
+INFO  0 files generated <span class="token keyword">in</span> 42 ms
+INFO  Deploying: <span class="token function">git</span>
+INFO  Clearing .deploy_git folder<span class="token punctuation">..</span>.
+INFO  Copying files from public folder<span class="token punctuation">..</span>.
+FATAL Something's wrong. Maybe you can <span class="token function">find</span> the solution here: https://hexo.io/docs/troubleshooting.html
+TypeError <span class="token punctuation">[</span>ERR_INVALID_ARG_TYPE<span class="token punctuation">]</span>: The <span class="token string">"mode"</span> argument must be integer. Received an instance of Object
+</code></pre>
+<blockquote>
+<p><strong>解决办法：</strong></p>
+<ul>
+<li><strong>原因</strong>：一般由于 hexo 不能使用最新版本的 node 版本（如，我的版本比较高 14.2.0） ，安装或切换为某个低的稳定版本即可（如，我切换成 v12.22.4 就正常了）。</li>
+<li><strong>解决</strong>：  <pre class=" language-bash"><code class="language-bash">$ <span class="token function">sudo</span> n stable   <span class="token comment" spellcheck="true">#n下载最新稳定版本。若需要切换回指定版本，则使用 sudo n 14.2.0(即版本号)</span>
+$ hexo <span class="token function">v</span><span class="token operator">|</span>version  <span class="token comment" spellcheck="true">#查看版本，正常了。</span>
+$ hexo d<span class="token operator">|</span>deploy   <span class="token comment" spellcheck="true">#重新发布，正常了。</span>
+</code></pre>
+</li>
+</ul>
+</blockquote>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术篇</category>
+        <category>工具指南</category>
+        <category>Hexo</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>环境</tag>
       </tags>
   </entry>
   <entry>
@@ -2424,481 +2923,6 @@ tags:
         <tag>个性化</tag>
         <tag>美化</tag>
         <tag>主题</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>快速搭建 Hexo+Github/Gitee 个人博客（入门篇1）</title>
-    <url>/dev-tools/hexo/Setup-Tutorial/</url>
-    <content><![CDATA[<p>如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 <a href="https://github.com/">Github</a>/<a href="https://gitee.com/">Gitee</a> 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。</p>
-<span id="more"></span>
-
-<!-- [toc] -->
-
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
-<li><a href="https://hexo.io/zh-cn/">Hexo官网</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/60578464">使用 Hexo+GitHub 搭建个人免费博客教程（小白向）</a></li>
-<li><a href="https://www.jianshu.com/p/8681ab76da08">用hexo+github搭建属于自己的博客</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/136552969">部署Hexo踩过的坑—node14.0配置hexo</a></li>
-<li><a href="https://segmentfault.com/a/1190000002632530">hexo常用命令笔记</a></li>
-<li><a href="https://hexo.io/docs/one-command-deployment">One-Command Deployment</a></li>
-<li><a href="https://blog.csdn.net/weixin_45667885/article/details/101084532">Hexo同时部署在GitHub、Coding、Gitee</a></li>
-<li><a href="https://gavincrown.gitee.io/2020/07/06/Hexo%E5%8D%9A%E5%AE%A2%E9%83%A8%E7%BD%B2%E5%88%B0Github%E5%92%8CGitee/">Hexo博客部署到GitHub和Gitee</a></li>
-</ul>
-<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>越来越多的人使用 GitHub/Gitee Pages 来搭建 Hexo 静态博客网站，其最吸引人的莫过于完全免费使用，并且非常稳定。虽然。hexo 搭建过程比较麻烦，有点折腾，但是配置完成后，基本不需要操心维护的事，甚至放了几年都忘记了，打开来看文章依然还在。</p>
-<p>本文就详细介绍下如何使用 Hexo + GitHub/Gitee 搭建免费个人博客网站的教程。</p>
-<p><em>PS：Github 和 Gitee 基本类似，主要区别为 Gitee 为国内开发，服务器在国内相比较访问比较快速，所以本篇讲解如何同时部署 hexo 到 Github/Gitee。</em></p>
-<hr>
-<p>开始前，再介绍一下：</p>
-<ul>
-<li><h2 id="GitHub-Gitee-Pages-是什么？"><a href="#GitHub-Gitee-Pages-是什么？" class="headerlink" title="GitHub/Gitee Pages 是什么？"></a><a href="https://help.github.com/en/github/working-with-github-pages/about-github-pages">GitHub/Gitee Pages 是什么？</a></h2><p>  GitHub Pages 是由 GitHub 官方提供的一种免费的静态站点托管服务，让我们可以在 GitHub 仓库里托管和发布自己的静态网站页面。同理，Gitee Pages 是 Gitee 官方主的托管服务。</p>
-</li>
-<li><h2 id="Hexo-是什么？"><a href="#Hexo-是什么？" class="headerlink" title="Hexo 是什么？"></a><a href="https://hexo.io/zh-cn/">Hexo 是什么？</a></h2><p>  Hexo 是一个快速、简洁且高效的静态博客框架，它基于 Node.js 运行，可以将我们撰写的 Markdown 文档解析渲染成静态的 HTML 网页。</p>
-</li>
-<li><h2 id="Hexo-GitHub-Gitee-文章发布原理"><a href="#Hexo-GitHub-Gitee-文章发布原理" class="headerlink" title="Hexo + GitHub/Gitee 文章发布原理"></a>Hexo + GitHub/Gitee 文章发布原理</h2><p>  在本地撰写 Markdown 格式文章后，通过 Hexo 解析文档，渲染生成具有主题样式的 HTML 静态网页，再推送到 GitHub/Gitee 上完成博文的发布。</p>
-</li>
-</ul>
-<pre class=" language-text"><code class="language-text">graph LR
-A(撰写文章.md) --> |hexo g| B(Hexo生成静态网页)
-B --> |hexo d| C(部署到Github Pages)
-C --> |访客| D(该博客首页xxx.github.io)
-</code></pre>
-<p><img src="http://pic3.zhimg.com/80/v2-a193a47cf70fe6ecf156e5f3d34920ea_1440w.jpg"></p>
-<ul>
-<li><h2 id="Hexo-的优缺点"><a href="#Hexo-的优缺点" class="headerlink" title="Hexo 的优缺点"></a>Hexo 的优缺点</h2><p>  <strong>优点</strong>：免费托管在 GitHub/Gitee，安全省心；静态站点，轻量快速；可自由定制；迁移方便……</p>
-<p>  <strong>不足</strong>：发文不便，依赖于本地环境；更适合个人博客使用；GitHub 在国内访问速度有点不快。</p>
-</li>
-<li><h2 id="托管与博客地址一览表"><a href="#托管与博客地址一览表" class="headerlink" title="托管与博客地址一览表"></a>托管与博客地址一览表</h2><table>
-<thead>
-<tr>
-<th align="center">托管平台</th>
-<th align="center">访问博客地址格式</th>
-<th align="center">示例</th>
-<th align="center">备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center"><a href="https://github.com/">https://github.com</a></td>
-<td align="center">https://用户名.github.io</td>
-<td align="center"><a href="https://jiyiqini.github.io/">https://jiyiqini.github.io</a></td>
-<td align="center">国内访问慢</td>
-</tr>
-<tr>
-<td align="center"><a href="https://gitee.com/">https://gitee.com</a></td>
-<td align="center">https://用户名.gitee.io</td>
-<td align="center"><a href="https://jiyiqini.gitee.io/">https://jiyiqini.gitee.io</a></td>
-<td align="center">国内访问快</td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<h1 id="博客搭建"><a href="#博客搭建" class="headerlink" title="博客搭建"></a>博客搭建</h1><p>由于 Hexo 基于 Node.js，搭建过程中还需要使用 npm（Node.js 已带） 和 git，因此先搭建本地操作环境，安装 Node.js 和 Git。</p>
-<ul>
-<li>Node.js：<a href="https://nodejs.org/zh-cn">https://nodejs.org/zh-cn</a></li>
-<li>Git：<a href="https://git-scm.com/downloads">https://git-scm.com/downloads</a></li>
-</ul>
-<p>下载 Node.js 和 Git 程序并安装，一路点 “下一步” 按默认配置完成安装。</p>
-<p>安装完成后，打开 terminal ，依次输入 <code>node -v、npm -v、 git --version</code> 并回车，出现程序版本号即可。</p>
-<h2 id="1-搭建环境"><a href="#1-搭建环境" class="headerlink" title="1. 搭建环境"></a>1. 搭建环境</h2><ul>
-<li><h3 id="安装-git"><a href="#安装-git" class="headerlink" title="安装 git"></a>安装 git</h3><p>  忽略。具体请下载安装包或终端命令安装均可。</p>
-</li>
-<li><h3 id="安装-node-js"><a href="#安装-node-js" class="headerlink" title="安装 node.js"></a>安装 node.js</h3><p>  忽略。具体请下载安装包或终端命令安装均可。</p>
-</li>
-<li><h3 id="申请-github、gitee-账号"><a href="#申请-github、gitee-账号" class="headerlink" title="申请 github、gitee 账号"></a>申请 github、gitee 账号</h3><p>  忽略。本文着重讲解hexo，请自行网上查阅。</p>
-</li>
-<li><h3 id="安装-hexo"><a href="#安装-hexo" class="headerlink" title="安装 hexo"></a>安装 hexo</h3><p>  具体过程请看如下。</p>
-</li>
-</ul>
-<h2 id="2-连接-github-gitee-与-SSH-key"><a href="#2-连接-github-gitee-与-SSH-key" class="headerlink" title="2. 连接 github/gitee 与 SSH-key"></a>2. 连接 github/gitee 与 SSH-key</h2><h3 id="Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）"><a href="#Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）" class="headerlink" title="Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）"></a>Step1：SSH-key（方便多环境管理不同SSH-Key，此处以配置多个ssk-key为例）</h3><pre class=" language-bash"><code class="language-bash">1，分别生成不同使用环境的SSH-Key：
-
-<span class="token comment" spellcheck="true"># 例1，生成 github、gitgee 使用的 ssh-key，并单独命名管理为 github_id_rsa</span>
-<span class="token comment" spellcheck="true"># 例2，生成 公司(例如：gitlab) 使用的 ssh-key，并单独命名管理为 gitlab_id_rsa</span>
-$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_github.com"</span> -f ~/.ssh/github_id_rsa
-$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_gitee.com"</span>  -f ~/.ssh/gitee_id_rsa
-$ ssh-keygen -t rsa -C <span class="token string">"your_email@your_gitlab.com"</span> -f ~/.ssh/gitlab_id_rsa
-$ <span class="token punctuation">..</span>.
-
-最终，在 ~/.ssh/ 目录会生成 私钥和公钥（分别为：github_id_rsa/github_id_rsa.pub、gitee_id_rsa/gitee_id_rsa.pub、gitlab_id_rsa/gitlab_id_rsa.pub）。然后，我们将公钥中的内容粘帖到各自服务器的 SSH-key 的配置中即可。
-
-2，添加私钥：
-
-$ ssh-add ~/.ssh/github_id_rsa  <span class="token comment" spellcheck="true">#输出例如：Identity added: id_rsa (sh14****60@163)</span>
-$ ssh-add ~/.ssh/gitee_id_rsa   <span class="token comment" spellcheck="true">#输出例如：Identity added: id_rsa (sh14****60@163)</span>
-$ ssh-add ~/.ssh/gitlab_id_rsa  <span class="token comment" spellcheck="true">#输出例如：Identity added: github_id_rsa (sh14****60@163)</span>
-$ <span class="token punctuation">..</span>.
-
-如果执行ssh-add时提示<span class="token string">"Could not open a connection to your authentication agent"</span>，可以现执行命令：
-
-$ ssh-agent <span class="token function">bash</span>
-
-然后，再运行ssh-add命令：
-
-<span class="token comment" spellcheck="true"># 可以通过 ssh-add -l 来显示私钥列表</span>
-$ ssh-add -l
-<span class="token comment" spellcheck="true"># 输出（对应ssh-add添加的密钥），例如：</span>
-<span class="token comment" spellcheck="true"># 3072 SHA256:IFMBBfvZvSb1+Gmrs******9HaY2f5x******Sw+atVY sh14****60@163.com (RSA)</span>
-<span class="token comment" spellcheck="true"># 3072 SHA256:IFMBBfvZvF+d+Bgtf******9HaY2f5x******BstddYZ sh14****60@163.com (RSA)</span>
-<span class="token comment" spellcheck="true"># 3072 SHA256:Z65IEans5+7mZ5Fj8******lbYa2Qk******UP54oUeE sh14****60@163.com (RSA)</span>
-
-<span class="token comment" spellcheck="true"># 可以通过 ssh-add -D 来清空私钥列表</span>
-$ ssh-add -D
-
-ssh-add命令是把专用密钥添加到ssh-agent的高速缓存中。该命令位置在/usr/bin/ssh-add，参数选项有：
-
--D：删除ssh-agent中的所有密钥. 
--d：从ssh-agent中的删除密钥 
--e pkcs11：删除PKCS<span class="token comment" spellcheck="true">#11共享库pkcs1提供的钥匙。 </span>
--s pkcs11：添加PKCS<span class="token comment" spellcheck="true">#11共享库pkcs1提供的钥匙。 </span>
--L：显示ssh-agent中的公钥 
--l：显示ssh-agent中的密钥 
--t life：对加载的密钥设置超时时间，超时ssh-agent将自动卸载密钥 -X：对ssh-agent进行解锁 
--x：对ssh-agent进行加锁
-
-3，创建并修改config配置文件：
-
-<span class="token comment" spellcheck="true"># 在 ~/.ssh 目录下新建一个 config 文件：</span>
-$ <span class="token function">touch</span> config
-
-添加内容：
-
-<span class="token comment" spellcheck="true"># github</span>
-Host github.com
-    HostName github.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/github_id_rsa
-
-<span class="token comment" spellcheck="true"># gitee</span>
-Host gitee.com
-    HostName gitee.com
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/gitee_id_rsa
-
-<span class="token comment" spellcheck="true"># gitlab</span>
-Host gitlab.com
-    HostName gitlab.com <span class="token comment" spellcheck="true">#这里填你们公司的git网址即可</span>
-    PreferredAuthentications publickey
-    IdentityFile ~/.ssh/gitlab_id_rsa
-
-<span class="token comment" spellcheck="true"># 更多ssh-key添加...</span>
-
-4，测试：
-
-$ <span class="token function">ssh</span> -T git@github.com
-$ <span class="token function">ssh</span> -T git@gitee.com
-
-<span class="token comment" spellcheck="true"># 若出错的话，别急！通过debug来查看解决吧。(其中-v 是输出编译信息，然后根据编译信息自己去解决问题吧)：</span>
-$ <span class="token function">ssh</span> -vT git@github.com
-
-若输出：  
-
-Hi <span class="token operator">&lt;</span>your_ssh_user_name<span class="token operator">></span><span class="token operator">!</span> You've successfully authenticated, but <span class="token operator">&lt;</span>GitHub<span class="token operator">|</span>GITEE.COM<span class="token operator">|</span><span class="token punctuation">..</span>.<span class="token operator">></span> does not provide shell access.  
-
-则表示成功的连上 github 了。也可以试试链接公司的 gitlab 。这样，就可以在不同的仓库，用不同的账号登录了~~~
-</code></pre>
-<h3 id="Step2：在托管平台上添加公钥授权："><a href="#Step2：在托管平台上添加公钥授权：" class="headerlink" title="Step2：在托管平台上添加公钥授权："></a>Step2：在托管平台上添加公钥授权：</h3><ul>
-<li><p>Github 添加公钥授权：</p>
-<pre class=" language-bash"><code class="language-bash">1，Github -<span class="token operator">></span> Settings -<span class="token operator">></span> SSH and GPG keys
-2，SSH keys选项 -<span class="token operator">></span> New SSH key。
-3，Title：随便取个名字即可，如：SSH-key_myGithub。
-4，Key：将之前创建的 github 公钥（即 github_id_rsa.pub）里的内容，全复制粘贴进去。
-5，点击“Add SSH key”，保存。
-</code></pre>
-</li>
-<li><p>Gitee 添加公钥授权：</p>
-<pre class=" language-bash"><code class="language-bash">1，Gitee -<span class="token operator">></span> 设置 -<span class="token operator">></span> 安全设置<span class="token comment" spellcheck="true">#SSH公钥。</span>
-2，SSH公钥 -<span class="token operator">></span> 添加公钥。
-3，标题：随便取个名字即可。如：SSH-key_myGitee。
-4，公钥：将之前创建的 gitee 公钥（即 gitee_id_rsa.pub）里的内容，全复制粘贴进去。
-5，点击“确定”，保存。
-</code></pre>
-</li>
-</ul>
-<h3 id="Step3：验证连接"><a href="#Step3：验证连接" class="headerlink" title="Step3：验证连接"></a>Step3：验证连接</h3><pre class=" language-bash"><code class="language-bash">1，进入终端。
-2，输入命令：ssh -T git@github.com <span class="token comment" spellcheck="true"># gitee：ssh -T git@gitee.com</span>
-3，若出现 “Are you sure……”，输入 <span class="token function">yes</span> 回车确认。
-4，最后输出 “Hi <span class="token operator">&lt;</span>your_ssh_user_name<span class="token operator">></span><span class="token operator">!</span> You've successfully authenticated, but <span class="token operator">&lt;</span>GitHub<span class="token operator">|</span>GITEE.COM<span class="token operator">></span> does not provide shell access.  ”，表示成功连接。
-</code></pre>
-<h2 id="3-创建-Github-Gitee-Pages-仓库"><a href="#3-创建-Github-Gitee-Pages-仓库" class="headerlink" title="3. 创建 Github/Gitee Pages 仓库"></a>3. 创建 Github/Gitee Pages 仓库</h2><h3 id="Github-Pages-仓库"><a href="#Github-Pages-仓库" class="headerlink" title="Github Pages 仓库"></a>Github Pages 仓库</h3><pre class=" language-bash"><code class="language-bash">1，GitHub 主页右上角加号 -<span class="token operator">></span> New repository。
-2，Repository name 中输入“用户名.github.io”。
-3，勾选 Public。必须 Public 才能使用。 
-4，勾选 “Initialize this repository with a README”。
-5，填好后点击 Create repository 创建。
-6，创建后默认自动启用 HTTPS，博客地址为：https://用户名.github.io。
-</code></pre>
-<p>例如，我的博客：<a href="https://jiyiqini.github.io/">https://jiyiqini.github.io</a></p>
-<h3 id="Gitee-Pages-仓库"><a href="#Gitee-Pages-仓库" class="headerlink" title="Gitee Pages 仓库"></a>Gitee Pages 仓库</h3><pre class=" language-bash"><code class="language-bash">1，Gitee 主页右上角加号 -<span class="token operator">></span> 新建仓库。
-2，仓库名称中输入“用户名”。
-3，勾选“开源”或“私有”均可。对于个人博客嘛，私有吧。
-4，勾选“初始化仓库”，其它看情况可选（如：设置模板、选择分支模型）。
-5，创建完成后，点击该仓库的 “服务” -<span class="token operator">></span> Gitee Pages <span class="token operator">></span> 勾选“强制使用HTTPS” -<span class="token operator">></span> 启动。博客地址为：https://用户名.gitee.io。
-</code></pre>
-<p>例如，我的博客：<a href="https://jiyiqini.gitee.io/">https://jiyiqini.gitee.io</a></p>
-<p><strong>注意事项：</strong></p>
-<ul>
-<li>Github repo 权限只能为 <code>public</code> ，而 Gitee repo 权限可以是 <code>public</code>、也可是 <code>private</code>。</li>
-<li>Github 的 repo name 必须为 <code>“用户名.github.io”</code> 格式，从而博客访问地址为：<code>https://用户名.github.io</code>；而 Gitee 的 repo name 任意。***一般与用户名一致，这样博客地址就比较简洁，形如：<code>https://用户名.gitee.io</code>***。若 repo name 不保持与用户名一致，则需要有二级目录方可访问，如：<code>https://用户名.gitee.io/仓库名</code>。</li>
-<li>Github 创建好仓库，默认为 <code>HTTPS</code> ，而 Gitee 需要去手动开启！</li>
-</ul>
-<h2 id="4-Hexo博客系统接入（核心）"><a href="#4-Hexo博客系统接入（核心）" class="headerlink" title="4. Hexo博客系统接入（核心）"></a>4. Hexo博客系统接入（核心）</h2><h3 id="hexo-安装与基本使用"><a href="#hexo-安装与基本使用" class="headerlink" title="hexo 安装与基本使用"></a>hexo 安装与基本使用</h3><p>☞ <a href="https://hexo.io/zh-cn/">Hexo</a>官方步骤参考：</p>
-<blockquote>
-<pre class=" language-bash"><code class="language-bash">$ <span class="token function">npm</span> <span class="token function">install</span> hexo-cli -g
-$ hexo init blog
-$ <span class="token function">cd</span> blog
-$ <span class="token function">npm</span> <span class="token function">install</span>
-$ hexo server
-</code></pre>
-</blockquote>
-<p>☞ Hexo 博客文件夹目录结构概览（<a href="https://hexo.io/zh-cn/docs/setup">更多详情</a>）：</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token keyword">.</span>
-├── _config.yml         <span class="token comment" spellcheck="true">#网点的配置信息</span>
-├── db.json             <span class="token comment" spellcheck="true">#缓存文件</span>
-├── node_modules        <span class="token comment" spellcheck="true">#安装的插件以及hexo所需的一些node.js模块。</span>
-├── package-lock.json   <span class="token comment" spellcheck="true">#应用程序的信息</span>
-├── package.json        <span class="token comment" spellcheck="true">#应用程序信息，配置hexo运行需要的js包。</span>
-├── public              <span class="token comment" spellcheck="true">#最终所见网页的所有内容</span>
-├── scaffolds           <span class="token comment" spellcheck="true">#模版文件夹。当您新建文章时，Hexo会根据scaffold来建立文件。Hexo的模板是指在新建的文章文件中默认填充的内容。例如，如果您修改scaffold/post.md中的Front-matter内容，那么每次新建一篇文章时都会包含这个修改。</span>
-│   ├── draft.md
-│   ├── page.md
-│   └── post.md
-├── <span class="token function">source</span>              <span class="token comment" spellcheck="true">#存放用户资源，md等文档。除 _posts 文件夹之外，开头命名为 _ (下划线)的文件 / 文件夹和隐藏的文件将会被忽略。Markdown和HTML 文件会被解析并放到 public 文件夹，而其他文件会被拷贝过去。</span>
-│   └── _posts
-└── themes              <span class="token comment" spellcheck="true">#主题 文件夹。Hexo 会根据主题来生成静态页面。</span>
-</code></pre>
-<p><em><strong>具体个人搭建步骤：</strong></em></p>
-<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># ********** 1，npm安装hexo博客程序：</span>
-$ <span class="token function">sudo</span> <span class="token function">npm</span> <span class="token function">install</span> -g hexo-cli
-
-
-<span class="token comment" spellcheck="true"># ********** 2，hexo初始化及相关依赖：</span>
-<span class="token comment" spellcheck="true"># 假设，我的博客放在： ~/MyBlogs/Hexo-Blogs</span>
-$ <span class="token function">cd</span> ~/MyBlogs/Hexo-Blogs <span class="token comment" spellcheck="true">#进入存放hexo博客程序的目标目录</span>
-$ hexo init     <span class="token comment" spellcheck="true">#初始化。亦可：进入上一级目录~/MyBlogs下，再直接 hexo init Hexo-Blogs。</span>
-$ <span class="token function">npm</span> <span class="token function">install</span>   <span class="token comment" spellcheck="true">#安装依赖组件</span>
-
-
-<span class="token comment" spellcheck="true"># ********** 3，生成与预览：</span>
-$ hexo g    <span class="token comment" spellcheck="true">#生成静态页面。或hexo generate</span>
-$ hexo s    <span class="token comment" spellcheck="true">#启动本地预览。或hexo server</span>
-<span class="token comment" spellcheck="true"># 浏览器打开终端提示的url：http://localhost:4000。若出现默认的hexo页面，表示本地博客成功。</span>
-<span class="token comment" spellcheck="true"># Tips：如果出现页面加载不出来，可能是端口被占用了。Ctrl+C 关闭服务器，运行 hexo server -p 5000 更改端口号后重试。</span>
-
-<span class="token comment" spellcheck="true"># ********** 4，部署 Hexo 到 GitHub Pages</span>
-<span class="token comment" spellcheck="true"># 本地博客测试成功后，就是上传到 GitHub 进行部署，使其能够在网络上访问。</span>
-$ <span class="token function">npm</span> <span class="token function">install</span> hexo-deployer-git --save <span class="token comment" spellcheck="true">#安装 hexo-deployer-git。否则可能会出错“error deployer not found:git/github”</span>
-$ 修改 <span class="token punctuation">..</span>/<span class="token punctuation">{</span>your_hexo_blog<span class="token punctuation">}</span>/_config.yml<span class="token variable">$deploy</span> 中 Deployment 部分并保存：
-    <span class="token comment" spellcheck="true"># Deployment</span>
-    <span class="token comment" spellcheck="true">## Docs: https://hexo.io/docs/deployment.html</span>
-    deploy:
-      type: <span class="token function">git</span>
-      repo: https://github.com/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>/<span class="token punctuation">{</span>用户名<span class="token punctuation">}</span>.github.io.git
-      branch: master
-$ hexo d <span class="token comment" spellcheck="true">#发布网点到 Github Pages</span>
-$ 浏览器访问 https://用户名.github.io，结束. <span class="token comment" spellcheck="true">#注意：第一次发布可能会有10分钟的延迟，在这期间可能看到的是空白页面。</span>
-</code></pre>
-<p>☞ ==<em><strong>每次修改完本地的文件后必须执行以下命令，以重新部署Github Pages：</strong></em>==</p>
-<pre class=" language-bash"><code class="language-bash">hexo clean              <span class="token comment" spellcheck="true">#清除缓存</span>
-hexo g 或 hexo generate <span class="token comment" spellcheck="true">#生成静态页面</span>
-hexo d 或 deploy        <span class="token comment" spellcheck="true">#部署发布。发布前本地检查预览下：hexo s -> http://localhost:4000</span>
-</code></pre>
-<h3 id="hexo-同时部署-Github-Gitee-Pages"><a href="#hexo-同时部署-Github-Gitee-Pages" class="headerlink" title="hexo 同时部署 Github/Gitee Pages"></a>hexo 同时部署 Github/Gitee Pages</h3><p>即，在您的博客根目录下，编辑 <code>_config.yml</code> 配置文件，设置 <code>deploy</code> ，如：</p>
-<pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># Deployment</span>
-<span class="token comment" spellcheck="true">## Docs: https://hexo.io/docs/deployment.html</span>
-<span class="token key atrule">deploy</span><span class="token punctuation">:</span>
-  <span class="token comment" spellcheck="true"># 单平台部署，不用 - 分栏配置亦可以，直接如下：</span>
-  <span class="token comment" spellcheck="true"># ref: https://hexo.io/docs/one-command-deployment</span>
-  <span class="token comment" spellcheck="true"># type: git</span>
-  <span class="token comment" spellcheck="true"># repo: https://github.com/用户名/用户名.github.io.git</span>
-  <span class="token comment" spellcheck="true"># #repo: https://gitee.com/用户名/用户名.git</span>
-  <span class="token comment" spellcheck="true"># branch: master</span>
-  
-  <span class="token comment" spellcheck="true"># 如果为多平台部署，请用 - 分栏配置：</span>
-<span class="token punctuation">-</span> <span class="token key atrule">type</span><span class="token punctuation">:</span> git
-  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@github.com<span class="token punctuation">:</span>用户名/用户名.github.io.git <span class="token comment" spellcheck="true">#或 https://github.com/用户名/用户名.github.io.git</span>
-  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master
-<span class="token punctuation">-</span> <span class="token key atrule">type</span><span class="token punctuation">:</span> git 
-  <span class="token key atrule">repo</span><span class="token punctuation">:</span> git@gitee.com<span class="token punctuation">:</span>用户名/用户名.git <span class="token comment" spellcheck="true">#或 https://gitee.com/用户名/用户名.git</span>
-  <span class="token key atrule">branch</span><span class="token punctuation">:</span> master
-</code></pre>
-<p><strong>注意事项：Github Pages 部署后，支持自动更新，无需额外操作，稍等一小会就可访问了，因 Github 服务器在国外。而 Gitee Pages 则不一样，部署后，不支持自动更新，需要手动去点击更新后才可以访问。</strong></p>
-<h3 id="最后，一键部署。"><a href="#最后，一键部署。" class="headerlink" title="最后，一键部署。"></a>最后，一键部署。</h3><p>通常，我比较喜欢使用一键操作：</p>
-<blockquote>
-<p><code>hexo clean &amp;&amp; hexo g -d</code> 或 <code>hexo clean &amp;&amp; hexo d -g</code></p>
-</blockquote>
-<h1 id="Hexo常用命令"><a href="#Hexo常用命令" class="headerlink" title="Hexo常用命令"></a>Hexo常用命令</h1><h2 id="Hexo基本命令（★★★★）"><a href="#Hexo基本命令（★★★★）" class="headerlink" title="Hexo基本命令（★★★★）"></a>Hexo基本命令（★★★★）</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 基本常用</span>
-hexo <span class="token punctuation">[</span>-<span class="token punctuation">]</span>h<span class="token operator">|</span><span class="token function">help</span>              <span class="token comment" spellcheck="true">#查看帮助</span>
-hexo <span class="token punctuation">[</span>-<span class="token punctuation">]</span>v<span class="token operator">|</span>version           <span class="token comment" spellcheck="true">#查看 hexo 的版本，包括 hexo 所依赖的组件正在使用的版本，如：node、v8……</span>
-
-hexo n/new <span class="token string">"postName"</span>       <span class="token comment" spellcheck="true">#新建文章。在source下_post中生成一个“postName.md”，打开开始写文章即可。即：/source/_post/&lt;postName.md></span>
-hexo n/new page <span class="token string">"pageName"</span>  <span class="token comment" spellcheck="true">#新建页面。在source下生成page文件夹页并默认生成index.md，即：/source/&lt;pageName>/index.md</span>
-
-hexo g/generate             <span class="token comment" spellcheck="true">#生成静态页面至public目录</span>
-hexo s/server               <span class="token comment" spellcheck="true">#开启预览访问端口（默认端口4000，'ctrl + c'关闭server）</span>
-hexo d/deploy               <span class="token comment" spellcheck="true">#将.deploy目录部署到GitHub</span>
-hexo p/publish <span class="token punctuation">[</span>layout<span class="token punctuation">]</span> <span class="token operator">&lt;</span>filename<span class="token operator">></span>  <span class="token comment" spellcheck="true">#发表草稿</span>
-
-<span class="token comment" spellcheck="true"># 完成后部署</span>
-<span class="token comment" spellcheck="true"># 两个命令的作用是相同的（--deploy全名等价于-简写）</span>
-hexo deploy --generate 或 hexo generate --deploy
-<span class="token comment" spellcheck="true">#简写即为：</span>
-hexo g -d 或 hexo d -g  <span class="token comment" spellcheck="true">#生成后并部署（g和d顺序可交换）</span>
-hexo g -d -m <span class="token string">'message'</span>  <span class="token comment" spellcheck="true">#生成后并部署带git-commit message</span>
-
-<span class="token comment" spellcheck="true"># 服务器</span>
-hexo s/server                   <span class="token comment" spellcheck="true">#Hexo 会监视文件变动并自动更新，您无须重启服务器。</span>
-hexo s/server -s                <span class="token comment" spellcheck="true">#静态模式</span>
-hexo s/server -p 5000           <span class="token comment" spellcheck="true">#更改端口为5000</span>
-hexo s/server -i 192.168.1.1    <span class="token comment" spellcheck="true">#自定义 IP</span>
-
-<span class="token comment" spellcheck="true"># 监视文件变动</span>
-hexo generate               <span class="token comment" spellcheck="true">#使用 Hexo 生成静态文件快速而且简单</span>
-hexo generate --watch       <span class="token comment" spellcheck="true">#监视文件变动</span>
-</code></pre>
-<h2 id="Hexo升级"><a href="#Hexo升级" class="headerlink" title="Hexo升级"></a>Hexo升级</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 使用淘宝源的 cnpm 替换 npm</span>
-<span class="token comment" spellcheck="true"># 若网络好，还是尽量使用 npm ，万一使用 cnpm 出现未同步或者其他问题，当然可能性小。</span>
-<span class="token function">npm</span> <span class="token function">install</span> -g cnpm --registry<span class="token operator">=</span>https://registry.npm.taobao.org
-
-cnpm <span class="token function">install</span> -g cnpm        <span class="token comment" spellcheck="true"># 升级 npm</span>
-cnpm cache clean -f         <span class="token comment" spellcheck="true"># 清除 npm 缓存</span>
-
-<span class="token operator">==</span><span class="token operator">=</span>更新 hexo: 进入 blog 目录，执行如下命令<span class="token operator">==</span><span class="token operator">=</span> 
-<span class="token comment" spellcheck="true"># 更新 package.json 中的 hexo 及个插件版本</span>
-cnpm <span class="token function">install</span> -g npm-check   <span class="token comment" spellcheck="true"># 检查之前安装的插件，都有哪些是可以升级的 </span>
-cnpm <span class="token function">install</span> -g npm-upgrade <span class="token comment" spellcheck="true"># 升级系统中的插件</span>
-npm-check
-npm-upgrade
-
-<span class="token comment" spellcheck="true"># 更新 hexo 及所有插件</span>
-cnpm update
-
-<span class="token comment" spellcheck="true"># 确认 hexo 已经更新</span>
-hexo -v
-</code></pre>
-<h1 id="Hexo个性化设置（基础入门）"><a href="#Hexo个性化设置（基础入门）" class="headerlink" title="Hexo个性化设置（基础入门）"></a>Hexo个性化设置（基础入门）</h1><p>此章节仅讲解 hexo 如何设置主题，更多详细请移步: <a href="/dev-tools/hexo/How-To-Config/" title="《如何美化 hexo+next 个人博客？(入门篇2)》">《如何美化 hexo+next 个人博客？(入门篇2)》</a></p>
-<h2 id="主题切换"><a href="#主题切换" class="headerlink" title="主题切换"></a>主题切换</h2><p>Hexo官方推荐或Github上搜索，都有很多主题。</p>
-<blockquote>
-<ol>
-<li><a href="https://hexo.io/themes">https://hexo.io/themes</a></li>
-</ol>
-</blockquote>
-<p>☞ <strong>切换主题步骤：</strong></p>
-<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true">#********** 1，进入&lt;your_blogs>/thems目录</span>
-$ <span class="token function">cd</span> themes
-
-<span class="token comment" spellcheck="true">#********** 2，下载主题（例如：https://github.com/theme-next/hexo-theme-next.git）</span>
-$ <span class="token function">git</span> clone <span class="token operator">&lt;</span>git_theme_repo_url<span class="token operator">></span>
-
-<span class="token comment" spellcheck="true">#********** 3, 配置&lt;your_blogs>/_config.yml</span>
-    <span class="token comment" spellcheck="true"># vim _config.yml</span>
-    <span class="token comment" spellcheck="true"># Extensions</span>
-    <span class="token comment" spellcheck="true">## Plugins: https://hexo.io/plugins/</span>
-    <span class="token comment" spellcheck="true">## Themes: https://hexo.io/themes/</span>
-    theme: hexo-theme-next <span class="token comment" spellcheck="true">#landscape</span>
-
-<span class="token comment" spellcheck="true">#********** 4, 重启server（本地预览或部署Github）</span>
-$ hexo clean <span class="token operator">&amp;&amp;</span> hexo g <span class="token operator">&amp;&amp;</span> hexo s    <span class="token comment" spellcheck="true">#更新并本地预览服务</span>
-$ hexo cleann <span class="token operator">&amp;&amp;</span> hexo d -g          <span class="token comment" spellcheck="true">#更新并部署发布</span>
-</code></pre>
-<h2 id="布局切换"><a href="#布局切换" class="headerlink" title="布局切换"></a>布局切换</h2><h1 id="Hexo搭建遇到问题（仅入门常见的几个）"><a href="#Hexo搭建遇到问题（仅入门常见的几个）" class="headerlink" title="Hexo搭建遇到问题（仅入门常见的几个）"></a>Hexo搭建遇到问题（仅入门常见的几个）</h1><p>此章节仅讲解 hexo 入门搭建中遇到的几个报错与解决，更多异常与处理请移步: <a href="/dev-tools/hexo/Hexo-Issues/" title="《常见的 Hexo 报错与解决》">《常见的 Hexo 报错与解决》</a></p>
-<ul>
-<li><p>若出现 <code>error deployer not found:git 或者 error deployer not found:github</code> 的错误：</p>
-<blockquote>
-<p><strong>解决办法</strong>：</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token variable">$npm</span> <span class="token function">install</span> hexo-deployer-git --save
-</code></pre>
-</blockquote>
-</li>
-<li><p>若出现类似 <code>FATAL can not read a block mapping entry; a multiline key may not be an implicit key at line 70, column 1: ...</code> 错误：</p>
-<blockquote>
-<p><strong>解决办法</strong>：</p>
-<pre class=" language-bash"><code class="language-bash">_config.yml中配置项的冒号后面要用空格隔开，再跟配置内容。
-<span class="token comment" spellcheck="true">#例如：</span>
-<span class="token comment" spellcheck="true">#deploy:</span>
-<span class="token comment" spellcheck="true">#  type: git</span>
-<span class="token comment" spellcheck="true">#  repo: https://github.com/用户名/用户名.github.io.git</span>
-<span class="token comment" spellcheck="true">#  branch: master</span>
-</code></pre>
-</blockquote>
-</li>
-<li><p>中文乱码问题：</p>
-<blockquote>
-<p><strong>解决办法</strong>：</p>
-<pre class=" language-bash"><code class="language-bash">将文件的内容编码改为UTF8格式
-</code></pre>
-</blockquote>
-</li>
-<li><p><code>hexo sever</code>能够成功运行，但是 <code>localhost:4000</code> 无法访问：</p>
-<blockquote>
-<p><strong>解决办法</strong>：</p>
-<pre class=" language-bash"><code class="language-bash">$ hexo s -p 5000 <span class="token comment" spellcheck="true">#改用其他端口5000启动</span>
-</code></pre>
-</blockquote>
-</li>
-<li><p><code>hexo d</code> 和 <code>hexo -v</code> 若出现如下稀奇古怪错误，已确保所有配置都正确，但还是会报错：</p>
-<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># hexo -v 提示错误：</span>
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>Use <span class="token variable"><span class="token variable">`</span>node --trace-warnings <span class="token punctuation">..</span>.<span class="token variable">`</span></span> to show where the warning was created<span class="token punctuation">)</span>
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13857<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
-hexo: 4.2.0
-hexo-cli: 3.1.0
-os: Darwin 19.4.0 darwin x64
-node: 14.2.0 <span class="token comment" spellcheck="true">#------》注意这一行！！！</span>
-v8: 8.1.307.31-node.32
-uv: 1.37.0
-zlib: 1.2.11
-brotli: 1.0.7
-ares: 1.16.0
-modules: 83
-nghttp2: 1.40.0
-napi: 6
-llhttp: 2.0.4
-openssl: 1.1.1g
-cldr: 36.1
-icu: 66.1
-tz: 2019c
-unicode: 13.0
-
-<span class="token comment" spellcheck="true"># hexo d 提示错误：</span>
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>Use <span class="token variable"><span class="token variable">`</span>node --trace-warnings <span class="token punctuation">..</span>.<span class="token variable">`</span></span> to show where the warning was created<span class="token punctuation">)</span>
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'lineno'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'column'</span> of module exports inside circular dependency
-<span class="token punctuation">(</span>node:13872<span class="token punctuation">)</span> Warning: Accessing non-existent property <span class="token string">'filename'</span> of module exports inside circular dependency
-INFO  Start processing
-INFO  Files loaded <span class="token keyword">in</span> 125 ms
-INFO  0 files generated <span class="token keyword">in</span> 42 ms
-INFO  Deploying: <span class="token function">git</span>
-INFO  Clearing .deploy_git folder<span class="token punctuation">..</span>.
-INFO  Copying files from public folder<span class="token punctuation">..</span>.
-FATAL Something's wrong. Maybe you can <span class="token function">find</span> the solution here: https://hexo.io/docs/troubleshooting.html
-TypeError <span class="token punctuation">[</span>ERR_INVALID_ARG_TYPE<span class="token punctuation">]</span>: The <span class="token string">"mode"</span> argument must be integer. Received an instance of Object
-</code></pre>
-<blockquote>
-<p><strong>解决办法：</strong></p>
-<ul>
-<li><strong>原因</strong>：一般由于 hexo 不能使用最新版本的 node 版本（如，我的版本比较高 14.2.0） ，安装或切换为某个低的稳定版本即可（如，我切换成 v12.22.4 就正常了）。</li>
-<li><strong>解决</strong>：  <pre class=" language-bash"><code class="language-bash">$ <span class="token function">sudo</span> n stable   <span class="token comment" spellcheck="true">#n下载最新稳定版本。若需要切换回指定版本，则使用 sudo n 14.2.0(即版本号)</span>
-$ hexo <span class="token function">v</span><span class="token operator">|</span>version  <span class="token comment" spellcheck="true">#查看版本，正常了。</span>
-$ hexo d<span class="token operator">|</span>deploy   <span class="token comment" spellcheck="true">#重新发布，正常了。</span>
-</code></pre>
-</li>
-</ul>
-</blockquote>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>技术篇</category>
-        <category>工具指南</category>
-        <category>Hexo</category>
-      </categories>
-      <tags>
-        <tag>Hexo</tag>
-        <tag>环境</tag>
       </tags>
   </entry>
   <entry>

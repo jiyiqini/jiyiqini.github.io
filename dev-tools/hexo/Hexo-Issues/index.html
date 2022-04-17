@@ -29,8 +29,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"><link rel="alternate" href="/atom.xml" title="随风起舞" type="application/atom+xml">
-</head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="随风起舞" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
 
 
 
@@ -493,14 +493,14 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2022-03-13
+                    2022-04-17
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    177
+                    414
                 </div>
                 
 
@@ -532,17 +532,41 @@
 
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ul>
 <li><a target="_blank" rel="noopener" href="https://leunggeorge.github.io/2017/07/09/%E6%89%A7%E8%A1%8Chexo%E6%97%B6%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8A%A5%E9%94%99%E5%A4%84%E7%90%86/">执行 hexo 时的一些报错处理</a></li>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_47617631/article/details/121425697">hexo上传博客代码时花括号被转义了</a></li>
 </ul>
 <h1 id="Deprecated：use-date-for-updated"><a href="#Deprecated：use-date-for-updated" class="headerlink" title="Deprecated：use_date_for_updated"></a>Deprecated：<code>use_date_for_updated</code></h1><p>因安装一些模块，中途又跟踪提示 fix ，最后莫名其妙地把 hexo 从 <code>4.2.0</code> 升级到了 <code>5.4.0</code> ，在使用 hexo 操作（<code>hexo server</code>, etc.）时，出现如下警告提示：</p>
 <pre class=" language-text"><code class="language-text">Deprecated config detected: "use_date_for_updated" is deprecated, please use "updated_option" instead. See https://hexo.io/docs/configuration for more details.
 </code></pre>
 <blockquote>
-<p><strong>原因：</strong> 提示 <code>use_date_for_updated</code> 过时。<br><strong>解决办法：</strong>： 根据提示，用 <code>updated_option</code> 替换即可。</p>
+<p><strong>原因：</strong> 提示 <code>use_date_for_updated</code> 过时。<br><strong>👉🏻解决：</strong> 根据提示，用 <code>updated_option</code> 替换即可。</p>
 <pre class=" language-yaml"><code class="language-yaml"><span class="token comment" spellcheck="true"># 修改文件：&lt;hexo-blog>/_config.yml</span>
 <span class="token comment" spellcheck="true"># Date / Time format</span>
 <span class="token comment" spellcheck="true">## Use post's date for updated date unless set in front-matter</span>
 <span class="token key atrule">updated_option</span><span class="token punctuation">:</span> <span class="token boolean important">false</span>
 </code></pre>
+</blockquote>
+<h1 id="Hexo-插入代码片段时，在预览时诸如-等被转义了。"><a href="#Hexo-插入代码片段时，在预览时诸如-等被转义了。" class="headerlink" title="Hexo 插入代码片段时，在预览时诸如 {} 等被转义了。"></a>Hexo 插入代码片段时，在预览时诸如 <code>&#123;&#125;</code> 等被转义了。</h1><p>当我切换到 <a target="_blank" rel="noopener" href="https://github.com/blinkfox/hexo-theme-matery">hexo-theme-matery</a> 主题时，markdown 里插入代码片段后，在博客预览显示时，代码里的花括号 <code>&#123;&#125;</code> 不显示，而是显示转义代码 <code>&amp;#123</code> 和 <code>&amp;#125</code> （*在其它主题下暂时没有这个问题~*）。</p>
+<blockquote>
+<p><strong>原因：</strong> 主要是 <code>&#123;你的博客项目&#125;/node_modules/hexo-prism-plugin/src/index.js</code> 配置里缺少了这些转义字符的映射配置。<br><strong>👉🏻解决：</strong> </p>
+<blockquote>
+<ol>
+<li>打开 <code>&#123;你的博客项目&#125;/node_modules/hexo-prism-plugin/src/index.js</code> 文件。</li>
+<li>找到 <code>map</code> 变量声明，将 <code>&#123;&#125;</code> 等的转义字符与友好显示字符映射键值对（<code>&amp;#123 → &#123;</code> 与 <code>&amp;#125 → &#125;</code>）加上，然后保存，<code>hexo s</code> 重启服务。<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// {你的博客项目}/node_modules/hexo-prism-plugin/src/index.js</span>
+<span class="token operator">...</span>
+<span class="token keyword">const</span> map <span class="token operator">=</span> <span class="token punctuation">{</span>
+ <span class="token string">'&amp;#39;'</span><span class="token punctuation">:</span> <span class="token string">'\''</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;amp;'</span><span class="token punctuation">:</span> <span class="token string">'&amp;'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;gt;'</span><span class="token punctuation">:</span> <span class="token string">'>'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;lt;'</span><span class="token punctuation">:</span> <span class="token string">'&lt;'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;quot;'</span><span class="token punctuation">:</span> <span class="token string">'"'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;#123;'</span><span class="token punctuation">:</span> <span class="token string">'{'</span><span class="token punctuation">,</span>
+ <span class="token string">'&amp;#125;'</span><span class="token punctuation">:</span> <span class="token string">'}'</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token operator">...</span>
+</code></pre>
+</li>
+</ol>
+</blockquote>
 </blockquote>
 
                 
@@ -1375,7 +1399,7 @@
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">34.9k</span>
+                        class="white-color">35.1k</span>
             
             
             
