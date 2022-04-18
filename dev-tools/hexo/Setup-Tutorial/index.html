@@ -489,21 +489,21 @@
                 
                 <div class="post-date info-break-policy">
                     <i class="far fa-calendar-check fa-fw"></i>更新日期:&nbsp;&nbsp;
-                    2021-08-17
+                    2022-04-18
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    4.5k
+                    4.7k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    19 分
+                    20 分
                 </div>
                 
 
@@ -845,6 +845,27 @@ hexo s/server -i 192.168.1.1    <span class="token comment" spellcheck="true">#�
 <span class="token comment" spellcheck="true"># 监视文件变动</span>
 hexo generate               <span class="token comment" spellcheck="true">#使用 Hexo 生成静态文件快速而且简单</span>
 hexo generate --watch       <span class="token comment" spellcheck="true">#监视文件变动</span>
+
+<span class="token comment" spellcheck="true"># list</span>
+hexo list <span class="token operator">&lt;</span>type: page<span class="token operator">|</span>post<span class="token operator">|</span>route<span class="token operator">|</span>tag<span class="token operator">|</span>category<span class="token operator">></span>      <span class="token comment" spellcheck="true">#列出网站资料</span>
+<span class="token comment" spellcheck="true"># 如：hexo list page</span>
+<span class="token comment" spellcheck="true"># ➜ Hexo-Blogs (master) ✏️  hexo list page </span>
+<span class="token comment" spellcheck="true"># INFO  Validating config</span>
+<span class="token comment" spellcheck="true"># INFO  Start processing</span>
+<span class="token comment" spellcheck="true"># Date        Title       Path</span>
+<span class="token comment" spellcheck="true"># 2020-05-16  标签搜索    tags/index.md</span>
+<span class="token comment" spellcheck="true"># 2020-05-16  文章分类    categories/index.md</span>
+<span class="token comment" spellcheck="true"># 2020-05-16  页面不存在  404/index.md</span>
+<span class="token comment" spellcheck="true"># 2020-05-16  关于介绍    about/index.md</span>
+<span class="token comment" spellcheck="true"># 2021-08-11  留言版      contact/index.md</span>
+<span class="token comment" spellcheck="true"># 2021-08-11  friends     friends/index.md</span>
+
+<span class="token comment" spellcheck="true"># hexo 草稿</span>
+<span class="token comment" spellcheck="true"># 草稿，相当于“私密文章”，不会被显示在页面上，链接也无法访问</span>
+hexo new draft <span class="token string">"mydraft"</span>    <span class="token comment" spellcheck="true">#会与 _post/_data 同级，生成一个 _drafts 目录，草稿 “mydraft” 存放于 “_drafts/mydraft.md”</span>
+hexo s/server _drafts       <span class="token comment" spellcheck="true">#启动草稿预览，即在 http://localhost:4000 里看到所有草稿文章</span>
+render_drafts: <span class="token boolean">true</span>         <span class="token comment" spellcheck="true">#强行预览某草稿文章，则添加配置。</span>
+hexo publish <span class="token punctuation">[</span>layout<span class="token punctuation">]</span> <span class="token operator">&lt;</span>filename<span class="token operator">></span>    <span class="token comment" spellcheck="true">#发布（移动）草稿文章到 _data/ 下</span>
 </code></pre>
 <h2 id="Hexo升级"><a href="#Hexo升级" class="headerlink" title="Hexo升级"></a>Hexo升级</h2><pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># 使用淘宝源的 cnpm 替换 npm</span>
 <span class="token comment" spellcheck="true"># 若网络好，还是尽量使用 npm ，万一使用 cnpm 出现未同步或者其他问题，当然可能性小。</span>
@@ -1499,9 +1520,9 @@ $ hexo d<span class="token operator">|</span>deploy   <span class="token comment
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="如何美化 hexo+next 个人博客？(入门篇2)">
+                        <img src="/medias/featureimages/8.jpg" class="responsive-img" alt="添加功能，美化 Hexo (入门篇2)">
                         
-                        <span class="card-title">如何美化 hexo+next 个人博客？(入门篇2)</span>
+                        <span class="card-title">添加功能，美化 Hexo (入门篇2)</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -1816,7 +1837,7 @@ $ hexo d<span class="token operator">|</span>deploy   <span class="token comment
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">35.1k</span>
+                        class="white-color">35.3k</span>
             
             
             

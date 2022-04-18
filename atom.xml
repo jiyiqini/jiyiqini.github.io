@@ -69,7 +69,7 @@
     <link href="https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/"/>
     <id>https://jiyiqini.github.io/tech-articles/backend-tech/SpringBoot/level-basic/SB-Learn-1/</id>
     <published>2022-03-13T03:22:19.000Z</published>
-    <updated>2022-03-13T04:33:16.579Z</updated>
+    <updated>2022-04-18T07:47:12.300Z</updated>
     
     
     <summary type="html">&lt;p&gt;什么叫微服务？Spring Boot 又是什么？它们能干什么，如何开发？Spring Boot 与传统的 Spring MVC、SSH 这些有啥异同？&lt;/p&gt;</summary>
@@ -115,11 +115,11 @@
   </entry>
   
   <entry>
-    <title>如何美化 hexo+next 个人博客？(入门篇2)</title>
+    <title>添加功能，美化 Hexo (入门篇2)</title>
     <link href="https://jiyiqini.github.io/dev-tools/hexo/How-To-Config/"/>
     <id>https://jiyiqini.github.io/dev-tools/hexo/How-To-Config/</id>
     <published>2020-05-16T17:07:05.000Z</published>
-    <updated>2021-08-11T13:38:40.095Z</updated>
+    <updated>2022-04-18T08:30:10.825Z</updated>
     
     
     <summary type="html">&lt;p&gt;Hexo博客搭建成功后，其实我们就已经可以愉快地进行写文章了。但是，由于个人喜好，我们可能需要自定义设置一下创建的博客系统。这样，既也助于我们有更好的心情去编写文章，又能吸引更多访客的阅读。So，我们来看看如何进行常见的个性化设置吧？&lt;/p&gt;</summary>
@@ -148,7 +148,7 @@
     <link href="https://jiyiqini.github.io/dev-tools/hexo/Setup-Tutorial/"/>
     <id>https://jiyiqini.github.io/dev-tools/hexo/Setup-Tutorial/</id>
     <published>2020-05-15T04:51:08.000Z</published>
-    <updated>2021-08-17T09:09:02.711Z</updated>
+    <updated>2022-04-18T08:50:24.835Z</updated>
     
     
     <summary type="html">&lt;p&gt;如今各类博客系统一大堆，所谓萝卜白菜各有所爱。由于个人看重 hexo 的简洁性和免费托管 &lt;a href=&quot;https://github.com/&quot;&gt;Github&lt;/a&gt;/&lt;a href=&quot;https://gitee.com/&quot;&gt;Gitee&lt;/a&gt; 的原因，将决定折腾学习 hexo，以便后期学写技术博客、备忘笔记、和记录生活点滴。废话不多说，基于网上学习教程，个人做了如下总结。&lt;/p&gt;</summary>
