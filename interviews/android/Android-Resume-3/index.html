@@ -29,8 +29,8 @@
 
     <script src="/libs/jquery/jquery-3.6.0.min.js"></script>
 
-<meta name="generator" content="Hexo 5.4.0"><link rel="alternate" href="/atom.xml" title="随风起舞" type="application/atom+xml">
-<link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"></head>
+<meta name="generator" content="Hexo 5.4.2"><link rel="stylesheet" href="/css/prism-tomorrow.css" type="text/css"><link rel="alternate" href="/atom.xml" title="随风起舞" type="application/atom+xml">
+</head>
 
 
 
@@ -533,7 +533,7 @@
 </ol>
 <p><strong>（2）Activity 的 4 种状态：</strong></p>
 <ol>
-<li>运行中（running/active）：对应 <code>onResume</code> 状态，位于栈顶，交互可见。</li>
+<li>运行中（running&#x2F;active）：对应 <code>onResume</code> 状态，位于栈顶，交互可见。</li>
 <li>暂停（paused）：对应 <code>onPause</code> 状态，可见+不可交互。</li>
 <li>停止（stopped）：对应 <code>onStop</code> 状态，不可见+不可交互。</li>
 <li>销毁（destroyed）：对应 <code>onDestroy</code> 状态，Activity 被销毁了。</li>
@@ -541,7 +541,7 @@
 <p>对于理解 Activity 的 4 种状态，应结合 <a href="#">Post not found: ??? Activity 生命周期</a> 来理解。</p>
 <p><strong>（3）Activity 的生命周期：</strong></p>
 <blockquote>
-<p>首先，献上官方的 Activity 生命周期图：<br><img src="../../../images/illustration/android/lifecycle-Activity&Fragment.png" alt="lifecycle-Activity&amp;Fragment.png"></p>
+<p>首先，献上官方的 Activity 生命周期图：<br><img src="/../../../images/illustration/android/lifecycle-Activity&Fragment.png" alt="lifecycle-Activity&amp;Fragment.png"></p>
 </blockquote>
 <p><strong>按顺序总结 Activiyt 各生命周期：</strong></p>
 <ul>
@@ -884,9 +884,8 @@
 <ul>
 <li>注册：<code>LocalBroadcastManager.getInstance(context).registerReceiver(receiver, filter)</code></li>
 <li>解注册：<code>LocalBroadcastManager.getInstance(context).unregisterReceiver(receiver)</code></li>
-<li>发送：<code>LocalBroadcastManager.getInstance(context).sendBroadcast(Intent)</code></li>
+<li>发送：<code>LocalBroadcastManager.getInstance(context).sendBroadcast(Intent)</code><br><strong>Local Boradcast 的特点：</strong><br>因 Android 中的广播是可以跨域的（即跨App），可存在如下问题：</li>
 </ul>
-<p><strong>Local Boradcast 的特点：</strong><br>因 Android 中的广播是可以跨域的（即跨App），可存在如下问题：</p>
 <ol>
 <li>other-App 发出与 current-App 的 intent-filter 相匹配的广播时，current-App 会不断收到广播并处理。</li>
 <li>current-App 发出与 other-App 的 intent-filter 相匹配的广播时，other-App 会不断收到广播并处理。<br>这样，就出现了 **安全性 &amp;&amp; 效率性 ** 的问题。</li>
@@ -943,8 +942,8 @@
 <ul>
 <li>对于不同注册方式的广播接收器回调 <code>onReceive(Context context, Intent intent)</code> 中的 <code>context</code> 返回值是不一样的：<blockquote>
 <ul>
-<li><strong>静态注册的全局广播（Normal/Ordered/Sticky/System）</strong>：<code>android.app.ReceiverRestrictedContext</code></li>
-<li><strong>动态注册的全局广播（Normal/Ordered/Sticky/System）</strong>：<code>Activity（即具体send广播的组件）</code></li>
+<li><strong>静态注册的全局广播（Normal&#x2F;Ordered&#x2F;Sticky&#x2F;System）</strong>：<code>android.app.ReceiverRestrictedContext</code></li>
+<li><strong>动态注册的全局广播（Normal&#x2F;Ordered&#x2F;Sticky&#x2F;System）</strong>：<code>Activity（即具体send广播的组件）</code></li>
 <li><strong>动态注册的应用内广播（LocalBroadcastManager方式）</strong>：<code>android.app.Application</code></li>
 </ul>
 </blockquote>
@@ -1821,7 +1820,7 @@ ContentResolver<span class="token punctuation">.</span><span class="token functi
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">35.3k</span>
+                        class="white-color">35.6k</span>
             
             
             
